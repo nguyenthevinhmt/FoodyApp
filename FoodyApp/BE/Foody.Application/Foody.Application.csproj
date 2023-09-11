@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Services\CategoryServices\Dtos\" />
+		<Folder Include="Services\CategoryServices\Implements\" />
+		<Folder Include="Services\CategoryServices\Interfaces\" />
+		<Folder Include="Services\CartServices\" />
+		<Folder Include="Services\OrderServices\Dtos\" />
+		<Folder Include="Services\OrderServices\Interfaces\" />
+		<Folder Include="Services\OrderServices\Implements\" />
+		<Folder Include="Services\PromotionServices\Dtos\" />
+		<Folder Include="Services\PromotionServices\Implements\" />
+		<Folder Include="Services\PromotionServices\Interfaces\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Foody.Infrastructure\Foody.Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>
