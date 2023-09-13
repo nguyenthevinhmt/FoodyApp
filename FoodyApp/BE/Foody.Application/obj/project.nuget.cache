@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JRTuYyJnpmOnqt2iJX/jjwb1R4TNJ2uF5T8DWjvJ+hmx/GTc1FRKPQGcA+Ccn69bbLzvKYsfAHxaxqjAgni1kQ==",
+  "dgSpecHash": "Yqh1253otkJQQuPucTwENUNFOIUl84PomgY916rCkM65cvLXWqXg4lzEuRC9lI6HxGTG8QGcChHTCMPM1gsbbA==",
   "success": true,
-  "projectFilePath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Application\\Foody.Application.csproj",
+  "projectFilePath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Application\\Foody.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

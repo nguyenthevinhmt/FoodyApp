@@ -3851,11 +3851,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
+      "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
       "projectName": "Foody.Infrastructure",
-      "projectPath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
+      "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Infrastructure\\obj\\",
+      "outputPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3872,8 +3872,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Domain\\Foody.Domain.csproj": {
-              "projectPath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Domain\\Foody.Domain.csproj"
+            "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
+              "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
             }
           }
         }

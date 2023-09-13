@@ -127,11 +127,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Domain\\Foody.Domain.csproj",
+      "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
       "projectName": "Foody.Domain",
-      "projectPath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Domain\\Foody.Domain.csproj",
+      "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\FoodyApp\\FoodyApp\\src\\BE\\Foody.Domain\\obj\\",
+      "outputPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
