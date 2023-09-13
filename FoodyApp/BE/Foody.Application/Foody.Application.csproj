@@ -6,10 +6,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Services\CartServices\" />
-		<Folder Include="Services\OrderServices\Dtos\" />
-		<Folder Include="Services\OrderServices\Interfaces\" />
-		<Folder Include="Services\OrderServices\Implements\" />
 		<Folder Include="Services\ProductImageService\Dtos\" />
 	</ItemGroup>
 
