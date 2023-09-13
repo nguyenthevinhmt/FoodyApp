@@ -5,11 +5,11 @@ namespace Foody.Application.Services.ProductServices.Interfaces
 {
     public interface IProductService
     {
-        public void CreateProduct(CreateProductDto input);
-        public PageResultDto<ProductResponseDto> GetProductPaging(ProductFilterDto input);
+        public Task CreateProduct(CreateProductDto input);
+        public Task<PageResultDto<ProductResponseDto>> GetProductPaging(ProductFilterDto input);
 
-        public ProductResponseDto GetProductById(int id);
-        public void UpdateProduct(UpdateProductDto input);
+        public Task<ProductResponseDto> GetProductById(int id);
+        public Task UpdateProduct(UpdateProductDto input);
         //public PageResultDto<ProductResponseDto> GetProductByCategory(ProductFilterDto input);
     }
 }

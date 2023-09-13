@@ -6,16 +6,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Services\CategoryServices\Dtos\" />
-		<Folder Include="Services\CategoryServices\Implements\" />
-		<Folder Include="Services\CategoryServices\Interfaces\" />
 		<Folder Include="Services\CartServices\" />
 		<Folder Include="Services\OrderServices\Dtos\" />
 		<Folder Include="Services\OrderServices\Interfaces\" />
 		<Folder Include="Services\OrderServices\Implements\" />
-		<Folder Include="Services\PromotionServices\Dtos\" />
-		<Folder Include="Services\PromotionServices\Implements\" />
-		<Folder Include="Services\PromotionServices\Interfaces\" />
+		<Folder Include="Services\ProductImageService\Dtos\" />
 	</ItemGroup>
 
 	<ItemGroup>
