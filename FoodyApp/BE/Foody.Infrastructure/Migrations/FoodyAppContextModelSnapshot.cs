@@ -79,9 +79,6 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdateBy")
                         .HasColumnType("datetime2");
 
@@ -89,8 +86,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Categories");
                 });
@@ -182,6 +177,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
@@ -202,6 +200,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<decimal>("ActualPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -209,6 +210,7 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -226,9 +228,6 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
@@ -239,6 +238,8 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("PromotionId");
 
@@ -285,6 +286,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -325,7 +329,7 @@ namespace Foody.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<double>("Discount")
+                    b.Property<double>("DiscountPercent")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("EndTime")
@@ -341,6 +345,9 @@ namespace Foody.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("PromotionCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -415,15 +422,6 @@ namespace Foody.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
-                {
-                    b.HasOne("Foody.Domain.Entities.Product", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
                 {
                     b.HasOne("Foody.Domain.Entities.Category", null)
@@ -454,11 +452,19 @@ namespace Foody.Infrastructure.Migrations
 
             modelBuilder.Entity("Foody.Domain.Entities.Product", b =>
                 {
+                    b.HasOne("Foody.Domain.Entities.Category", "Categories")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Foody.Domain.Entities.Promotion", "Promotion")
                         .WithMany("Products")
                         .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Categories");
 
                     b.Navigation("Promotion");
                 });
@@ -501,6 +507,8 @@ namespace Foody.Infrastructure.Migrations
             modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
                 {
                     b.Navigation("CategoryImage");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
@@ -510,8 +518,6 @@ namespace Foody.Infrastructure.Migrations
 
             modelBuilder.Entity("Foody.Domain.Entities.Product", b =>
                 {
-                    b.Navigation("Categories");
-
                     b.Navigation("OrderDetails");
 
                     b.Navigation("ProductCarts");

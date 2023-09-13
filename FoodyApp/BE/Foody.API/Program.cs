@@ -1,7 +1,13 @@
 using Foody.Application.Services.AuthServices.Implements;
 using Foody.Application.Services.AuthServices.Interfaces;
+using Foody.Application.Services.CategoryServices.Implements;
+using Foody.Application.Services.CategoryServices.Interfaces;
+using Foody.Application.Services.ProductImageService.Implements;
+using Foody.Application.Services.ProductImageService.Interfaces;
 using Foody.Application.Services.ProductServices.Implements;
 using Foody.Application.Services.ProductServices.Interfaces;
+using Foody.Application.Services.PromotionServices.Implements;
+using Foody.Application.Services.PromotionServices.Interfaces;
 using Foody.Application.Services.UserServices.Implements;
 using Foody.Application.Services.UserServices.Interfaces;
 using Foody.Infrastructure.Persistence;
@@ -92,9 +98,12 @@ namespace Foody.API
                     builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
-            builder.Services.AddTransient<IAuthService, AuthService>();
-            builder.Services.AddTransient<IUserService, UserService>();
-            builder.Services.AddTransient<IProductService, ProductService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IStorageService, FileStorageService>();
+            builder.Services.AddScoped<IPromotionService, PromotionService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -108,7 +117,7 @@ namespace Foody.API
             app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
 

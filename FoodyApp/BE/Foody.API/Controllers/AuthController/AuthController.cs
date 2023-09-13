@@ -51,11 +51,10 @@ namespace Foody.API.Controllers.AuthController
             }
         }
         /// <summary>
-        /// Refresh token
+        /// RefreshToken
         /// </summary>
         /// <param name="tokenApiDto"></param>
         /// <returns></returns>
-
         [HttpPost("refresh")]
         public IActionResult Refresh([FromBody] TokenApiDto tokenApiDto)
         {
