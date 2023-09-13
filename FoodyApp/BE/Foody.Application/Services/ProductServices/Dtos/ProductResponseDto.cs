@@ -6,6 +6,8 @@
         public decimal Price { get; set; }
         public decimal ActualPrice { get; set; }
         public string Description { get; set; }
+        public int PromotionId { get; set; }
         public string ProductImageUrl { get; set; }
+        public int CategoryId { get; set; }
     }
 }
