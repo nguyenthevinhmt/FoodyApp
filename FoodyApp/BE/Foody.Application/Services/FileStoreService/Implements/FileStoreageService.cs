@@ -6,7 +6,7 @@ namespace Foody.Application.Services.FileStoreService.Implements
     public class FileStorageService : IStorageService
     {
         private readonly string _imageUploadPath;
-        private const string FILE_STORE_FOLDER = "wwwroot";
+        private const string FILE_STORE_FOLDER = "ImageStorage";
 
         public FileStorageService(IWebHostEnvironment webHostEnvironment)
         {
@@ -19,7 +19,7 @@ namespace Foody.Application.Services.FileStoreService.Implements
 
         public string GetFileUrl(string fileName)
         {
-            return $"/{FILE_STORE_FOLDER}/{fileName}";
+            return $"/{FILE_STORE_FOLDER}/images/{fileName}";
         }
 
         public async Task SaveFileAsync(Stream mediaBinaryStream, string fileName)

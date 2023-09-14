@@ -1,4 +1,6 @@
 ﻿using Foody.Application.Shared.FilterDto;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace Foody.Application.Services.ProductServices.Dtos
 {
@@ -8,7 +10,11 @@ namespace Foody.Application.Services.ProductServices.Dtos
         public string Name { get { return _name; } set { _name = value.Trim(); } }
 
         public string CategoryId { get; set; }
-        public decimal StartPrice { get; set; } = decimal.Zero;
+        [FromQuery(Name = "startPrice")]
+        [DefaultValue(0)]
+        public decimal StartPrice { get; set; }
+        [FromQuery(Name = "endPrice")]
+        [DefaultValue(999999999)]
         public decimal EndPrice { get; set; } = decimal.MaxValue;
 
     }

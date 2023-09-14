@@ -15,7 +15,7 @@ namespace Foody.Application.Services.ProductServices.Dtos
         [StringLength(250)]
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Description { get; set; }
-        public int PromotionId { get; set; }
+        public int PromotionId { get; set; } = 1;
         public int CategoryId { get; set; }
         public bool IsActive { get; set; } = false;
         public IFormFile ThumbnailImage { get; set; }
