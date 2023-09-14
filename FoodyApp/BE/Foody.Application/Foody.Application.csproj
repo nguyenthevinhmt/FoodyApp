@@ -6,7 +6,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Services\ProductImageService\Dtos\" />
+	  <Compile Remove="Services\ProductImageService\Dtos\**" />
+	  <EmbeddedResource Remove="Services\ProductImageService\Dtos\**" />
+	  <None Remove="Services\ProductImageService\Dtos\**" />
 	</ItemGroup>
 
 	<ItemGroup>
