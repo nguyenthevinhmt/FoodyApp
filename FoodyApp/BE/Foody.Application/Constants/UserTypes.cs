@@ -1,4 +1,4 @@
-﻿namespace Foody.Applications.Constants
+﻿namespace Foody.Application.Constants
 {
     public class UserTypes
     {
