@@ -1,4 +1,4 @@
-﻿namespace Foody.Application.Services.ProductImageService.Interfaces
+﻿namespace Foody.Application.Services.FileStoreService.Interfaces
 {
     public interface IStorageService
     {
