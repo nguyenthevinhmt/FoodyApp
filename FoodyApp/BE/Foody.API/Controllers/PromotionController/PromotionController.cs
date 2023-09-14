@@ -25,5 +25,16 @@ namespace Foody.API.Controllers.PromotionController
             await _service.CreatePromotion(input);
             return Ok();
         }
+        /// <summary>
+        /// Lấy danh sách khuyến mại có phân trang, tìm kiếm
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("get-all-promotion")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] PromotionFilterDto input)
+        {
+            var result = await _service.getPromotionPaging(input);
+            return Ok(result);
+        }
     }
 }

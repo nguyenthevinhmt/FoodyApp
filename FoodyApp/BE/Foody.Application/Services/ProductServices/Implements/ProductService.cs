@@ -15,7 +15,7 @@ namespace Foody.Application.Services.ProductServices.Implements
     {
         private readonly FoodyAppContext _context;
         private readonly IStorageService _storageService;
-        private const string FILE_STORE_FOLDER = "wwwroot";
+        private const string FILE_STORE_FOLDER = "ImageStorage";
 
         public ProductService(FoodyAppContext context, IStorageService storageService)
         {
@@ -82,7 +82,8 @@ namespace Foody.Application.Services.ProductServices.Implements
             var query = from product in _context.Products
                         join proImage in _context.ProductImages on product.Id equals proImage.ProductId
                         join category in _context.Categories on product.CategoryId equals category.Id
-                        select new { product, proImage, category };
+                        join promotion in _context.Promotions on product.PromotionId equals promotion.Id
+                        select new { product, proImage, category, promotion };
             query = query.Where(p => (p.product.IsDeleted == false) && (input.Name == null || p.product.Name.ToLower().Trim().Contains(input.Name.ToLower()))
             && ((input.StartPrice <= p.product.ActualPrice && p.product.ActualPrice <= input.EndPrice))
             && (input.CategoryId == null || p.product.CategoryId == Convert.ToInt32(input.CategoryId)));
@@ -96,7 +97,10 @@ namespace Foody.Application.Services.ProductServices.Implements
                         ActualPrice = p.product.ActualPrice,
                         Description = p.product.Description,
                         ProductImageUrl = p.proImage.ProductImageUrl,
-                        CategoryId = p.category.Id
+                        CategoryId = p.category.Id,
+                        CategoryName = p.category.Name,
+                        PromotionId = p.promotion.Id,
+                        PromotionName = p.promotion.Name,
                     }).ToListAsync();
             var pageResult = new PageResultDto<ProductResponseDto>
             {
@@ -147,7 +151,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
-            return "/" + FILE_STORE_FOLDER + "/" + fileName;
+            return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
         }
 
 

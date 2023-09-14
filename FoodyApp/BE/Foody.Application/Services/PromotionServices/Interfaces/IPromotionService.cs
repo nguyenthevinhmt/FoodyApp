@@ -1,9 +1,11 @@
 ﻿using Foody.Application.Services.PromotionServices.Dtos;
+using Foody.Application.Shared.FilterDto;
 
 namespace Foody.Application.Services.PromotionServices.Interfaces
 {
     public interface IPromotionService
     {
         public Task CreatePromotion(CreatePromotionDto input);
+        public Task<PageResultDto<PromotionResponseDto>> getPromotionPaging(PromotionFilterDto input);
     }
 }

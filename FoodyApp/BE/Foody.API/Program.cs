@@ -13,6 +13,7 @@ using Foody.Application.Services.UserServices.Interfaces;
 using Foody.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -112,12 +113,15 @@ namespace Foody.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            //WebHost.CreateDefaultBuilder(args).UseUrls("http://192.168.1.16:7271");
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImageStorage", "images")),
+                RequestPath = "/ImageStorage/images"
+            });
 
             app.MapControllers();
 
