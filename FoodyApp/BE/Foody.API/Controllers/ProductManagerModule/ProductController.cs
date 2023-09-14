@@ -1,4 +1,4 @@
-﻿using Foody.Application.Services.ProductImageService.Interfaces;
+﻿using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;

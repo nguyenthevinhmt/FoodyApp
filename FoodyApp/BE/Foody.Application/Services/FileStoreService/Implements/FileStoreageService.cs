@@ -1,7 +1,7 @@
-﻿using Foody.Application.Services.ProductImageService.Interfaces;
+﻿using Foody.Application.Services.FileStoreService.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Foody.Application.Services.ProductImageService.Implements
+namespace Foody.Application.Services.FileStoreService.Implements
 {
     public class FileStorageService : IStorageService
     {
