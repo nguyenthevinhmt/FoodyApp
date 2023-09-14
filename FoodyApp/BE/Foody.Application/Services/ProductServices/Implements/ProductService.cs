@@ -66,12 +66,14 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
             return new ProductResponseDto
             {
+                Id = id,
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description,
                 ActualPrice = product.ActualPrice,
                 PromotionId = product.PromotionId,
-                ProductImageUrl = image != null ? image.ProductImageUrl : "no-image.jpg"
+                ProductImageUrl = image != null ? image.ProductImageUrl : "no-image.jpg",
+                CategoryId = product.CategoryId
             };
         }
 
@@ -81,13 +83,14 @@ namespace Foody.Application.Services.ProductServices.Implements
                         join proImage in _context.ProductImages on product.Id equals proImage.ProductId
                         join category in _context.Categories on product.CategoryId equals category.Id
                         select new { product, proImage, category };
-            query = query.Where(p => (input.Name == null || p.product.Name.ToLower().Trim().Contains(input.Name.ToLower()))
+            query = query.Where(p => (p.product.IsDeleted == false) && (input.Name == null || p.product.Name.ToLower().Trim().Contains(input.Name.ToLower()))
             && ((input.StartPrice <= p.product.ActualPrice && p.product.ActualPrice <= input.EndPrice))
             && (input.CategoryId == null || p.product.CategoryId == Convert.ToInt32(input.CategoryId)));
             var totalItem = await query.CountAsync();
             var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
                     .Select(p => new ProductResponseDto
                     {
+                        Id = p.product.Id,
                         Name = p.product.Name,
                         Price = p.product.Price,
                         ActualPrice = p.product.ActualPrice,
@@ -128,7 +131,17 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
             _context.SaveChanges();
         }
-
+        public async Task DeleteProduct(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id == id);
+            if (product == null)
+            {
+                throw new UserFriendlyException($"Sản phẩm có id = {id} không tồn tại!");
+            }
+            product.IsDeleted = true;
+            product.UpdatedAt = DateTime.Now;
+            _context.SaveChanges();
+        }
         private async Task<string> SaveFile(IFormFile file)
         {
             var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
@@ -136,5 +149,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + FILE_STORE_FOLDER + "/" + fileName;
         }
+
+
     }
 }
