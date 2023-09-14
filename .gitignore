@@ -4,7 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 wwwroot/images/
 *.dll
-*
 # User-specific files
 *.rsuser
 *.suo
@@ -363,5 +362,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-FoodyApp/FoodyApp/BE/Foody.Infrastructure/obj/Debug/net7.0/
-FoodyApp/FoodyApp/BE/Foody.Application/obj/Debug/net7.0/
