@@ -27,6 +27,10 @@
         /// </summary>
         public int PromotionId { get; set; }
         /// <summary>
+        /// Tên chương trình khuyến mại
+        /// </summary>
+        public string PromotionName { get; set; }
+        /// <summary>
         /// Đường link ảnh sản phẩm
         /// </summary>
         public string ProductImageUrl { get; set; }
@@ -34,5 +38,9 @@
         /// Danh mục của sản phẩm
         /// </summary>
         public int CategoryId { get; set; }
+        /// <summary>
+        /// Tên danh mục sản phẩm
+        /// </summary>
+        public string CategoryName { get; set; }
     }
 }
