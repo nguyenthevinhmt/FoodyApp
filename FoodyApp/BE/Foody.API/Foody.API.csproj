@@ -20,8 +20,4 @@
 		<ProjectReference Include="..\Foody.Application\Foody.Application.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="wwwroot\images\" />
-	</ItemGroup>
-
 </Project>
