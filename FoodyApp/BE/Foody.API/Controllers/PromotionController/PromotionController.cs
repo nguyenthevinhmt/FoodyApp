@@ -36,5 +36,60 @@ namespace Foody.API.Controllers.PromotionController
             var result = await _service.getPromotionPaging(input);
             return Ok(result);
         }
+        /// <summary>
+        /// Lấy phiếu giảm giá theo id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get-promotion-by-id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var result = await _service.getPromotionById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Cập nhật thông tin phiếu giảm giá
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("update-promotion")]
+        public async Task<IActionResult> Update([FromForm] UpdatePromotionDto input)
+        {
+            try
+            {
+                await _service.UpdatePromotion(input);
+                return Ok("Update thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Xóa phiếu giảm giá
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-promotion")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeletePromotion(id);
+                return Ok("Xóa thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

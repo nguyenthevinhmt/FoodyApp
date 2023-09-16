@@ -1,4 +1,5 @@
-﻿using Foody.Application.Services.PromotionServices.Dtos;
+﻿using Foody.Application.Exceptions;
+using Foody.Application.Services.PromotionServices.Dtos;
 using Foody.Application.Services.PromotionServices.Interfaces;
 using Foody.Application.Shared.FilterDto;
 using Foody.Domain.Entities;
@@ -30,6 +31,40 @@ namespace Foody.Application.Services.PromotionServices.Implements
             });
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeletePromotion(int id)
+        {
+            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id);
+            if (promotion == null)
+            {
+                throw new UserFriendlyException($"Phiếu giảm giá có id={id} không tồn tại!");
+            }
+            promotion.IsActive = false;
+            promotion.UpdatedAt = DateTime.Now;
+            _context.SaveChanges();
+        }
+
+        public async Task<PromotionResponseDto> getPromotionById(int id)
+        {
+            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id);
+            if (promotion == null)
+            {
+                throw new UserFriendlyException($"Phiếu giảm giá có id={id} không tồn tại!");
+            }
+            return new PromotionResponseDto
+            {
+                Id = id,
+                Name = promotion.Name,
+                PromotionCode = promotion.PromotionCode,
+                DiscountPercent = promotion.DiscountPercent,
+                Description = promotion.Description,
+                StartTime = promotion.StartTime,
+                EndTime = promotion.EndTime,
+                IsActive=promotion.IsActive,
+            };
+
+        }
+
         public async Task<PageResultDto<PromotionResponseDto>> getPromotionPaging(PromotionFilterDto input)
         {
             var query = _context.Promotions.AsQueryable();
@@ -49,6 +84,8 @@ namespace Foody.Application.Services.PromotionServices.Implements
             var items = queryList.Select(p => new PromotionResponseDto
             {
                 PromotionCode = p.PromotionCode,
+                Name = p.Name,
+                DiscountPercent= p.DiscountPercent,
                 StartTime = p.StartTime,
                 EndTime = p.EndTime,
 
@@ -59,6 +96,24 @@ namespace Foody.Application.Services.PromotionServices.Implements
                 TotalItem = totalItem
             };
             return pageResult;
+        }
+
+        public async Task UpdatePromotion(UpdatePromotionDto input)
+        {
+            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == input.Id);
+            if (promotion == null)
+            {
+                throw new UserFriendlyException($"Phiếu giảm giá có id = {input.Id} không tồn tại");
+            }
+
+            promotion.PromotionCode = input.PromotionCode;
+            promotion.Name = input.Name;
+            promotion.Description = input.Description;
+            promotion.DiscountPercent = input.DiscountPercent;
+            promotion.StartTime = input.StartTime;
+            promotion.EndTime = input.EndTime;
+            promotion.UpdatedAt = DateTime.Now;
+            _context.SaveChanges();
         }
     }
 }

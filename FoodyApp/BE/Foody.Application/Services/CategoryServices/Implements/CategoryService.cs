@@ -78,6 +78,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             category.Name = input.Name;
             category.Description = input.Description;
             category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
+            category.UpdatedAt = DateTime.Now;
             _context.SaveChanges();
             
         }
