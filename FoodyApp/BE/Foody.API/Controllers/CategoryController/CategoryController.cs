@@ -20,7 +20,7 @@ namespace Foody.API.Controllers.CategoryController
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("create-category")]
-        public async Task<IActionResult> Create(CreateCategoryDto input)
+        public async Task<IActionResult> Create([FromQuery] CreateCategoryDto input)
         {
             await _service.Create(input);
             return Ok();

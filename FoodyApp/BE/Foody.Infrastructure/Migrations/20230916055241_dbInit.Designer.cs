@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    [Migration("20230913093340_UpdateDb2")]
-    partial class UpdateDb2
+    [Migration("20230916055241_dbInit")]
+    partial class dbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,45 +91,6 @@ namespace Foody.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CategoryImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("CategoryImages");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
@@ -425,15 +386,6 @@ namespace Foody.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
-                {
-                    b.HasOne("Foody.Domain.Entities.Category", null)
-                        .WithMany("CategoryImage")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Foody.Domain.Entities.OrderDetail", b =>
                 {
                     b.HasOne("Foody.Domain.Entities.Order", "Order")
@@ -509,8 +461,6 @@ namespace Foody.Infrastructure.Migrations
 
             modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
                 {
-                    b.Navigation("CategoryImage");
-
                     b.Navigation("Products");
                 });
 

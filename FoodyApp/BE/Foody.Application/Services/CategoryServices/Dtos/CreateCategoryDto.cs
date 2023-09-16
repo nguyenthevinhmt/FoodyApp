@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Application.Services.CategoryServices.Dtos
 {
@@ -8,6 +9,7 @@ namespace Foody.Application.Services.CategoryServices.Dtos
         [Required(ErrorMessage = "Tên không được bỏ trống")]
         public string Name { get; set; }
         public string Description { get; set; }
-        public string CategoryImageUrl { get; set; } = string.Empty;
+        //public string CategoryImageUrl { get; set; }
+        public IFormFile ThumbnailImage { get; set; }
     }
 }

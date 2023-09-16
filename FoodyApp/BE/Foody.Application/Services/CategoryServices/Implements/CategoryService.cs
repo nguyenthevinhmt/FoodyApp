@@ -33,9 +33,9 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 Name = input.Name,
                 Description = input.Description,
                 CreatedAt = DateTime.Now,
-                CategoryImageUrl = input.CategoryImageUrl,
+                //Thêm ảnh
+                CategoryImageUrl = await this.SaveFile(input.ThumbnailImage)
             };
-
             await _context.Categories.AddAsync(categoryCreate);
             await _context.SaveChangesAsync();
         }
@@ -61,9 +61,10 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             return new CategoryResponseDto
             {
+                Id = id,
                 Name = category.Name,
                 Description = category.Description,
-                CategoryImageUrl = category.CategoryImageUrl,
+                CategoryImageUrl = category.CategoryImageUrl != null ? category.CategoryImageUrl : "no-image.jpg",
             };
         }
 
@@ -76,7 +77,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             category.Name = input.Name;
             category.Description = input.Description;
-            category.CategoryImageUrl = input.CategoryImageUrl;
+            category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
             _context.SaveChanges();
             
         }
