@@ -4,6 +4,7 @@ using Foody.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    partial class FoodyAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230916142028_FixDb")]
+    partial class FixDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,13 +93,19 @@ namespace Foody.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
+            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -110,8 +119,8 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -134,8 +143,8 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -416,6 +425,15 @@ namespace Foody.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
+                {
+                    b.HasOne("Foody.Domain.Entities.Category", null)
+                        .WithMany("CategoryImage")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Foody.Domain.Entities.OrderDetail", b =>
                 {
                     b.HasOne("Foody.Domain.Entities.Order", "Order")
@@ -491,6 +509,8 @@ namespace Foody.Infrastructure.Migrations
 
             modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
                 {
+                    b.Navigation("CategoryImage");
+
                     b.Navigation("Products");
                 });
 

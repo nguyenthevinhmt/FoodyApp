@@ -17,7 +17,7 @@ namespace Foody.Application.Services.ProductServices.Dtos
         public string Description { get; set; }
         public int PromotionId { get; set; } = 1;
         public int CategoryId { get; set; }
-        public bool IsActive { get; set; } = false;
+        public bool IsActive { get; set; }
         public IFormFile ThumbnailImage { get; set; }
     }
 }

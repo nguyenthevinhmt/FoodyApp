@@ -1,7 +1,9 @@
 ﻿using Foody.Application.Exceptions;
+using Foody.Application.Helper;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
+using Foody.Application.Shared;
 using Foody.Application.Shared.FilterDto;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
@@ -16,14 +18,17 @@ namespace Foody.Application.Services.ProductServices.Implements
         private readonly FoodyAppContext _context;
         private readonly IStorageService _storageService;
         private const string FILE_STORE_FOLDER = "ImageStorage";
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProductService(FoodyAppContext context, IStorageService storageService)
+        public ProductService(FoodyAppContext context, IStorageService storageService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _storageService = storageService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task CreateProduct(CreateProductDto input)
         {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == input.Name);
             if (product != null)
             {
@@ -36,7 +41,10 @@ namespace Foody.Application.Services.ProductServices.Implements
                 Price = input.Price,
                 ActualPrice = input.ActualPrice,
                 PromotionId = input.PromotionId,
-                CategoryId = input.CategoryId
+                CategoryId = input.CategoryId,
+                IsActived = input.IsActive,
+                CreatedAt = DateTime.Now,
+                CreatedBy = currentUserId.ToString(),
             };
             //Xử lý thêm ảnh ở đây
             if (input.ThumbnailImage != null)
@@ -73,7 +81,8 @@ namespace Foody.Application.Services.ProductServices.Implements
                 ActualPrice = product.ActualPrice,
                 PromotionId = product.PromotionId,
                 ProductImageUrl = image != null ? image.ProductImageUrl : "no-image.jpg",
-                CategoryId = product.CategoryId
+                CategoryId = product.CategoryId,
+                CreateBy = product.CreatedBy
             };
         }
 
@@ -101,6 +110,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                         CategoryName = p.category.Name,
                         PromotionId = p.promotion.Id,
                         PromotionName = p.promotion.Name,
+                        CreateBy = p.product.CreatedBy
                     }).ToListAsync();
             var pageResult = new PageResultDto<ProductResponseDto>
             {
@@ -112,7 +122,8 @@ namespace Foody.Application.Services.ProductServices.Implements
 
         public async Task UpdateProduct(UpdateProductDto input)
         {
-            var product = _context.Products.FirstOrDefault(p => p.IsDeleted == false && p.Id == input.Id);
+            var currentUserId = GetCurrentUserId.GetUserId(_httpContextAccessor);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id == input.Id);
             if (product == null)
             {
                 throw new UserFriendlyException($"Sản phẩm có id = {input.Id} không tồn tại!");
@@ -122,6 +133,8 @@ namespace Foody.Application.Services.ProductServices.Implements
             product.Price = input.Price;
             product.ActualPrice = input.ActualPrice;
             product.UpdatedAt = DateTime.Now;
+            product.UpdateBy = currentUserId.ToString();
+            product.IsActived = input.IsActive;
             // xử lý cập nhật ảnh
             if (input.ThumbnailImage != null)
             {
@@ -133,10 +146,11 @@ namespace Foody.Application.Services.ProductServices.Implements
                     _context.ProductImages.Update(thumbnailImage);
                 }
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         public async Task DeleteProduct(int id)
         {
+            var currentUserId = GetCurrentUserId.GetUserId(_httpContextAccessor);
             var product = await _context.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id == id);
             if (product == null)
             {
@@ -144,7 +158,8 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
-            _context.SaveChanges();
+            product.UpdateBy = currentUserId.ToString();
+            await _context.SaveChangesAsync();
         }
         private async Task<string> SaveFile(IFormFile file)
         {

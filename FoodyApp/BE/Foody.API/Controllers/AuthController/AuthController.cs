@@ -1,9 +1,11 @@
 ﻿using Foody.Application.Services.AuthServices.Dtos;
 using Foody.Application.Services.AuthServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.AuthController
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

@@ -1,9 +1,11 @@
 ﻿using Foody.Application.Exceptions;
 using Foody.Application.Services.PromotionServices.Dtos;
 using Foody.Application.Services.PromotionServices.Interfaces;
+using Foody.Application.Shared;
 using Foody.Application.Shared.FilterDto;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Foody.Application.Services.PromotionServices.Implements
@@ -11,13 +13,15 @@ namespace Foody.Application.Services.PromotionServices.Implements
     public class PromotionService : IPromotionService
     {
         private readonly FoodyAppContext _context;
-
-        public PromotionService(FoodyAppContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public PromotionService(FoodyAppContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task CreatePromotion(CreatePromotionDto input)
         {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             await _context.Promotions.AddAsync(new Promotion
             {
                 Name = input.Name,
@@ -27,7 +31,8 @@ namespace Foody.Application.Services.PromotionServices.Implements
                 CreatedAt = DateTime.Now,
                 IsActive = input.IsActive,
                 StartTime = input.StartTime,
-                EndTime = input.EndTime
+                EndTime = input.EndTime,
+                CreatedBy = currentUserId.ToString()
             });
             await _context.SaveChangesAsync();
         }
@@ -83,11 +88,19 @@ namespace Foody.Application.Services.PromotionServices.Implements
 
             var items = queryList.Select(p => new PromotionResponseDto
             {
+                Id = p.Id,
                 PromotionCode = p.PromotionCode,
                 Name = p.Name,
                 DiscountPercent= p.DiscountPercent,
                 StartTime = p.StartTime,
                 EndTime = p.EndTime,
+                CreatedAt = p.CreatedAt,
+                CreatedBy = p.CreatedBy,
+                Description = p.Description,
+                DiscountPercent = p.DiscountPercent,
+                IsActive = p.IsActive,
+                Name = p.Name
+
 
             }).ToList();
             var pageResult = new PageResultDto<PromotionResponseDto>
