@@ -1,5 +1,4 @@
 ﻿using Foody.Application.Exceptions;
-using Foody.Application.Helper;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
@@ -122,7 +121,7 @@ namespace Foody.Application.Services.ProductServices.Implements
 
         public async Task UpdateProduct(UpdateProductDto input)
         {
-            var currentUserId = GetCurrentUserId.GetUserId(_httpContextAccessor);
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var product = await _context.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id == input.Id);
             if (product == null)
             {
@@ -150,7 +149,7 @@ namespace Foody.Application.Services.ProductServices.Implements
         }
         public async Task DeleteProduct(int id)
         {
-            var currentUserId = GetCurrentUserId.GetUserId(_httpContextAccessor);
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var product = await _context.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id == id);
             if (product == null)
             {
