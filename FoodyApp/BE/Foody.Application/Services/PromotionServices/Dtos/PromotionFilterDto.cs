@@ -14,6 +14,5 @@ namespace Foody.Application.Services.PromotionServices.Dtos
         [FromQuery(Name = "endTime")]
         [DefaultValue("9999-12-31T23:59:59")]
         public DateTime EndTime { get; set; }
-
     }
 }

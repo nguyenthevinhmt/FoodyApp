@@ -42,5 +42,6 @@
         /// Tên danh mục sản phẩm
         /// </summary>
         public string CategoryName { get; set; }
+        public string CreateBy { get; set; }
     }
 }
