@@ -31,7 +31,6 @@ namespace Foody.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("FoodyAppConnectionString"));
             });
-            builder.Services.AddHttpContextAccessor();
             //Config JWT setting
             builder.Services.AddAuthentication(options =>
             {
@@ -45,13 +44,16 @@ namespace Foody.API
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"])),
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidAudience = builder.Configuration.GetSection("JWT")["ValidAudience"],
+                    ValidIssuer = builder.Configuration.GetSection("JWT")["ValidIssuer"],
                     ClockSkew = TimeSpan.Zero
                 };
 
             }
             );
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -113,6 +115,7 @@ namespace Foody.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
             app.UseAuthentication();
