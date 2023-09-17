@@ -7,20 +7,26 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { ValidationEmail, ValidationPassword } from "../utils/Validation";
-import axios from "axios";
+import {
+  getAccessToken,
+  getRefreshToken,
+  login,
+  saveToken,
+} from "../services/authService";
+import Alert from "../components/CustomAlert";
 
 export const LoginScreen = ({ navigation }: any) => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("customer@gmail.com");
+  const [password, setPassword] = useState<string>("Customer@12345");
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
-
-  const handleLogin = () => {
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const handleLogin = async () => {
     const checkEmail = ValidationEmail(email);
     const checkPassword = ValidationPassword(password);
     if (checkEmail !== null) {
@@ -35,7 +41,19 @@ export const LoginScreen = ({ navigation }: any) => {
       setIsValidEmail(false);
       setPasswordError("");
       setIsValidPassword(false);
-      alert("Đăng nhập thành công");
+    }
+    const result = await login({ email, password });
+    if (result) {
+      const accessToken = await getAccessToken();
+      const refreshToken = await getRefreshToken();
+      console.log("accessToken", accessToken);
+      console.log("refreshToken", refreshToken);
+      navigation.navigate("MainScreen");
+    } else {
+      // alert("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
+      setAlertMessage("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
+      setShowAlert(true);
+      console.log("Đăng nhập lỗi");
     }
   };
   return (
@@ -150,7 +168,18 @@ export const LoginScreen = ({ navigation }: any) => {
             </Text>
           </TouchableOpacity>
         </View>
+        {/* <Button
+          title="PingApi"
+          onPress={() => {
+            ping();
+          }}
+        ></Button> */}
       </View>
+      <Alert
+        visible={showAlert}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)}
+      />
     </SafeAreaView>
   );
 };

@@ -1,5 +1,8 @@
-﻿using Foody.Application.Services.PromotionServices.Dtos;
+﻿using Foody.Application.Constants;
+using Foody.Application.Filters;
+using Foody.Application.Services.PromotionServices.Dtos;
 using Foody.Application.Services.PromotionServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.PromotionController
@@ -20,6 +23,8 @@ namespace Foody.API.Controllers.PromotionController
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("create-promotion")]
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         public async Task<IActionResult> Create(CreatePromotionDto input)
         {
             await _service.CreatePromotion(input);
@@ -31,6 +36,7 @@ namespace Foody.API.Controllers.PromotionController
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("get-all-promotion")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery] PromotionFilterDto input)
         {
             var result = await _service.getPromotionPaging(input);
@@ -42,6 +48,7 @@ namespace Foody.API.Controllers.PromotionController
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get-promotion-by-id/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -55,10 +62,12 @@ namespace Foody.API.Controllers.PromotionController
             }
         }
         /// <summary>
-        /// Cập nhật thông tin phiếu giảm giá
+        /// Cập nhật khuyến mại
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpPut("update-promotion")]
         public async Task<IActionResult> Update([FromForm] UpdatePromotionDto input)
         {
@@ -73,10 +82,12 @@ namespace Foody.API.Controllers.PromotionController
             }
         }
         /// <summary>
-        /// Xóa phiếu giảm giá
+        /// Xóa khuyến mại
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpDelete("delete-promotion/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
