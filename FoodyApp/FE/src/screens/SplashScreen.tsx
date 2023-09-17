@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { StyleSheet, View, Image, Text, Button } from "react-native";
 
-export default function WellcomeScreen({ navigation }: any) {
+export default function SplashScreen({ navigation }: any) {
   const logoImage = require("../assets/images/Logo_app.png");
   useEffect(() => {
     const timer = setTimeout(() => {
