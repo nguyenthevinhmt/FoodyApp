@@ -1,6 +1,9 @@
-﻿using Foody.Application.Services.FileStoreService.Interfaces;
+﻿using Foody.Application.Constants;
+using Foody.Application.Filters;
+using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.ProductManagerModule
@@ -22,6 +25,7 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("get-product-paging")]
+        [AllowAnonymous]
         public async Task<IActionResult> getAllPaging([FromQuery] ProductFilterDto input)
         {
             var result = await _service.GetProductPaging(input);
@@ -32,6 +36,8 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpPost("create-product")]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductDto input)
         {
@@ -50,7 +56,8 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("get-product-by-id")]
+        [AllowAnonymous]
+        [HttpGet("get-product-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -69,6 +76,8 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("update-product")]
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         public async Task<IActionResult> Update([FromForm] UpdateProductDto input)
         {
             try
@@ -86,7 +95,9 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete-product")]
+        [HttpDelete("delete-product/{id}")]
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             try

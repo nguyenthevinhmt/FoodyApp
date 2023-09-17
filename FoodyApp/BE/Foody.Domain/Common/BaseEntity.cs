@@ -4,9 +4,9 @@
     {
         public T Id { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public DateTime UpdateBy { get; set; }
+        public string UpdateBy { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
