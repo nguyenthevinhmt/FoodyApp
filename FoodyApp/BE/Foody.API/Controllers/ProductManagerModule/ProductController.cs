@@ -50,7 +50,7 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("get-product-by-id")]
+        [HttpGet("get-product-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -86,7 +86,7 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete-product")]
+        [HttpDelete("delete-product/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

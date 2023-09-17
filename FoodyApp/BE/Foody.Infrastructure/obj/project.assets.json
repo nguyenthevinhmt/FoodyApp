@@ -3846,19 +3846,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
+      "projectUniqueName": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
       "projectName": "Foody.Infrastructure",
-      "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\obj\\",
+      "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\Foody.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3872,8 +3877,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
-              "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
+            "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
+              "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
             }
           }
         }
@@ -3937,7 +3942,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

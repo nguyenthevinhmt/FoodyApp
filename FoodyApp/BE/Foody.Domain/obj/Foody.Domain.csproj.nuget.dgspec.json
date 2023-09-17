@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {}
+    "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {}
   },
   "projects": {
-    "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
+    "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
+        "projectUniqueName": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
         "projectName": "Foody.Domain",
-        "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\obj\\",
+        "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

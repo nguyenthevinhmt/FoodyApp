@@ -30,7 +30,7 @@ namespace Foody.API.Controllers.CategoryController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("get-catgory-by-id")]
+        [HttpGet("get-catgory-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -66,7 +66,7 @@ namespace Foody.API.Controllers.CategoryController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete-catgory")]
+        [HttpDelete("delete-catgory/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

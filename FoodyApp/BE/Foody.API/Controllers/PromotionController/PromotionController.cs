@@ -41,7 +41,7 @@ namespace Foody.API.Controllers.PromotionController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("get-promotion-by-id")]
+        [HttpGet("get-promotion-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -77,7 +77,7 @@ namespace Foody.API.Controllers.PromotionController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete-promotion")]
+        [HttpDelete("delete-promotion/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
