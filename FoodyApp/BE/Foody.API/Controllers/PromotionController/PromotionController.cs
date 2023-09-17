@@ -33,7 +33,7 @@ namespace Foody.API.Controllers.PromotionController
         [HttpGet("get-all-promotion")]
         public async Task<IActionResult> GetAllPaging([FromQuery] PromotionFilterDto input)
         {
-            var result = await _service.GetPromotionPaging(input);
+            var result = await _service.getPromotionPaging(input);
             return Ok(result);
         }
         /// <summary>

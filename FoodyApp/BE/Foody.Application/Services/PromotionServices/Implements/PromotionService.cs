@@ -55,7 +55,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
             promotion.UpdatedAt = DateTime.Now;
             promotion.UpdateBy = currentUserId.ToString();
 
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<PromotionResponseDto> getPromotionById(int id)
@@ -108,9 +108,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
                 CreatedAt = p.CreatedAt,
                 CreatedBy = p.CreatedBy,
                 Description = p.Description,
-                DiscountPercent = p.DiscountPercent,
                 IsActive = p.IsActive,
-                Name = p.Name
 
 
             }).ToList();
