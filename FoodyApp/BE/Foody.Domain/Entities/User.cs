@@ -17,7 +17,9 @@ namespace Foody.Domain.Entities
         public string Password { get; set; }
         public int UserType { get; set; }
         public string RefreshToken { get; set; }
+        public IEnumerable<UserAddress> UserAddresses { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        public IEnumerable<Order> Orders { get; set; }
 
     }
 }
