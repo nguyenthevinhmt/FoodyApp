@@ -12,6 +12,7 @@ namespace Foody.Infrastructure.Configurations
             builder.HasKey(p => p.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(250);
             builder.Property(x => x.Description).HasMaxLength(250);
+            builder.HasMany(c => c.ProductPromotions).WithOne(c => c.Promotion).HasForeignKey(f => f.PromotionId);
         }
     }
 }
