@@ -11,6 +11,6 @@ namespace Foody.Domain.Entities
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public bool IsActive { get; set; }
-        public IEnumerable<Product> Products { get; }
+        public IEnumerable<ProductPromotion> ProductPromotions { get; set; }
     }
 }

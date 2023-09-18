@@ -1,7 +1,10 @@
-﻿namespace Foody.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Foody.Domain.Entities
 {
     public class OrderDetail
     {
+        [Key]
         public int Id { get; set; }
         public int Quantity { get; set; }
         public int OrderId { get; set; }
