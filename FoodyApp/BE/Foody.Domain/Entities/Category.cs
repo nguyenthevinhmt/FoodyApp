@@ -7,7 +7,6 @@ namespace Foody.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string CategoryImageUrl { get; set; }
-        public List<CategoryImage> CategoryImage { get; set; }
         public List<Product> Products { get; }
     }
 }

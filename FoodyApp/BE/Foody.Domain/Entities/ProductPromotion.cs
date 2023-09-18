@@ -2,13 +2,13 @@
 
 namespace Foody.Domain.Entities
 {
-    public class ProductCart
+    public class ProductPromotion
     {
         [Key]
         public int Id { get; set; }
-        public int CartId { get; set; }
-        public Cart Cart { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+        public int PromotionId { get; set; }
+        public Promotion Promotion { get; set; }
     }
 }
