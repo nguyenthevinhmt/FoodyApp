@@ -9,7 +9,6 @@ namespace Foody.Domain.Entities
         public int Status { get; set; }
         public int ProductCartId { get; set; }
         public string PaymentMethod { get; set; }
-        public ProductCart ProductCart { get; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<OrderDetail> OrderDetails { get; set; }
     }
