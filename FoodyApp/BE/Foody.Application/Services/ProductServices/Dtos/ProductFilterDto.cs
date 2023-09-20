@@ -1,4 +1,4 @@
-﻿using Foody.Application.Shared.FilterDto;
+﻿using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 
