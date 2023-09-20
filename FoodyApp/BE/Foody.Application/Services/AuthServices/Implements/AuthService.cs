@@ -1,9 +1,10 @@
-﻿using Foody.Application.Constants;
-using Foody.Application.Exceptions;
+﻿
 using Foody.Application.Services.AuthServices.Dtos;
 using Foody.Application.Services.AuthServices.Interfaces;
-using Foody.Application.Shared;
 using Foody.Infrastructure.Persistence;
+using Foody.Share.Constants;
+using Foody.Share.Exceptions;
+using Foody.Share.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -79,6 +80,7 @@ namespace Foody.Application.Services.AuthServices.Implements
             string refreshToken = input.RefreshToken;
             var principal = GetPrincipleFromExpiredToken(accessToken);
             var email = principal.Identity.Name;
+
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 throw new UserFriendlyException("Invalid Request");
@@ -99,8 +101,8 @@ namespace Foody.Application.Services.AuthServices.Implements
 
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JWT")["Key"]);
             var claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, userId.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, user.Email),
                 new Claim(CustomClaimTypes.UserType, userId.UserType.ToString())
             };
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);

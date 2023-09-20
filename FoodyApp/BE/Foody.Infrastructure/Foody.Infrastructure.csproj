@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Foody.Domain\Foody.Domain.csproj" />
+	  <ProjectReference Include="..\Foody.Share\Foody.Share.csproj" />
 	</ItemGroup>
 
 </Project>

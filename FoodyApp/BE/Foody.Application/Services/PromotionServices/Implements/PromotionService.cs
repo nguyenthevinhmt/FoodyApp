@@ -1,10 +1,10 @@
-﻿using Foody.Application.Exceptions;
-using Foody.Application.Services.PromotionServices.Dtos;
+﻿using Foody.Application.Services.PromotionServices.Dtos;
 using Foody.Application.Services.PromotionServices.Interfaces;
-using Foody.Application.Shared;
-using Foody.Application.Shared.FilterDto;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
+using Foody.Share.Exceptions;
+using Foody.Share.Shared;
+using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 

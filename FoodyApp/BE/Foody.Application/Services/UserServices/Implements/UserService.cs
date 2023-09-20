@@ -1,7 +1,7 @@
-﻿using Foody.Application.Exceptions;
-using Foody.Application.Services.UserServices.Dtos;
+﻿using Foody.Application.Services.UserServices.Dtos;
 using Foody.Application.Services.UserServices.Interfaces;
 using Foody.Infrastructure.Persistence;
+using Foody.Share.Exceptions;
 
 namespace Foody.Application.Services.UserServices.Implements
 {

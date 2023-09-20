@@ -4,6 +4,7 @@ using Foody.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    partial class FoodyAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230920084244_dataseeding")]
+    partial class dataseeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,16 +44,13 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdateBy")
                         .IsRequired()
@@ -61,69 +61,7 @@ namespace Foody.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1287),
-                            CreatedBy = "",
-                            Description = "Các món cơm",
-                            IsDeleted = false,
-                            Name = "Cơm",
-                            UpdateBy = "",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1290),
-                            CreatedBy = "",
-                            Description = "Các món ăn nhanh",
-                            IsDeleted = false,
-                            Name = "Đồ ăn nhanh",
-                            UpdateBy = "",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1293),
-                            CreatedBy = "",
-                            Description = "Các đồ uống",
-                            IsDeleted = false,
-                            Name = "Đồ uống",
-                            UpdateBy = "",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1294),
-                            CreatedBy = "",
-                            Description = "Các món bún",
-                            IsDeleted = false,
-                            Name = "Bún",
-                            UpdateBy = "",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1296),
-                            CreatedBy = "",
-                            Description = "Các món mì",
-                            IsDeleted = false,
-                            Name = "Mì",
-                            UpdateBy = "",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
@@ -377,7 +315,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9029),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2337),
                             CreatedBy = "",
                             Description = "Không giảm giá",
                             DiscountPercent = 0.0,
@@ -392,7 +330,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9042),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2346),
                             CreatedBy = "",
                             Description = "Giảm giá 5%",
                             DiscountPercent = 5.0,
@@ -407,7 +345,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9044),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2348),
                             CreatedBy = "",
                             Description = "Giảm giá 10%",
                             DiscountPercent = 10.0,
@@ -422,7 +360,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9045),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2349),
                             CreatedBy = "",
                             Description = "Giảm giá 20%",
                             DiscountPercent = 20.0,
@@ -437,7 +375,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9046),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2350),
                             CreatedBy = "",
                             Description = "Giảm giá 25%",
                             DiscountPercent = 25.0,
@@ -452,7 +390,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9047),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 633, DateTimeKind.Local).AddTicks(2351),
                             CreatedBy = "",
                             Description = "Giảm giá 50%",
                             DiscountPercent = 50.0,
@@ -530,11 +468,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 433, DateTimeKind.Local).AddTicks(769),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 618, DateTimeKind.Local).AddTicks(5976),
                             CreatedBy = "",
                             Email = "Admin@gmail.com",
                             IsDeleted = false,
-                            Password = "thDgkC55aUsJX3UTZ02BffvA2+EWo/k/dU7McrF+4ftvTe2R",
+                            Password = "18IrouUyfIRwtCh6Pg19eRz9xyxTiq1AXxlwpCXMhmj7BWBD",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -543,11 +481,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 437, DateTimeKind.Local).AddTicks(7772),
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 42, 44, 623, DateTimeKind.Local).AddTicks(3564),
                             CreatedBy = "",
                             Email = "Customer@gmail.com",
                             IsDeleted = false,
-                            Password = "FO0t24e83QTVKLIu0GvanSKW7WFF/GooTEvzsjm7ZIqxyQrG",
+                            Password = "ihaONU75QJ9Ha6bC9rgKZhBAxCKLf5o+hRhntwxWlnLCXKzD",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),

@@ -1,5 +1,5 @@
 ﻿using Foody.Application.Services.PromotionServices.Dtos;
-using Foody.Application.Shared.FilterDto;
+using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.PromotionServices.Interfaces
 {
