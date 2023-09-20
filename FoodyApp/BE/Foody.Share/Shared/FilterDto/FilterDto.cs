@@ -1,4 +1,4 @@
-﻿namespace Foody.Application.Shared.FilterDto
+﻿namespace Foody.Share.Shared.FilterDto
 {
     public class FilterDto
     {

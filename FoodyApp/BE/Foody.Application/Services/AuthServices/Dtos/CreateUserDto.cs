@@ -1,5 +1,5 @@
-﻿using Foody.Application.Shared;
-using Foody.Domain.Constants;
+﻿using Foody.Domain.Constants;
+using Foody.Share.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Application.Services.AuthServices.Dtos

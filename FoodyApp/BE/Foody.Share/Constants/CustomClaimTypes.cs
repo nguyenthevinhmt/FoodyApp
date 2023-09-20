@@ -1,4 +1,4 @@
-﻿namespace Foody.Application.Constants
+﻿namespace Foody.Share.Constants
 {
     public static class CustomClaimTypes
     {
