@@ -1,4 +1,4 @@
-﻿using Foody.Application.Exceptions;
+﻿using Foody.Share.Exceptions;
 using Foody.Application.Services.CategoryServices.Dtos;
 using Foody.Application.Services.CategoryServices.Interfaces;
 using Foody.Application.Services.FileStoreService.Interfaces;

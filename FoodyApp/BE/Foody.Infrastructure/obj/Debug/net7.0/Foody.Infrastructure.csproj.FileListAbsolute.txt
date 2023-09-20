@@ -56,7 +56,9 @@ D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructur
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Infrastructure.dll
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Infrastructure.pdb
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Domain.dll
+D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Share.dll
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Domain.pdb
+D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\bin\Debug\net7.0\Foody.Share.pdb
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\obj\Debug\net7.0\Foody.Infrastructure.csproj.AssemblyReference.cache
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\obj\Debug\net7.0\Foody.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 D:\ReactNativeProject\DoAnCrossPlatform\FoodyApp\FoodyApp\BE\Foody.Infrastructure\obj\Debug\net7.0\Foody.Infrastructure.AssemblyInfoInputs.cache

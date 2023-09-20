@@ -577,8 +577,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
-              "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
+            "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
+              "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
             }
           }
         }

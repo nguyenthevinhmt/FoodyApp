@@ -101,8 +101,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
-                "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
+              "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
+                "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
               }
             }
           }
@@ -170,16 +170,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-<<<<<<< HEAD
               "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
                 "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
-=======
-              "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
-                "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
               },
-              "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
-                "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
->>>>>>> dev
+              "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
+                "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
               }
             }
           }
@@ -247,17 +242,21 @@
         }
       }
     },
-    "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
+    "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj",
+        "projectUniqueName": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj",
         "projectName": "Foody.Share",
-        "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\obj\\",
+        "projectPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\ReactNativeProject\\DoAnCrossPlatform\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -308,7 +307,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
