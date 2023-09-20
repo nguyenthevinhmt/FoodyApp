@@ -1,12 +1,12 @@
-﻿using Foody.Application.Constants;
-using Foody.Application.Filters;
+﻿using Foody.Application.Filters;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
+using Foody.Share.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Foody.API.Controllers.ProductManagerModule
+namespace Foody.API.Controllers.ProductController
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,7 +25,6 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("get-product-paging")]
-        [AllowAnonymous]
         public async Task<IActionResult> getAllPaging([FromQuery] ProductFilterDto input)
         {
             var result = await _service.GetProductPaging(input);
@@ -43,8 +42,8 @@ namespace Foody.API.Controllers.ProductManagerModule
         {
             try
             {
-                await _service.CreateProduct(input);
-                return Ok("Thêm thành công");
+                var result = await _service.CreateProduct(input);
+                return Ok($"Thêm thành công, sản phẩm có ID = {result}");
             }
             catch (Exception ex)
             {
@@ -56,7 +55,6 @@ namespace Foody.API.Controllers.ProductManagerModule
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpGet("get-product-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -104,6 +102,27 @@ namespace Foody.API.Controllers.ProductManagerModule
             {
                 await _service.DeleteProduct(id);
                 return Ok("Xóa thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Thêm chương trình khuyến mại sản phẩm
+        /// </summary>
+        /// <param name="promotionId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpPost("update-promotion")]
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
+        public async Task<IActionResult> UpdatePromotionToProduct(int promotionId, int productId)
+        {
+            try
+            {
+                await _service.UpdatePromotionToProduct(promotionId, productId);
+                return Ok("Thêm khuyến mãi thành công");
             }
             catch (Exception ex)
             {

@@ -59,6 +59,23 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "2.2.0",
+          "System.Text.Encodings.Web": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Http.Features/5.0.17": {
         "type": "package",
         "dependencies": {
@@ -1289,6 +1306,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "Foody.Share": "1.0.0",
           "Microsoft.AspNetCore.Http.Features": "5.0.17"
         },
         "compile": {
@@ -1296,6 +1314,20 @@
         },
         "runtime": {
           "bin/placeholder/Foody.Domain.dll": {}
+        }
+      },
+      "Foody.Share/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
+          "System.IdentityModel.Tokens.Jwt": "6.21.0"
+        },
+        "compile": {
+          "bin/placeholder/Foody.Share.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Foody.Share.dll": {}
         }
       }
     }
@@ -1355,6 +1387,19 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
+      "sha512": "Nxs7Z1q3f1STfLYKJSVXCs1iBl+Ya6E8o4Oy1bCxJ/rNI44E/0f6tbsrVqAWfB7jlnJfyaAtIalBVxPKUPQb4Q==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.http.abstractions/2.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.xml",
+        "microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+        "microsoft.aspnetcore.http.abstractions.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
@@ -3831,11 +3876,17 @@
       "type": "project",
       "path": "../Foody.Domain/Foody.Domain.csproj",
       "msbuildProject": "../Foody.Domain/Foody.Domain.csproj"
+    },
+    "Foody.Share/1.0.0": {
+      "type": "project",
+      "path": "../Foody.Share/Foody.Share.csproj",
+      "msbuildProject": "../Foody.Share/Foody.Share.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
       "Foody.Domain >= 1.0.0",
+      "Foody.Share >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 7.0.10",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.10",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.10",
@@ -3874,6 +3925,9 @@
           "projectReferences": {
             "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj": {
               "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Domain\\Foody.Domain.csproj"
+            },
+            "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj": {
+              "projectPath": "D:\\FoodyApp\\FoodyApp\\BE\\Foody.Share\\Foody.Share.csproj"
             }
           }
         }

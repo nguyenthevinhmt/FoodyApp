@@ -1,4 +1,4 @@
-﻿namespace Foody.Application.Exceptions
+﻿namespace Foody.Share.Exceptions
 {
     public class UserFriendlyException : Exception
     {

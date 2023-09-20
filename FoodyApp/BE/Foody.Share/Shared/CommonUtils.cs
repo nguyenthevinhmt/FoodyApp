@@ -1,8 +1,9 @@
-﻿using Foody.Application.Exceptions;
+﻿using Foody.Share.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Foody.Application.Shared
+namespace Foody.Share.Shared
 {
     public static class CommonUtils
     {
@@ -16,6 +17,17 @@ namespace Foody.Application.Shared
             }
             int userId = int.Parse(claim.Value);
             return userId;
+        }
+        public static string GetEmail(IHttpContextAccessor httpContextAccessor)
+        {
+            var claims = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
+            var claim = claims?.FindFirst(JwtRegisteredClaimNames.Email) ?? claims?.FindFirst("name");
+            if (claim == null)
+            {
+                throw new UserFriendlyException($"Tài khoản không chứa claim \"{ClaimTypes.NameIdentifier}\"");
+            }
+            string email = claim.Value;
+            return email;
         }
     }
 }

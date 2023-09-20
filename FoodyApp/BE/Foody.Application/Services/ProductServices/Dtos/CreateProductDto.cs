@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Application.Services.ProductServices.Dtos
@@ -15,9 +16,11 @@ namespace Foody.Application.Services.ProductServices.Dtos
         [StringLength(250)]
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Description { get; set; }
-        public int PromotionId { get; set; } = 1;
         public int CategoryId { get; set; }
+        [DefaultValue(1)]
+        public int PromotionId { get; set; }
         public bool IsActive { get; set; }
+        [Required]
         public IFormFile ThumbnailImage { get; set; }
     }
 }

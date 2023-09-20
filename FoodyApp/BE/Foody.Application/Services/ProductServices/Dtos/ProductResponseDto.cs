@@ -23,19 +23,19 @@
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// ID chương trình khuyến mãi sản phẩm
-        /// </summary>
-        public int PromotionId { get; set; }
-        /// <summary>
-        /// Tên chương trình khuyến mại
-        /// </summary>
-        public string PromotionName { get; set; }
-        /// <summary>
         /// Đường link ảnh sản phẩm
         /// </summary>
         public string ProductImageUrl { get; set; }
         /// <summary>
-        /// Danh mục của sản phẩm
+        /// ID khuyến mãi
+        /// </summary>
+        public int PromotionId { get; set; }
+        /// <summary>
+        /// Tên khuyến mãi
+        /// </summary>
+        public string PromotionName { get; set; }
+        /// <summary>
+        /// Id danh mục sản phẩm
         /// </summary>
         public int CategoryId { get; set; }
         /// <summary>
