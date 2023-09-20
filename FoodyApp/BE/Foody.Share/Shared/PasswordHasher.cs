@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace Foody.Application.Shared
+namespace Foody.Share.Shared
 {
     public class PasswordHasher
     {

@@ -1,9 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { TokenResponse, UserLogin } from "../models/AuthModel";
-
-const baseURL = "http://192.168.253.185:5010/api/Auth";
-
+import baseURL from "../utils/baseUrl";
 export const login = async ({ email, password }: UserLogin) => {
   try {
     const response = await axios.post(`${baseURL}/login`, {

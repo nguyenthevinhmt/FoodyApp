@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Foody.Application.Shared
+namespace Foody.Share.Shared
 {
     /// <summary>
     /// Cho phép một trong các giá trị, nếu là null thì bỏ qua
