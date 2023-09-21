@@ -20,7 +20,6 @@ namespace Foody.Application.Services.ProductServices.Dtos
         [DefaultValue(1)]
         public int PromotionId { get; set; }
         public bool IsActive { get; set; }
-        [Required]
         public IFormFile ThumbnailImage { get; set; }
     }
 }
