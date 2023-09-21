@@ -1,4 +1,6 @@
-﻿namespace Foody.Application.Services.ProductServices.Dtos
+﻿using Foody.Domain.Entities;
+
+namespace Foody.Application.Services.ProductServices.Dtos
 {
     public class ProductResponseDto
     {
@@ -29,11 +31,11 @@
         /// <summary>
         /// ID khuyến mãi
         /// </summary>
-        public int PromotionId { get; set; }
+        //public int PromotionId { get; set; }
         /// <summary>
         /// Tên khuyến mãi
         /// </summary>
-        public string PromotionName { get; set; }
+        public Promotion Promotion { get; set; }
         /// <summary>
         /// Id danh mục sản phẩm
         /// </summary>
@@ -43,5 +45,8 @@
         /// </summary>
         public string CategoryName { get; set; }
         public string CreateBy { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }
