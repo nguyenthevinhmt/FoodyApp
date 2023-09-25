@@ -25,52 +25,68 @@ namespace Foody.Application.Services.ProductServices.Implements
             _storageService = storageService;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<int> CreateProduct(CreateProductDto input)
+        public async Task<string> CreateProduct(CreateProductDto input)
         {
-            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == input.Name);
-            if (product != null)
+            using (var CreateTransaction = await _context.Database.BeginTransactionAsync())
             {
-                throw new UserFriendlyException($"Sản phẩm có tên {input.Name} đã tồn tại trong hệ thống");
-            }
-            if (!await _context.Promotions.AnyAsync(c => c.Id == input.PromotionId))
-            {
-                throw new UserFriendlyException("Chương trình khuyến mãi không tồn tại");
-            }
-            var productCreate = new Product
-            {
-                Name = input.Name,
-                Description = input.Description,
-                Price = input.Price,
-                ActualPrice = input.ActualPrice,
-                CategoryId = input.CategoryId,
-                IsActived = input.IsActive,
-                CreatedAt = DateTime.Now,
-                CreatedBy = currentUserId.ToString(),
-            };
-            //Xử lý thêm ảnh ở đây
-            if (input.ThumbnailImage != null)
-            {
-                productCreate.ProductImages = new List<ProductImage>() {
-                    new ProductImage()
+                try
+                {
+                    var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
+                    var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == input.Name);
+                    if (product != null)
                     {
-                        Description = "",
-                        CreatedAt = DateTime.Now,
-                        FileSize = input.ThumbnailImage.Length,
-                        ProductImageUrl = await this.SaveFile(input.ThumbnailImage)
+                        throw new UserFriendlyException($"Sản phẩm có tên {input.Name} đã tồn tại trong hệ thống");
                     }
-                };
+                    if (!await _context.Promotions.AnyAsync(c => c.Id == input.PromotionId))
+                    {
+                        throw new UserFriendlyException("Chương trình khuyến mãi không tồn tại");
+                    }
+                    var productCreate = new Product
+                    {
+                        Name = input.Name,
+                        Description = input.Description,
+                        Price = input.Price,
+                        ActualPrice = input.ActualPrice,
+                        CategoryId = input.CategoryId,
+                        IsActived = input.IsActive,
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = currentUserId.ToString(),
+                    };
+
+                    //Xử lý thêm ảnh ở đây
+                    if (input.ThumbnailImage != null)
+                    {
+                        productCreate.ProductImages = new List<ProductImage>() {
+                            new ProductImage()
+                            {
+                                Description = $"Ảnh mô tả sản phẩm {input.Name}",
+                                CreatedAt = DateTime.Now,
+                                CreatedBy = currentUserId.ToString(),
+                                FileSize = input.ThumbnailImage.Length,
+                                ProductImageUrl = await this.SaveFile(input.ThumbnailImage)
+                            }
+                        };
+                    }
+                    await _context.Products.AddAsync(productCreate);
+                    await _context.SaveChangesAsync();
+
+                    var productPromotion = new ProductPromotion
+                    {
+                        ProductId = productCreate.Id,
+                        PromotionId = input.PromotionId
+                    };
+                    await _context.ProductPromotions.AddAsync(productPromotion);
+                    await _context.SaveChangesAsync();
+                    await CreateTransaction.CommitAsync();
+                    return "Thêm sản phẩm thành công";
+                }
+                catch (Exception ex)
+                {
+                    await CreateTransaction.RollbackAsync();
+                    return $"Lỗi: {ex.Message}";
+                }
             }
-            await _context.Products.AddAsync(productCreate);
-            await _context.SaveChangesAsync();
-            var productPromotion = new ProductPromotion
-            {
-                ProductId = productCreate.Id,
-                PromotionId = input.PromotionId
-            };
-            await _context.ProductPromotions.AddAsync(productPromotion);
-            await _context.SaveChangesAsync();
-            return productCreate.Id;
+
         }
 
         public async Task<ProductResponseDto> GetProductById(int id)
@@ -190,6 +206,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                 var thumbnailImage = _context.ProductImages.FirstOrDefault(i => i.ProductId == input.Id);
                 if (thumbnailImage != null)
                 {
+                    await _storageService.DeleteFileAsync(thumbnailImage.ProductImageUrl);
                     thumbnailImage.FileSize = input.ThumbnailImage.Length;
                     thumbnailImage.ProductImageUrl = await this.SaveFile(input.ThumbnailImage);
                     _context.ProductImages.Update(thumbnailImage);
@@ -204,6 +221,11 @@ namespace Foody.Application.Services.ProductServices.Implements
             if (product == null)
             {
                 throw new UserFriendlyException($"Sản phẩm có id = {id} không tồn tại!");
+            }
+            var images = _context.ProductImages.Where(i => i.ProductId == id);
+            foreach (var image in images)
+            {
+                await _storageService.DeleteFileAsync(image.ProductImageUrl);
             }
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
