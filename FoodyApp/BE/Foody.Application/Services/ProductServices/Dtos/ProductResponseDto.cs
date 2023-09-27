@@ -43,7 +43,6 @@ namespace Foody.Application.Services.ProductServices.Dtos
         /// <summary>
         /// Tên danh mục sản phẩm
         /// </summary>
-        public string CategoryName { get; set; }
         public string CreateBy { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }

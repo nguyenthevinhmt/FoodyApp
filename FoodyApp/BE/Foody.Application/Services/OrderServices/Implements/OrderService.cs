@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.OrderServices.Dtos;
 using Foody.Application.Services.OrderServices.Interfaces;
+using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Domain.Constants;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
@@ -85,37 +86,38 @@ namespace Foody.Application.Services.OrderServices.Implements
             await _context.SaveChangesAsync();
         }
         //Lấy danh sách sản phẩm trong đơn hàng nháp
-        public async Task<List<DraftOrderResponse>> GetDraftOrdersByUserId()
+        public async Task<CartInfoResponse> GetDraftOrdersByUserId()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
-            var query = await (from order in _context.Orders
-                               where order.UserId == userId
-                               join orderDetail in _context.OrderDetails on order.Id equals orderDetail.OrderId
-                               select new DraftOrderResponse
-                               {
-                                   OrderId = orderDetail.OrderId,
-                                   Product = _context.Products.Where(c => c.Id == orderDetail.ProductId).FirstOrDefault(),
-                                   ProductId = orderDetail.ProductId,
-                                   Quantity = orderDetail.Quantity,
-                                   TotalPrice = orderDetail.Quantity * orderDetail.Product.ActualPrice
-                               }).ToListAsync();
-            //var listItem = new List<DraftOrderResponse>();
-            //foreach (var orderDetail in query)
-            //{
-            //    var product = await _context.Products.FirstOrDefaultAsync(c => c.Id == orderDetail.ProductId);
-            //    listItem.Add(new DraftOrderResponse
-            //    {
-            //        Id = orderDetail.Id,
-            //        OrderId = orderDetail.OrderId,
-            //        Order = orderDetail.Order,
-            //        Product = product,
-            //        ProductId = orderDetail.ProductId,
-            //        Quantity = orderDetail.Quantity,
-            //        TotalPrice = orderDetail.Quantity * orderDetail.Product.ActualPrice
-            //    });
-            //};
-            return query;
-
+            var shoppingCart = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .ThenInclude(img => img.ProductImages)
+                .Where(o => o.UserId == userId && o.Status == OrderStatus.DRAFT)
+                .FirstOrDefaultAsync();
+            if(shoppingCart == null)
+            {
+                throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
+            }
+            var shoppingCartDto = new CartInfoResponse
+            {
+                OrderId = shoppingCart.Id,
+                TotalPrice = shoppingCart.OrderDetails.Sum(od => od.Quantity * od.Product.ActualPrice),
+                Products = shoppingCart.OrderDetails.Select(od => new ProductResponseDto
+                {
+                    Id = od.ProductId,
+                    Name = od.Product.Name,
+                    Price = od.Product.Price,
+                    ActualPrice = od.Product.ActualPrice,
+                    CategoryId = od.Product.CategoryId,
+                    Description = od.Product.Description,
+                    ProductImageUrl = od.Product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
+                    CreateBy = od.Product.CreatedBy,
+                    IsActive = od.Product.IsActived,
+                    IsDeleted = od.Product.IsDeleted   
+                }).ToList()
+            };
+            return shoppingCartDto;
         }
         #endregion
     }
