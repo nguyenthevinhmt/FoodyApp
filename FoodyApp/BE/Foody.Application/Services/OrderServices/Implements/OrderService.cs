@@ -95,7 +95,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                 .ThenInclude(img => img.ProductImages)
                 .Where(o => o.UserId == userId && o.Status == OrderStatus.DRAFT)
                 .FirstOrDefaultAsync();
-            if(shoppingCart == null)
+            if (shoppingCart == null)
             {
                 throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
             }
