@@ -1,6 +1,6 @@
 ﻿namespace Foody.Application.Services.OrderServices.Dtos
 {
-    public class CreateDraftOrderDto
+    public class CreateCartDto
     {
         public int UserId { get; set; }
         public int Status { get; set; }
