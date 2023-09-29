@@ -21,7 +21,7 @@ namespace Foody.API.Controllers.CartController
         [HttpGet("get-cart-by-user")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _service.GetDraftOrdersByUserId());
+            return Ok(await _service.GetCartByUserId());
         }
         /// <summary>
         /// Thêm sản phẩm vào giỏ hàng
@@ -33,7 +33,7 @@ namespace Foody.API.Controllers.CartController
         {
             try
             {
-                var result = await _service.AddProductToDraftOrder(productId);
+                var result = await _service.AddProductToCart(productId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace Foody.API.Controllers.CartController
         {
             try
             {
-                await _service.RemoveProductFromDraftOrder(productId);
+                await _service.RemoveProductFromCart(productId);
                 return Ok("Xóa thành công");
             }
             catch (Exception ex)
