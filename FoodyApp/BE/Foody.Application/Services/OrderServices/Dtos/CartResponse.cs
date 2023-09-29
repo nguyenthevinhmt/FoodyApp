@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Foody.Application.Services.OrderServices.Dtos
 {
-    public class CartInfoResponse
+    public class CartResponse
     {
         public int OrderId { get; set; }
         public decimal TotalPrice { get; set; }
