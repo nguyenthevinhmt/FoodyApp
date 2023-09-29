@@ -24,7 +24,7 @@ namespace Foody.Application.Services.OrderServices.Implements
         #region quản lý đơn hàng nháp (giỏ hàng)
 
         //Thêm sản phẩm vào giỏ hàng
-        public async Task<string> AddProductToDraftOrder(int productId)
+        public async Task<string> AddProductToCart(int productId)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             using (var transaction = await _context.Database.BeginTransactionAsync())
@@ -73,7 +73,7 @@ namespace Foody.Application.Services.OrderServices.Implements
         }
 
         //Xóa sản phẩm khỏi đơn hàng nháp
-        public async Task RemoveProductFromDraftOrder(int productId)
+        public async Task RemoveProductFromCart(int productId)
         {
             var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.Id == productId);
 
@@ -86,7 +86,7 @@ namespace Foody.Application.Services.OrderServices.Implements
             await _context.SaveChangesAsync();
         }
         //Lấy danh sách sản phẩm trong đơn hàng nháp
-        public async Task<CartInfoResponse> GetDraftOrdersByUserId()
+        public async Task<CartResponse> GetCartByUserId()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var shoppingCart = await _context.Orders
@@ -99,7 +99,7 @@ namespace Foody.Application.Services.OrderServices.Implements
             {
                 throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
             }
-            var shoppingCartDto = new CartInfoResponse
+            var shoppingCartDto = new CartResponse
             {
                 OrderId = shoppingCart.Id,
                 TotalPrice = shoppingCart.OrderDetails.Sum(od => od.Quantity * od.Product.ActualPrice),
