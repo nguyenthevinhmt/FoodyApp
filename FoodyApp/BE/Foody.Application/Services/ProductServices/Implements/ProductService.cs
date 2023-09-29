@@ -25,123 +25,155 @@ namespace Foody.Application.Services.ProductServices.Implements
             _storageService = storageService;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<int> CreateProduct(CreateProductDto input)
+        public async Task<string> CreateProduct(CreateProductDto input)
         {
-            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == input.Name);
-            if (product != null)
+            using (var CreateTransaction = await _context.Database.BeginTransactionAsync())
             {
-                throw new UserFriendlyException($"Sản phẩm có tên {input.Name} đã tồn tại trong hệ thống");
-            }
-            if (!await _context.Promotions.AnyAsync(c => c.Id == input.PromotionId))
-            {
-                throw new UserFriendlyException("Chương trình khuyến mãi không tồn tại");
-            }
-            var productCreate = new Product
-            {
-                Name = input.Name,
-                Description = input.Description,
-                Price = input.Price,
-                ActualPrice = input.ActualPrice,
-                CategoryId = input.CategoryId,
-                IsActived = input.IsActive,
-                CreatedAt = DateTime.Now,
-                CreatedBy = currentUserId.ToString(),
-            };
-            //Xử lý thêm ảnh ở đây
-            if (input.ThumbnailImage != null)
-            {
-                productCreate.ProductImages = new List<ProductImage>() {
-                    new ProductImage()
+                try
+                {
+                    var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
+                    var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == input.Name);
+                    if (product != null)
                     {
-                        Description = "",
-                        CreatedAt = DateTime.Now,
-                        FileSize = input.ThumbnailImage.Length,
-                        ProductImageUrl = await this.SaveFile(input.ThumbnailImage)
+                        throw new UserFriendlyException($"Sản phẩm có tên {input.Name} đã tồn tại trong hệ thống");
                     }
-                };
+                    if (!await _context.Promotions.AnyAsync(c => c.Id == input.PromotionId))
+                    {
+                        throw new UserFriendlyException("Chương trình khuyến mãi không tồn tại");
+                    }
+                    var productCreate = new Product
+                    {
+                        Name = input.Name,
+                        Description = input.Description,
+                        Price = input.Price,
+                        ActualPrice = input.ActualPrice,
+                        CategoryId = input.CategoryId,
+                        IsActived = input.IsActive,
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = currentUserId.ToString(),
+                    };
+
+                    //Xử lý thêm ảnh ở đây
+                    if (input.ThumbnailImage != null)
+                    {
+                        productCreate.ProductImages = new List<ProductImage>() {
+                            new ProductImage()
+                            {
+                                Description = $"Ảnh mô tả sản phẩm {input.Name}",
+                                CreatedAt = DateTime.Now,
+                                CreatedBy = currentUserId.ToString(),
+                                FileSize = input.ThumbnailImage.Length,
+                                ProductImageUrl = await this.SaveFile(input.ThumbnailImage)
+                            }
+                        };
+                    }
+                    await _context.Products.AddAsync(productCreate);
+                    await _context.SaveChangesAsync();
+
+                    var productPromotion = new ProductPromotion
+                    {
+                        ProductId = productCreate.Id,
+                        PromotionId = input.PromotionId
+                    };
+                    await _context.ProductPromotions.AddAsync(productPromotion);
+                    await _context.SaveChangesAsync();
+                    await CreateTransaction.CommitAsync();
+                    return "Thêm sản phẩm thành công";
+                }
+                catch (Exception ex)
+                {
+                    await CreateTransaction.RollbackAsync();
+                    return $"Lỗi: {ex.Message}";
+                }
             }
 
-
-
-            await _context.Products.AddAsync(productCreate);
-            await _context.SaveChangesAsync();
-            var productPromotion = new ProductPromotion
-            {
-                ProductId = productCreate.Id,
-                PromotionId = input.PromotionId
-            };
-            await _context.ProductPromotions.AddAsync(productPromotion);
-            await _context.SaveChangesAsync();
-            return productCreate.Id;
         }
 
         public async Task<ProductResponseDto> GetProductById(int id)
         {
-            var product = await (from prod in _context.Products
-                                 join pp in _context.ProductPromotions on prod.Id equals pp.ProductId
-                                 join category in _context.Categories on prod.CategoryId equals category.Id
-                                 join prom in _context.Promotions on pp.PromotionId equals prom.Id
-                                 where prod.Id == id && prod.IsDeleted == false
-                                       && prod.IsActived == true && prom.IsActive == true && prom.IsDeleted == false
-                                 select new ProductResponseDto
-                                 {
-                                     Id = prod.Id,
-                                     Name = prod.Name,
-                                     Price = prod.Price,
-                                     Description = prod.Description,
-                                     ActualPrice = prod.ActualPrice,
-                                     CategoryId = prod.CategoryId,
-                                     CreateBy = prod.CreatedBy,
-                                     PromotionId = prom.Id,
-                                     PromotionName = prom.Name
-                                 }).FirstOrDefaultAsync();
+            var query = await (from product in _context.Products
+                               join productImage in _context.ProductImages on product.Id equals productImage.ProductId
+                               into pi
+                               from proImg in pi.DefaultIfEmpty()
+                               join category in _context.Categories on product.CategoryId equals category.Id
+                               into ppic
+                               from cate in ppic.DefaultIfEmpty()
+                               join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
+                               into picppm
+                               from proImgCatePP in picppm.DefaultIfEmpty()
+                               join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
+                               from result in results.DefaultIfEmpty()
+                               select new ProductResponseDto
+                               {
+                                   Id = product.Id,
+                                   Name = product.Name,
+                                   Description = product.Description,
+                                   ActualPrice = product.ActualPrice,
+                                   Price = product.Price,
+                                   CategoryId = product.CategoryId,
+                                   ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
+                                   Promotion = result,
+                                   CreateBy = product.CreatedBy,
+                                   IsDeleted = product.IsDeleted,
+                                   IsActive = product.IsActived
+                               }).Where(c => c.Id == id).FirstOrDefaultAsync();
 
-            if (product == null)
+            if (query == null)
             {
                 throw new UserFriendlyException($"Sản phẩm có id = {id} không tồn tại!");
             }
-            var image = await _context.ProductImages.Where(x => x.ProductId == id).FirstOrDefaultAsync();
-            if (image != null)
-            {
-                product.ProductImageUrl = image.ProductImageUrl;
-            }
-            else
-            {
-                product.ProductImageUrl = "no-image.png";
-            }
-
-            return product;
+            return query;
         }
 
         public async Task<PageResultDto<ProductResponseDto>> GetProductPaging(ProductFilterDto input)
         {
             var query = from product in _context.Products
+                        join productImage in _context.ProductImages on product.Id equals productImage.ProductId
+                        into pi
+                        from proImg in pi.DefaultIfEmpty()
                         join category in _context.Categories on product.CategoryId equals category.Id
+                        into ppic
+                        from cate in ppic.DefaultIfEmpty()
                         join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
-                        join promotion in _context.Promotions on productPromotion.PromotionId equals promotion.Id
-                        join proImage in _context.ProductImages on product.Id equals proImage.ProductId
-                        select new { product, proImage, category, promotion };
-            query = query.Where(p => (p.product.IsDeleted == false)
-            && (p.product.IsActived == true) && (p.promotion.IsActive == true)
-            && (input.Name == null || p.product.Name.ToLower().Trim().Contains(input.Name.ToLower()))
-            && ((input.StartPrice <= p.product.ActualPrice && p.product.ActualPrice <= input.EndPrice))
-            && (input.CategoryId == null || p.category.Id == Convert.ToInt32(input.CategoryId)));
+                        into picppm
+                        from proImgCatePP in picppm.DefaultIfEmpty()
+                        join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
+                        from result in results.DefaultIfEmpty()
+                        select new
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Description = product.Description,
+                            ActualPrice = product.ActualPrice,
+                            Price = product.Price,
+                            CategoryId = product.CategoryId,
+                            CategoryName = cate.Name,
+                            ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
+                            Promotion = result,
+                            CreateBy = product.CreatedBy,
+                            IsDeleted = product.IsDeleted,
+                            IsActive = product.IsActived
+                        };
+            query = query.Where(p => (p.IsDeleted == false)
+            && (p.IsActive == true) && (p.Promotion.IsActive == true)
+            && (input.Name == null || p.Name.ToLower().Trim().Contains(input.Name.ToLower()))
+            && ((input.StartPrice <= p.ActualPrice && p.ActualPrice <= input.EndPrice))
+            && (input.CategoryId == null || p.CategoryId == Convert.ToInt32(input.CategoryId)));
             var totalItem = await query.CountAsync();
             var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
-                    .Select(p => new ProductResponseDto
+                    .Select(prod => new ProductResponseDto
                     {
-                        Id = p.product.Id,
-                        Name = p.product.Name,
-                        Description = p.product.Description,
-                        ActualPrice = p.product.ActualPrice,
-                        Price = p.product.Price,
-                        CategoryId = p.category.Id,
-                        CategoryName = p.category.Name,
-                        ProductImageUrl = p.proImage.ProductImageUrl,
-                        PromotionId = p.promotion.Id,
-                        PromotionName = p.promotion.Name,
-                        CreateBy = p.product.CreatedBy,
+                        Id = prod.Id,
+                        Name = prod.Name,
+                        Description = prod.Description,
+                        ActualPrice = prod.ActualPrice,
+                        Price = prod.Price,
+                        CategoryId = prod.Id,
+                        ProductImageUrl = prod.ProductImageUrl,
+                        Promotion = prod.Promotion,
+                        CreateBy = prod.CreateBy,
+                        IsDeleted = prod.IsDeleted,
+                        IsActive = prod.IsActive
                     }).ToListAsync();
             var pageResult = new PageResultDto<ProductResponseDto>
             {
@@ -172,6 +204,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                 var thumbnailImage = _context.ProductImages.FirstOrDefault(i => i.ProductId == input.Id);
                 if (thumbnailImage != null)
                 {
+                    await _storageService.DeleteFileAsync(thumbnailImage.ProductImageUrl);
                     thumbnailImage.FileSize = input.ThumbnailImage.Length;
                     thumbnailImage.ProductImageUrl = await this.SaveFile(input.ThumbnailImage);
                     _context.ProductImages.Update(thumbnailImage);
@@ -187,6 +220,11 @@ namespace Foody.Application.Services.ProductServices.Implements
             {
                 throw new UserFriendlyException($"Sản phẩm có id = {id} không tồn tại!");
             }
+            var images = _context.ProductImages.Where(i => i.ProductId == id);
+            foreach (var image in images)
+            {
+                await _storageService.DeleteFileAsync(image.ProductImageUrl);
+            }
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
             product.UpdateBy = currentUserId.ToString();
@@ -195,6 +233,7 @@ namespace Foody.Application.Services.ProductServices.Implements
 
         public async Task UpdatePromotionToProduct(int promotionId, int productId)
         {
+
             if (!await _context.Promotions.AnyAsync(c => c.Id == promotionId))
             {
                 throw new UserFriendlyException($"Khuyến mại có ID = {promotionId} không tồn tại!");
@@ -205,17 +244,11 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
             else
             {
-                await _context.ProductPromotions.AddAsync(new ProductPromotion
-                {
-                    PromotionId = promotionId,
-                    ProductId = productId,
-                    IsActive = true
-                });
+                var productPromotion = await _context.ProductPromotions.FirstOrDefaultAsync(c => c.ProductId == productId);
+                productPromotion.PromotionId = promotionId;
                 await _context.SaveChangesAsync();
             }
         }
-
-
         private async Task<string> SaveFile(IFormFile file)
         {
             var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');

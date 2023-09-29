@@ -10,6 +10,6 @@ namespace Foody.Domain.Entities
         public int OrderId { get; set; }
         public Order Order { get; }
         public int ProductId { get; set; }
-        public Product Product { get; }
+        public Product Product { get; set; }
     }
 }
