@@ -48,7 +48,7 @@ export const LoginScreen = ({ navigation }: any) => {
       const refreshToken = await getRefreshToken();
       console.log("accessToken", accessToken);
       console.log("refreshToken", refreshToken);
-      navigation.navigate("MainScreen");
+      navigation.replace("MainScreen");
     } else {
       // alert("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setAlertMessage("Email hoặc mật khẩu không đúng, mời đăng nhập lại");

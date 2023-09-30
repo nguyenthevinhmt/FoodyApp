@@ -7,6 +7,8 @@ using Foody.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
+using Foody.Share.Shared;
+using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.CategoryServices.Implements
 {
@@ -15,14 +17,17 @@ namespace Foody.Application.Services.CategoryServices.Implements
         private readonly FoodyAppContext _context;
         private readonly IStorageService _storageService;
         private const string FILE_STORE_FOLDER = "ImageStorage";
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CategoryService(FoodyAppContext context, IStorageService storageService)
+        public CategoryService(FoodyAppContext context, IStorageService storageService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _storageService = storageService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task Create(CreateCategoryDto input)
         {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == input.Name);
             if (category != null)
             {
@@ -33,15 +38,20 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 Name = input.Name,
                 Description = input.Description,
                 CreatedAt = DateTime.Now,
-                //Thêm ảnh
-                CategoryImageUrl = await this.SaveFile(input.ThumbnailImage)
+                CreatedBy = currentUserId.ToString(),
             };
+            //Thêm ảnh
+            if (input.ThumbnailImage != null)
+            {
+                categoryCreate.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
+            }
             await _context.Categories.AddAsync(categoryCreate);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteCategory(int id)
         {
+            var currentUserId = CommonUtils.GetUserId(this._httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.IsDeleted == false && c.Id == id);
             if (category == null)
             {
@@ -49,11 +59,13 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             category.IsDeleted = true;
             category.UpdatedAt = DateTime.Now;
-            _context.SaveChanges();
+            category.UpdateBy = currentUserId.ToString();
+            _context.SaveChangesAsync();
         }
 
         public async Task<CategoryResponseDto> GetCategoryById(int id)
         {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (category == null)
             {
@@ -70,6 +82,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
 
         public async Task UpdateCategory(UpdateCategoryDto input)
         {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.IsDeleted == false && c.Id == input.Id);
             if (category == null)
             {
@@ -77,9 +90,14 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             category.Name = input.Name;
             category.Description = input.Description;
-            category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
             category.UpdatedAt = DateTime.Now;
-            _context.SaveChanges();
+            category.UpdateBy = currentUserId.ToString();
+            if (input.ThumbnailImage != null)
+            {
+                category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
+            }
+                
+            _context.SaveChangesAsync();
             
         }
 
@@ -89,6 +107,39 @@ namespace Foody.Application.Services.CategoryServices.Implements
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
+        }
+        async Task<PageResultDto<CategoryResponseDto>> ICategoryService.GetCategoryPaging(CategoryFilterDto input)
+        {
+            var query = from c in _context.Categories
+                        select new
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                            Description = c.Description,
+                            CategoryImageUrl = c.CategoryImageUrl,
+                            createAt = c.CreatedAt,
+                            createBy = c.CreatedBy,
+                            UpdatedAt = c.UpdatedAt,
+                            updateBy = c.UpdateBy,
+                            IsDeleted = c.IsDeleted
+                        };
+            query = query.Where(c => (c.IsDeleted == false)
+            && (input.Name == null || c.Name.ToLower().Trim().Contains(input.Name.ToLower())));
+            var totalItem = await query.CountAsync();
+            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
+                .Select(cate => new CategoryResponseDto
+                {
+                    Id = cate.Id,
+                    Name = cate.Name,
+                    Description = cate.Description,
+                    CategoryImageUrl = cate.CategoryImageUrl
+                }).ToListAsync();
+            var pageResult = new PageResultDto<CategoryResponseDto>
+            {
+                Item = listItem,
+                TotalItem = totalItem
+            };
+            return pageResult;
         }
     }
 }

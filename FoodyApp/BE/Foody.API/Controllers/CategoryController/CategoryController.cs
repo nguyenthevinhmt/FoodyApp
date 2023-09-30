@@ -1,5 +1,8 @@
-﻿using Foody.Application.Services.CategoryServices.Dtos;
+﻿using Foody.Application.Filters;
+using Foody.Application.Services.CategoryServices.Dtos;
 using Foody.Application.Services.CategoryServices.Interfaces;
+using Foody.Share.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.CategoryController
@@ -19,11 +22,24 @@ namespace Foody.API.Controllers.CategoryController
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpPost("create-category")]
         public async Task<IActionResult> Create([FromQuery] CreateCategoryDto input)
         {
             await _service.Create(input);
             return Ok();
+        }
+        /// <summary>
+        /// Lấy tất cả category, có phân trang, tìm kiếm theo tên
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("get-category-paging")]
+        public async Task<IActionResult> getAllPaging([FromQuery] CategoryFilterDto input)
+        {
+            var result = await _service.GetCategoryPaging(input);
+            return Ok(result);
         }
         /// <summary>
         /// lấy category theo id
@@ -48,6 +64,8 @@ namespace Foody.API.Controllers.CategoryController
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpPut("update-catgory")]
         public async Task<IActionResult> Update([FromForm] UpdateCategoryDto input)
         {
@@ -66,6 +84,8 @@ namespace Foody.API.Controllers.CategoryController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
         [HttpDelete("delete-catgory/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

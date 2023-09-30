@@ -46,9 +46,9 @@ export default function SplashScreen({ navigation }: any) {
     };
     checkTokenValidity();
     if (isLogin) {
-      navigation.navigate("MainScreen");
+      navigation.replace("MainScreen");
     } else {
-      navigation.navigate("LoginScreen");
+      navigation.replace("LoginScreen");
     }
     // const timer = setTimeout(() => {
     //   checkTokenValidity();
