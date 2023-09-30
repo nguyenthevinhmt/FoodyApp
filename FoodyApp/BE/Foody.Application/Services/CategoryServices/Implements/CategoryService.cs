@@ -65,9 +65,8 @@ namespace Foody.Application.Services.CategoryServices.Implements
 
         public async Task<CategoryResponseDto> GetCategoryById(int id)
         {
-            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-            if (category == null)
+            if (category == null || category.IsDeleted == true)
             {
                 throw new UserFriendlyException($"Category với id = {id} không tồn tại");
             }
@@ -84,7 +83,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.IsDeleted == false && c.Id == input.Id);
-            if (category == null)
+            if (category == null || category.IsDeleted == true)
             {
                 throw new UserFriendlyException($"Category có id = {input.Id} không tồn tại!");
             }
@@ -96,9 +95,9 @@ namespace Foody.Application.Services.CategoryServices.Implements
             {
                 category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
             }
-                
+
             _context.SaveChangesAsync();
-            
+
         }
 
         private async Task<string> SaveFile(IFormFile file)
@@ -110,22 +109,12 @@ namespace Foody.Application.Services.CategoryServices.Implements
         }
         async Task<PageResultDto<CategoryResponseDto>> ICategoryService.GetCategoryPaging(CategoryFilterDto input)
         {
-            var query = from c in _context.Categories
-                        select new
-                        {
-                            Id = c.Id,
-                            Name = c.Name,
-                            Description = c.Description,
-                            CategoryImageUrl = c.CategoryImageUrl,
-                            createAt = c.CreatedAt,
-                            createBy = c.CreatedBy,
-                            UpdatedAt = c.UpdatedAt,
-                            updateBy = c.UpdateBy,
-                            IsDeleted = c.IsDeleted
-                        };
+            var query = _context.Categories.AsQueryable();
             query = query.Where(c => (c.IsDeleted == false)
             && (input.Name == null || c.Name.ToLower().Trim().Contains(input.Name.ToLower())));
+
             var totalItem = await query.CountAsync();
+
             var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
                 .Select(cate => new CategoryResponseDto
                 {
@@ -134,6 +123,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
                     Description = cate.Description,
                     CategoryImageUrl = cate.CategoryImageUrl
                 }).ToListAsync();
+
             var pageResult = new PageResultDto<CategoryResponseDto>
             {
                 Item = listItem,
