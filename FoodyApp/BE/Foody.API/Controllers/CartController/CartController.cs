@@ -21,7 +21,15 @@ namespace Foody.API.Controllers.CartController
         [HttpGet("get-cart-by-user")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _service.GetCartByUserId());
+            try
+            {
+
+                return Ok(await _service.GetCartByUserId());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// Thêm sản phẩm vào giỏ hàng

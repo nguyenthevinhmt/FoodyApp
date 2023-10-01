@@ -16,50 +16,51 @@ import {
 
 const Stack = createNativeStackNavigator();
 export default function App() {
-  // const jwt_decode = require("jwt-decode");
-  // const [isLogin, setIsLogin] = useState<boolean>(false);
-  // const setRefreshToken = async (objRefreshToken: any) => {
-  //   try {
-  //     const response = await refreshAccessToken(objRefreshToken);
-  //     const newAccessToken = response?.accessToken;
-  //     const newRefreshToken = response?.refreshToken;
-  //     await saveToken({ newAccessToken, newRefreshToken });
-  //     setIsLogin(true);
-  //   } catch (error) {
-  //     console.log("Có lỗi khi refresh token");
-  //     // await Logout();
-  //     setIsLogin(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   const checkTokenValidity = async () => {
-  //     const accessToken = await getAccessToken();
-  //     const refreshToken = await getRefreshToken();
-  //     const objRefreshToken: any = { accessToken, refreshToken };
-  //     console.log("accessToken: ", accessToken, "refreshToken: ", refreshToken);
+  const jwt_decode = require("jwt-decode");
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const setRefreshToken = async (objRefreshToken: any) => {
+    try {
+      const response = await refreshAccessToken(objRefreshToken);
+      const newAccessToken = response?.accessToken;
+      const newRefreshToken = response?.refreshToken;
+      await saveToken({ newAccessToken, newRefreshToken });
+      setIsLogin(true);
+    } catch (error) {
+      console.log("Có lỗi khi refresh token");
+      // await Logout();
+      setIsLogin(false);
+    }
+  };
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      const accessToken = await getAccessToken();
+      const refreshToken = await getRefreshToken();
+      const objRefreshToken: any = { accessToken, refreshToken };
+      console.log("accessToken: ", accessToken, "refreshToken: ", refreshToken);
 
-  //     if (accessToken !== null) {
-  //       const decodedToken = jwt_decode(accessToken);
-  //       const currentTime = Math.floor(Date.now() / 1000);
+      if (accessToken !== null) {
+        const decodedToken = jwt_decode(accessToken);
+        const currentTime = Math.floor(Date.now() / 1000);
 
-  //       if (decodedToken.exp < currentTime) {
-  //         await setRefreshToken(objRefreshToken);
-  //       } else {
-  //         setIsLogin(true);
-  //       }
-  //     } else {
-  //       setIsLogin(false);
-  //     }
-  //   };
-  //   checkTokenValidity();
-  // }, []);
+        if (decodedToken.exp < currentTime) {
+          await setRefreshToken(objRefreshToken);
+          setIsLogin(true);
+        } else {
+          setIsLogin(false);
+        }
+      } else {
+        setIsLogin(false);
+      }
+    };
+    checkTokenValidity();
+  }, [isLogin]);
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen name="MainScreen" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

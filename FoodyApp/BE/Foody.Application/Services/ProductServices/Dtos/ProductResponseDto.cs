@@ -15,11 +15,11 @@ namespace Foody.Application.Services.ProductServices.Dtos
         /// <summary>
         /// Giá nhập vào sản phẩm
         /// </summary>
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         /// <summary>
         /// Giá bán ra sản phẩm
         /// </summary>
-        public decimal ActualPrice { get; set; }
+        public double ActualPrice { get; set; }
         /// <summary>
         /// Mô tả sản phẩm
         /// </summary>
