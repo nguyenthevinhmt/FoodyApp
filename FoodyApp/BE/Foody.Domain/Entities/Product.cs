@@ -9,9 +9,9 @@ namespace Foody.Domain.Entities
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Name { get; set; }
         [Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         [Range(0, double.MaxValue)]
-        public decimal ActualPrice { get; set; }
+        public double ActualPrice { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
         [StringLength(500)]
         public string Description { get; set; }
