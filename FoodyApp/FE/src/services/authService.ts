@@ -3,14 +3,12 @@ import axios from "axios";
 import { TokenResponse, UserLogin } from "../models/AuthModel";
 import baseURL from "../utils/baseUrl";
 
-const AuthUrl = `${baseURL}/Auth/login`;
 export const login = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${baseURL}/Auth/login`, {
       email,
       password,
     });
-    console.log(response.data);
 
     if (response.status === 200) {
       const accessToken: string = response.data.accessToken;
@@ -21,7 +19,7 @@ export const login = async (email: string, password: string) => {
     }
   } catch (error) {
     console.log(error);
-    // return null;
+    return null;
   }
 };
 export const saveToken = async ({ accessToken, refreshToken }: any) => {
@@ -101,6 +99,9 @@ export const refreshAccessToken = async ({
       await saveToken({ accessToken, refreshToken });
       console.log("Đã refresh");
       return { accessToken, refreshToken };
+    } else {
+      console.log("Token đã hết hạn");
+      return null;
     }
   } catch (error) {
     console.log("Lỗi ở service");

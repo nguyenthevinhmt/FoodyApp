@@ -110,7 +110,7 @@ namespace Foody.Application.Services.AuthServices.Implements
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddSeconds(15),
+                expires: DateTime.Now.AddHours(1),
                 claims: claims,
                 signingCredentials: credentials
             );
