@@ -13,7 +13,14 @@ namespace Foody.Infrastructure.Configurations
             builder.Property(c => c.Name).IsRequired().HasMaxLength(250);
             builder.Property(c => c.Description).HasMaxLength(250);
             builder.HasMany(c => c.Products).WithOne(p => p.Categories).HasForeignKey(c => c.CategoryId);
-            builder.HasMany(c => c.CategoryImage).WithOne(p => p.Category).HasForeignKey(c => c.CategoryId);
+            //Data seeding
+            builder.HasData(
+                    new Category { Id = 0001, Name = "Cơm", Description = "Các món cơm", CategoryImageUrl = "no-image.png", CreatedAt = DateTime.Now, IsDeleted = false },
+                    new Category { Id = 0002, Name = "Đồ ăn nhanh", Description = "Các món ăn nhanh", CategoryImageUrl = "no-image.png", CreatedAt = DateTime.Now, IsDeleted = false },
+                    new Category { Id = 0003, Name = "Đồ uống", Description = "Các đồ uống", CategoryImageUrl = "no-image.png", CreatedAt = DateTime.Now, IsDeleted = false },
+                    new Category { Id = 0004, Name = "Bún", Description = "Các món bún", CategoryImageUrl = "no-image.png", CreatedAt = DateTime.Now, IsDeleted = false },
+                    new Category { Id = 0005, Name = "Mì", Description = "Các món mì", CategoryImageUrl = "no-image.png", CreatedAt = DateTime.Now, IsDeleted = false }
+                );
         }
     }
 }

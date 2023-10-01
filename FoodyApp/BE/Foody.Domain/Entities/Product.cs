@@ -17,13 +17,10 @@ namespace Foody.Domain.Entities
         public string Description { get; set; }
         public int CategoryId { get; set; }
         public Category Categories { get; set; }
-        public int PromotionId { get; set; }
-        public Promotion Promotion { get; set; }
-        public IEnumerable<ProductCart> ProductCarts { get; set; }
         public IEnumerable<OrderDetail> OrderDetails { get; set; }
         public IEnumerable<ProductImage> ProductImages { get; set; }
         public IEnumerable<Order> Orders { get; set; }
-        public IEnumerable<Cart> Carts { get; }
+        public IEnumerable<ProductPromotion> ProductPromotion { get; set; }
         public bool IsActived { get; set; }
     }
 }

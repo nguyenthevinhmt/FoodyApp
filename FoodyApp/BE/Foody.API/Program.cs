@@ -2,8 +2,10 @@ using Foody.Application.Services.AuthServices.Implements;
 using Foody.Application.Services.AuthServices.Interfaces;
 using Foody.Application.Services.CategoryServices.Implements;
 using Foody.Application.Services.CategoryServices.Interfaces;
-using Foody.Application.Services.ProductImageService.Implements;
-using Foody.Application.Services.ProductImageService.Interfaces;
+using Foody.Application.Services.FileStoreService.Implements;
+using Foody.Application.Services.FileStoreService.Interfaces;
+using Foody.Application.Services.OrderServices.Implements;
+using Foody.Application.Services.OrderServices.Interfaces;
 using Foody.Application.Services.ProductServices.Implements;
 using Foody.Application.Services.ProductServices.Interfaces;
 using Foody.Application.Services.PromotionServices.Implements;
@@ -13,6 +15,7 @@ using Foody.Application.Services.UserServices.Interfaces;
 using Foody.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -30,7 +33,6 @@ namespace Foody.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("FoodyAppConnectionString"));
             });
-            builder.Services.AddHttpContextAccessor();
             //Config JWT setting
             builder.Services.AddAuthentication(options =>
             {
@@ -44,13 +46,16 @@ namespace Foody.API
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"])),
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidAudience = builder.Configuration.GetSection("JWT")["ValidAudience"],
+                    ValidIssuer = builder.Configuration.GetSection("JWT")["ValidIssuer"],
                     ClockSkew = TimeSpan.Zero
                 };
 
             }
             );
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -104,6 +109,7 @@ namespace Foody.API
             builder.Services.AddScoped<IStorageService, FileStorageService>();
             builder.Services.AddScoped<IPromotionService, PromotionService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -112,12 +118,16 @@ namespace Foody.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            //WebHost.CreateDefaultBuilder(args).UseUrls("http://192.168.1.16:7271");
+
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImageStorage", "images")),
+                RequestPath = "/ImageStorage/images"
+            });
 
             app.MapControllers();
 

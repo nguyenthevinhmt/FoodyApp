@@ -1,4 +1,4 @@
-﻿using Foody.Application.Constants;
+﻿using Foody.Share.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

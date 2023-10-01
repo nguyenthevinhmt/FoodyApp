@@ -22,37 +22,6 @@ namespace Foody.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Foody.Domain.Entities.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cart", (string)null);
-                });
-
             modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -67,66 +36,94 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
-                });
+                    b.ToTable("Category", (string)null);
 
-            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CategoryImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("CategoryImages");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryImageUrl = "no-image.png",
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1287),
+                            CreatedBy = "",
+                            Description = "Các món cơm",
+                            IsDeleted = false,
+                            Name = "Cơm",
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryImageUrl = "no-image.png",
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1290),
+                            CreatedBy = "",
+                            Description = "Các món ăn nhanh",
+                            IsDeleted = false,
+                            Name = "Đồ ăn nhanh",
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryImageUrl = "no-image.png",
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1293),
+                            CreatedBy = "",
+                            Description = "Các đồ uống",
+                            IsDeleted = false,
+                            Name = "Đồ uống",
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryImageUrl = "no-image.png",
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1294),
+                            CreatedBy = "",
+                            Description = "Các món bún",
+                            IsDeleted = false,
+                            Name = "Bún",
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryImageUrl = "no-image.png",
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1296),
+                            CreatedBy = "",
+                            Description = "Các món mì",
+                            IsDeleted = false,
+                            Name = "Mì",
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
@@ -140,17 +137,25 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductCartId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -159,6 +164,8 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -206,8 +213,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -228,11 +236,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PromotionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -241,32 +247,7 @@ namespace Foody.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("PromotionId");
-
                     b.ToTable("Product", (string)null);
-                });
-
-            modelBuilder.Entity("Foody.Domain.Entities.ProductCart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductCarts");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.ProductImage", b =>
@@ -280,8 +261,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -298,8 +280,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<string>("ProductImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -309,6 +292,32 @@ namespace Foody.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.ProductPromotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("ProductPromotions");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Promotion", b =>
@@ -322,8 +331,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250)
@@ -352,8 +362,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -361,6 +372,98 @@ namespace Foody.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Promotion", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9029),
+                            CreatedBy = "",
+                            Description = "Không giảm giá",
+                            DiscountPercent = 0.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Không giảm giá",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9042),
+                            CreatedBy = "",
+                            Description = "Giảm giá 5%",
+                            DiscountPercent = 5.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Giảm giá 5%",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9044),
+                            CreatedBy = "",
+                            Description = "Giảm giá 10%",
+                            DiscountPercent = 10.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Giảm giá 10%",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9045),
+                            CreatedBy = "",
+                            Description = "Giảm giá 20%",
+                            DiscountPercent = 20.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Giảm giá 20%",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9046),
+                            CreatedBy = "",
+                            Description = "Giảm giá 25%",
+                            DiscountPercent = 25.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Giảm giá 25%",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9047),
+                            CreatedBy = "",
+                            Description = "Giảm giá 50%",
+                            DiscountPercent = 50.0,
+                            EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
+                            IsDeleted = false,
+                            Name = "Giảm giá 50%",
+                            StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.User", b =>
@@ -374,8 +477,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -408,8 +512,9 @@ namespace Foody.Infrastructure.Migrations
                     b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -420,15 +525,104 @@ namespace Foody.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 433, DateTimeKind.Local).AddTicks(769),
+                            CreatedBy = "",
+                            Email = "Admin@gmail.com",
+                            IsDeleted = false,
+                            Password = "thDgkC55aUsJX3UTZ02BffvA2+EWo/k/dU7McrF+4ftvTe2R",
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserType = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 437, DateTimeKind.Local).AddTicks(7772),
+                            CreatedBy = "",
+                            Email = "Customer@gmail.com",
+                            IsDeleted = false,
+                            Password = "FO0t24e83QTVKLIu0GvanSKW7WFF/GooTEvzsjm7ZIqxyQrG",
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdateBy = "",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserType = 2
+                        });
                 });
 
-            modelBuilder.Entity("Foody.Domain.Entities.CategoryImage", b =>
+            modelBuilder.Entity("Foody.Domain.Entities.UserAddress", b =>
                 {
-                    b.HasOne("Foody.Domain.Entities.Category", null)
-                        .WithMany("CategoryImage")
-                        .HasForeignKey("CategoryId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddressType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DetailAddress")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("District")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAddress");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("Foody.Domain.Entities.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.OrderDetail", b =>
@@ -458,34 +652,7 @@ namespace Foody.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Foody.Domain.Entities.Promotion", "Promotion")
-                        .WithMany("Products")
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Categories");
-
-                    b.Navigation("Promotion");
-                });
-
-            modelBuilder.Entity("Foody.Domain.Entities.ProductCart", b =>
-                {
-                    b.HasOne("Foody.Domain.Entities.Cart", "Cart")
-                        .WithMany("ProductCarts")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Foody.Domain.Entities.Product", "Product")
-                        .WithMany("ProductCarts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.ProductImage", b =>
@@ -499,15 +666,38 @@ namespace Foody.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Foody.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Foody.Domain.Entities.ProductPromotion", b =>
                 {
-                    b.Navigation("ProductCarts");
+                    b.HasOne("Foody.Domain.Entities.Product", "Product")
+                        .WithMany("ProductPromotion")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Foody.Domain.Entities.Promotion", "Promotion")
+                        .WithMany("ProductPromotions")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Promotion");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.UserAddress", b =>
+                {
+                    b.HasOne("Foody.Domain.Entities.User", "User")
+                        .WithMany("UserAddresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Category", b =>
                 {
-                    b.Navigation("CategoryImage");
-
                     b.Navigation("Products");
                 });
 
@@ -520,14 +710,21 @@ namespace Foody.Infrastructure.Migrations
                 {
                     b.Navigation("OrderDetails");
 
-                    b.Navigation("ProductCarts");
-
                     b.Navigation("ProductImages");
+
+                    b.Navigation("ProductPromotion");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Promotion", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("ProductPromotions");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }

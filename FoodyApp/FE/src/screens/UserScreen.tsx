@@ -1,10 +1,18 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Logout } from "../services/authService";
 
-export default function UserScreen() {
+export default function UserScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>User Screen work!</Text>
+      <Text style={{ marginBottom: 20 }}>User Screen work!</Text>
+      <Button
+        title="Logout"
+        onPress={async () => {
+          await Logout();
+          navigation.navigate("LoginScreen");
+        }}
+      />
     </SafeAreaView>
   );
 }
