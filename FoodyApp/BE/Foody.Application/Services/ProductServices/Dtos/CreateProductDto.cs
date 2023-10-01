@@ -10,9 +10,9 @@ namespace Foody.Application.Services.ProductServices.Dtos
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Name { get; set; }
         [Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         [Range(0, double.MaxValue)]
-        public decimal ActualPrice { get; set; }
+        public double ActualPrice { get; set; }
         [StringLength(250)]
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Description { get; set; }

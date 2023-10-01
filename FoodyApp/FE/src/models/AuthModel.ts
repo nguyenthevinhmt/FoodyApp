@@ -3,6 +3,6 @@ export interface TokenResponse {
   refreshToken: string | undefined;
 }
 export interface UserLogin {
-  email: string | null;
-  password: string | null;
+  email: string;
+  password: string;
 }
