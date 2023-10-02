@@ -6,5 +6,6 @@ namespace Foody.Application.Services.UserServices.Interfaces
     {
         public void UpdateUserInfo(UpdateUserDto input);
         public UserResponseDto GetById(int id);
+        public Task AddAddressForUser(CreateAddressDto input);
     }
 }

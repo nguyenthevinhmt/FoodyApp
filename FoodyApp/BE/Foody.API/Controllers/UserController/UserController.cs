@@ -48,5 +48,16 @@ namespace Foody.API.Controllers.UserController
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// Thêm địa chỉ cho người dùng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost("create-new-address")]
+        public async Task<IActionResult> CreateNewAddress(CreateAddressDto input)
+        {
+            await _service.AddAddressForUser(input);
+            return Ok("Thêm địa chỉ thành công");
+        }
     }
 }

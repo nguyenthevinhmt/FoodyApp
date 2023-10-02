@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.UserServices.Dtos;
 using Foody.Application.Services.UserServices.Interfaces;
+using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 
@@ -12,6 +13,24 @@ namespace Foody.Application.Services.UserServices.Implements
         public UserService(FoodyAppContext context)
         {
             _context = context;
+        }
+
+        public async Task AddAddressForUser(CreateAddressDto input)
+        {
+            await _context.UserAddresses.AddAsync(new UserAddress
+            {
+                AddressType = input.AddressType,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = input.UserId.ToString(),
+                Province = input.Province,
+                UserId = input.UserId,
+                DetailAddress = input.DetailAddress,
+                District = input.District,
+                Notes = input.Notes,
+                StreetAddress = input.StreetAddress,
+                Ward = input.Ward
+            });
+            await _context.SaveChangesAsync();
         }
 
         public UserResponseDto GetById(int id)

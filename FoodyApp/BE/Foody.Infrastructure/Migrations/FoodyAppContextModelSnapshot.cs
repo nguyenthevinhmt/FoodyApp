@@ -17,7 +17,7 @@ namespace Foody.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -37,7 +37,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -53,7 +52,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -68,7 +66,7 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1287),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8989),
                             CreatedBy = "",
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -80,7 +78,7 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 2,
                             CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1290),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8992),
                             CreatedBy = "",
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -92,7 +90,7 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 3,
                             CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1293),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8994),
                             CreatedBy = "",
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -104,7 +102,7 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 4,
                             CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1294),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8995),
                             CreatedBy = "",
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -116,7 +114,7 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 5,
                             CategoryImageUrl = "no-image.png",
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 448, DateTimeKind.Local).AddTicks(1296),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8997),
                             CreatedBy = "",
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -138,14 +136,13 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductCartId")
                         .HasColumnType("int");
@@ -154,7 +151,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -214,7 +210,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -237,7 +232,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -262,7 +256,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -281,7 +274,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -332,7 +324,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -363,7 +354,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -377,12 +367,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9029),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7034),
                             CreatedBy = "",
                             Description = "Không giảm giá",
                             DiscountPercent = 0.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Không giảm giá",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -392,12 +382,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9042),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7040),
                             CreatedBy = "",
                             Description = "Giảm giá 5%",
                             DiscountPercent = 5.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Giảm giá 5%",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -407,12 +397,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9044),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7041),
                             CreatedBy = "",
                             Description = "Giảm giá 10%",
                             DiscountPercent = 10.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Giảm giá 10%",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -422,12 +412,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9045),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7042),
                             CreatedBy = "",
                             Description = "Giảm giá 20%",
                             DiscountPercent = 20.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Giảm giá 20%",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -437,12 +427,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9046),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7043),
                             CreatedBy = "",
                             Description = "Giảm giá 25%",
                             DiscountPercent = 25.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Giảm giá 25%",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -452,12 +442,12 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 447, DateTimeKind.Local).AddTicks(9047),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7044),
                             CreatedBy = "",
                             Description = "Giảm giá 50%",
                             DiscountPercent = 50.0,
                             EndTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
+                            IsActive = true,
                             IsDeleted = false,
                             Name = "Giảm giá 50%",
                             StartTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -478,7 +468,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -513,7 +502,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -530,11 +518,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 433, DateTimeKind.Local).AddTicks(769),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 43, DateTimeKind.Local).AddTicks(8650),
                             CreatedBy = "",
                             Email = "Admin@gmail.com",
                             IsDeleted = false,
-                            Password = "thDgkC55aUsJX3UTZ02BffvA2+EWo/k/dU7McrF+4ftvTe2R",
+                            Password = "nuqNqnLqFPc7+on6MVYCOQXijEaVS1mX4tV/qkhvcO3qyHr8",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -543,11 +531,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 9, 20, 15, 50, 33, 437, DateTimeKind.Local).AddTicks(7772),
+                            CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 46, DateTimeKind.Local).AddTicks(9329),
                             CreatedBy = "",
                             Email = "Customer@gmail.com",
                             IsDeleted = false,
-                            Password = "FO0t24e83QTVKLIu0GvanSKW7WFF/GooTEvzsjm7ZIqxyQrG",
+                            Password = "GKvE255f4ogqoydh5ipLFSfRu9pRY/51S1nwO1gFSGFWF1KY",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -570,7 +558,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DetailAddress")
@@ -595,7 +582,6 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdateBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -611,7 +597,7 @@ namespace Foody.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAddress");
+                    b.ToTable("UserAddresses");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
