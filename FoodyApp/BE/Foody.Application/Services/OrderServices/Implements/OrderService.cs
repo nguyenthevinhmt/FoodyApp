@@ -1,6 +1,5 @@
 ﻿using Foody.Application.Services.OrderServices.Dtos;
 using Foody.Application.Services.OrderServices.Interfaces;
-using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Domain.Constants;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
@@ -31,7 +30,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             {
                 try
                 {
-
                     var order = await _context.Orders.FirstOrDefaultAsync(c => c.UserId == currentUserId);
                     if (order == null)
                     {
@@ -72,7 +70,7 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
         }
 
-        //Xóa sản phẩm khỏi đơn hàng nháp
+        //Xóa sản phẩm khỏi giỏ hàng
         public async Task RemoveProductFromCart(int productId)
         {
             var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.Id == productId);
@@ -85,39 +83,43 @@ namespace Foody.Application.Services.OrderServices.Implements
             _context.OrderDetails.Remove(orderDetail);
             await _context.SaveChangesAsync();
         }
-        //Lấy danh sách sản phẩm trong đơn hàng nháp
+        //Lấy danh sách sản phẩm trong giỏ hàng
         public async Task<CartResponse> GetCartByUserId()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
-            var shoppingCart = await _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Product)
-                .ThenInclude(img => img.ProductImages)
-                .Where(o => o.UserId == userId && o.Status == OrderStatus.DRAFT)
-                .FirstOrDefaultAsync();
+            var shoppingCart = await (from ord in _context.Orders
+                                      join od in _context.OrderDetails on ord.Id equals od.OrderId
+                                      join product in _context.Products on od.ProductId equals product.Id
+                                      join pp in _context.ProductPromotions on product.Id equals pp.ProductId
+                                      join pro in _context.Promotions on pp.PromotionId equals pro.Id
+                                      where ord.UserId == userId && ord.Status == OrderStatus.DRAFT
+                                      && product.IsActived == true && product.IsDeleted == false
+                                      && pp.IsActive == true
+                                      group new { ord, od, product, pro } by ord.Id into grouped
+                                      select new CartResponse
+                                      {
+                                          OrderId = grouped.Key,
+                                          TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                          Products = grouped.Select(p => new InfoProductCartDto
+                                          {
+                                              Id = p.product.Id,
+                                              Name = p.product.Name,
+                                              ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.pro.DiscountPercent / 100),
+                                              CategoryId = p.product.CategoryId,
+                                              Description = p.product.Description,
+                                              ProductImageUrl = p.product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
+                                              Quantity = p.od.Quantity,
+                                              CreateBy = p.product.CreatedBy,
+                                              Price = p.product.Price,
+                                              IsActive = p.product.IsActived,
+
+                                          }).ToList(),
+                                      }).FirstOrDefaultAsync();
             if (shoppingCart == null)
             {
                 throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
             }
-            var shoppingCartDto = new CartResponse
-            {
-                OrderId = shoppingCart.Id,
-                TotalPrice = shoppingCart.OrderDetails.Sum(od => od.Quantity * od.Product.ActualPrice),
-                Products = shoppingCart.OrderDetails.Select(od => new ProductResponseDto
-                {
-                    Id = od.ProductId,
-                    Name = od.Product.Name,
-                    Price = od.Product.Price,
-                    ActualPrice = od.Product.ActualPrice,
-                    CategoryId = od.Product.CategoryId,
-                    Description = od.Product.Description,
-                    ProductImageUrl = od.Product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
-                    CreateBy = od.Product.CreatedBy,
-                    IsActive = od.Product.IsActived,
-                    IsDeleted = od.Product.IsDeleted   
-                }).ToList()
-            };
-            return shoppingCartDto;
+            return shoppingCart;
         }
         #endregion
     }

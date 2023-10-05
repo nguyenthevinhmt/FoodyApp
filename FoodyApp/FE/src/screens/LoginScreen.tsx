@@ -13,12 +13,11 @@ import {
   getAccessToken,
   getRefreshToken,
   login,
-  saveToken,
 } from "../services/authService";
 import Alert from "../components/CustomAlert";
 
 export const LoginScreen = ({ navigation }: any) => {
-  const [email, setEmail] = useState<string>("customer@gmail.com");
+  const [email, setEmail] = useState<string>("Customer@gmail.com");
   const [password, setPassword] = useState<string>("Customer@12345");
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
@@ -42,7 +41,9 @@ export const LoginScreen = ({ navigation }: any) => {
       setPasswordError("");
       setIsValidPassword(false);
     }
-    const result = await login({ email, password });
+    const result = await login(email, password);
+    console.log(result);
+
     if (result) {
       const accessToken = await getAccessToken();
       const refreshToken = await getRefreshToken();
@@ -50,7 +51,6 @@ export const LoginScreen = ({ navigation }: any) => {
       console.log("refreshToken", refreshToken);
       navigation.replace("MainScreen");
     } else {
-      // alert("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setAlertMessage("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setShowAlert(true);
       console.log("Đăng nhập lỗi");
@@ -168,12 +168,6 @@ export const LoginScreen = ({ navigation }: any) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <Button
-          title="PingApi"
-          onPress={() => {
-            ping();
-          }}
-        ></Button> */}
       </View>
       <Alert
         visible={showAlert}
@@ -191,6 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     width: "100%",
+    marginTop: 20,
   },
   logoApp: {
     // backgroundColor: "#111",

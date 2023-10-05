@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Image, Text, Button } from "react-native";
 import {
+  Logout,
   getAccessToken,
   getRefreshToken,
   refreshAccessToken,
   saveToken,
 } from "../services/authService";
 
-export default function SplashScreen({ navigation }: any) {
+export default function SplashScreen({ navigation, route }: any) {
   const logoImage = require("../assets/images/Logo_app.png");
   const jwt_decode = require("jwt-decode");
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   const setRefreshToken = async (objRefreshToken: any) => {
     try {
       const response = await refreshAccessToken(objRefreshToken);
       const newAccessToken = response?.accessToken;
       const newRefreshToken = response?.refreshToken;
       await saveToken({ newAccessToken, newRefreshToken });
-      setIsLogin(true);
+      navigation.navigate("MainScreen");
     } catch (error) {
       console.log("Có lỗi khi refresh token");
-      // await Logout();
-      setIsLogin(false);
+      await Logout();
+      navigation.navigate("LoginScreen");
     }
   };
   useEffect(() => {
@@ -38,24 +39,20 @@ export default function SplashScreen({ navigation }: any) {
         if (decodedToken.exp < currentTime) {
           await setRefreshToken(objRefreshToken);
         } else {
-          setIsLogin(true);
+          navigation.replace("MainScreen");
         }
       } else {
-        setIsLogin(false);
+        navigation.replace("LoginScreen");
       }
     };
-    checkTokenValidity();
-    if (isLogin) {
-      navigation.replace("MainScreen");
-    } else {
-      navigation.replace("LoginScreen");
-    }
-    // const timer = setTimeout(() => {
-    //   checkTokenValidity();
-    // }, 2000);
-    // return () => {
-    //   clearTimeout(timer);
-    // };
+
+    const timer = setTimeout(() => {
+      checkTokenValidity();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
   return (
     <View style={styles.container}>

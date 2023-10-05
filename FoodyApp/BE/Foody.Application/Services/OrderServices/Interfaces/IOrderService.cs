@@ -7,6 +7,7 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         //public Task<int> CreateDraftOrder(int UserId);
         public Task<string> AddProductToCart(int productId);
         public Task RemoveProductFromCart(int id);
+        //public Task<CartResponse> GetCartByUserId();
         public Task<CartResponse> GetCartByUserId();
     }
 }
