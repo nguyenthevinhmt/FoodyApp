@@ -13,10 +13,8 @@ import {
   getAccessToken,
   getRefreshToken,
   login,
-  saveToken,
 } from "../services/authService";
 import Alert from "../components/CustomAlert";
-import { UserLogin } from "../models/AuthModel";
 
 export const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState<string>("Customer@gmail.com");
@@ -53,7 +51,6 @@ export const LoginScreen = ({ navigation }: any) => {
       console.log("refreshToken", refreshToken);
       navigation.replace("MainScreen");
     } else {
-      // alert("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setAlertMessage("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setShowAlert(true);
       console.log("Đăng nhập lỗi");
