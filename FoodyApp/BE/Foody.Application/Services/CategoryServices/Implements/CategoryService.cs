@@ -107,7 +107,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
         }
-        async Task<PageResultDto<CategoryResponseDto>> ICategoryService.GetCategoryPaging(CategoryFilterDto input)
+        public async Task<PageResultDto<CategoryResponseDto>> GetCategoryPaging(CategoryFilterDto input)
         {
             var query = _context.Categories.AsQueryable();
             query = query.Where(c => (c.IsDeleted == false)
