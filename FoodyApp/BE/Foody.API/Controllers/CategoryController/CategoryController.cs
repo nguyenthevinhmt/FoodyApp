@@ -25,7 +25,7 @@ namespace Foody.API.Controllers.CategoryController
         [Authorize]
         [AuthorizationFilter(UserTypes.Admin)]
         [HttpPost("create-category")]
-        public async Task<IActionResult> Create([FromQuery] CreateCategoryDto input)
+        public async Task<IActionResult> Create([FromForm] CreateCategoryDto input)
         {
             await _service.Create(input);
             return Ok();
@@ -87,7 +87,7 @@ namespace Foody.API.Controllers.CategoryController
         [Authorize]
         [AuthorizationFilter(UserTypes.Admin)]
         [HttpDelete("delete-catgory/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromBody] int id)
         {
             try
             {
