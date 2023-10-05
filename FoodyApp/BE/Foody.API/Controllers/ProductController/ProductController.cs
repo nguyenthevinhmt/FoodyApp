@@ -31,6 +31,23 @@ namespace Foody.API.Controllers.ProductController
             return Ok(result);
         }
         /// <summary>
+        /// lấy tất cả sản phẩm theo id danh mục, có phân trang
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("get-product-by-category-id-paging")]
+        public async Task<IActionResult> getAllByCategoryIdPaging([FromQuery] ProductFilter2Dto input)
+        {
+            try
+            {
+                var result = await _service.GetProductsByCategoryIdPaging(input);
+                return Ok(result);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// Tạo mới sản phẩm
         /// </summary>
         /// <param name="input"></param>

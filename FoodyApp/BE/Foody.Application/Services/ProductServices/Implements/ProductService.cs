@@ -1,4 +1,5 @@
-﻿using Foody.Application.Services.FileStoreService.Interfaces;
+﻿using Foody.Application.Services.CategoryServices.Dtos;
+using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
 using Foody.Domain.Entities;
@@ -183,6 +184,63 @@ namespace Foody.Application.Services.ProductServices.Implements
             return pageResult;
         }
 
+        public async Task<PageResultDto<ProductResponseDto>> GetProductsByCategoryIdPaging(ProductFilter2Dto input)
+        {
+            var query = from product in _context.Products
+                        join productImage in _context.ProductImages on product.Id equals productImage.ProductId
+                        into pi
+                        from proImg in pi.DefaultIfEmpty()
+                        join category in _context.Categories on product.CategoryId equals category.Id
+                        into ppic
+                        from cate in ppic.DefaultIfEmpty()
+                        join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
+                        into picppm
+                        from proImgCatePP in picppm.DefaultIfEmpty()
+                        join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
+                        from result in results.DefaultIfEmpty()
+                        select new
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Description = product.Description,
+                            ActualPrice = product.ActualPrice,
+                            Price = product.Price,
+                            CategoryId = product.CategoryId,
+                            CategoryName = cate.Name,
+                            ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
+                            Promotion = result,
+                            CreateBy = product.CreatedBy,
+                            IsDeleted = product.IsDeleted,
+                            IsActive = product.IsActived,
+                            CategoryIsDelete = cate.IsDeleted
+                        };
+            query = query.Where(p => (p.IsDeleted == false && p.CategoryIsDelete == false)
+            && (p.IsActive == true) && (p.Promotion.IsActive == true)
+            && (input.CategoryId == null || p.CategoryId == Convert.ToInt32(input.CategoryId))); ;
+            var totalItem = await query.CountAsync();
+            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
+                    .Select(prod => new ProductResponseDto
+                    {
+                        Id = prod.Id,
+                        Name = prod.Name,
+                        Description = prod.Description,
+                        ActualPrice = prod.ActualPrice,
+                        Price = prod.Price,
+                        CategoryId = prod.Id,
+                        ProductImageUrl = prod.ProductImageUrl,
+                        Promotion = prod.Promotion,
+                        CreateBy = prod.CreateBy,
+                        IsDeleted = prod.IsDeleted,
+                        IsActive = prod.IsActive
+                    }).ToListAsync();
+            var pageResult = new PageResultDto<ProductResponseDto>
+            {
+                Item = listItem,
+                TotalItem = totalItem
+            };
+            return pageResult;
+        }
+
         public async Task UpdateProduct(UpdateProductDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -228,6 +286,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
             product.UpdateBy = currentUserId.ToString();
+
             await _context.SaveChangesAsync();
         }
 
@@ -256,7 +315,6 @@ namespace Foody.Application.Services.ProductServices.Implements
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
         }
-
 
     }
 }

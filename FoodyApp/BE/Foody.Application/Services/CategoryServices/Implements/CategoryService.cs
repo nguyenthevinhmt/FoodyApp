@@ -60,6 +60,27 @@ namespace Foody.Application.Services.CategoryServices.Implements
             category.IsDeleted = true;
             category.UpdatedAt = DateTime.Now;
             category.UpdateBy = currentUserId.ToString();
+
+            var productsToDelete = _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductPromotion)
+                .Where(product => product.CategoryId == id);
+
+            foreach (var product in productsToDelete)
+            {
+                product.IsDeleted = true;
+
+                foreach (var image in product.ProductImages)
+                {
+                    image.IsDeleted = true;
+                }
+
+                foreach (var promotion in product.ProductPromotion)
+                {
+                    promotion.IsActive = false;
+                }
+            }
+
             _context.SaveChangesAsync();
         }
 
