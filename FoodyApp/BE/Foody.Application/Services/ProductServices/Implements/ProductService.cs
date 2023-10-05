@@ -25,6 +25,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             _storageService = storageService;
             _httpContextAccessor = httpContextAccessor;
         }
+        //Tạo mới sản phẩm
         public async Task<string> CreateProduct(CreateProductDto input)
         {
             using (var CreateTransaction = await _context.Database.BeginTransactionAsync())
@@ -88,7 +89,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
 
         }
-
+        //Lấy sản phẩm theo id
         public async Task<ProductResponseDto> GetProductById(int id)
         {
             var query = await (from product in _context.Products
@@ -125,6 +126,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             return query;
         }
 
+        //Lấy tất cả sản phẩm phân trang
         public async Task<PageResultDto<ProductResponseDto>> GetProductPaging(ProductFilterDto input)
         {
             var query = from product in _context.Products
@@ -183,6 +185,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             return pageResult;
         }
 
+        //Cập nhật thông tin sản phẩm
         public async Task UpdateProduct(UpdateProductDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
