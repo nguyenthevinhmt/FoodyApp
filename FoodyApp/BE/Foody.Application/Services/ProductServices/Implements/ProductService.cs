@@ -1,5 +1,4 @@
-﻿using Foody.Application.Services.CategoryServices.Dtos;
-using Foody.Application.Services.FileStoreService.Interfaces;
+﻿using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
 using Foody.Domain.Entities;
@@ -243,6 +242,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             return pageResult;
         }
 
+        //Cập nhật thông tin sản phẩm
         public async Task UpdateProduct(UpdateProductDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -288,7 +288,6 @@ namespace Foody.Application.Services.ProductServices.Implements
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
             product.UpdateBy = currentUserId.ToString();
-
             await _context.SaveChangesAsync();
         }
 
@@ -317,6 +316,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
         }
+
 
     }
 }

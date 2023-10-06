@@ -6,9 +6,9 @@ namespace Foody.Application.Services.PromotionServices.Interfaces
     public interface IPromotionService
     {
         public Task CreatePromotion(CreatePromotionDto input);
-        public Task<PageResultDto<PromotionResponseDto>> getPromotionPaging(PromotionFilterDto input);
-        public Task<PromotionResponseDto> getPromotionById(int id);
-        public Task UpdatePromotion(UpdatePromotionDto input);
-        public Task DeletePromotion(int id);
+        public Task<PageResultDto<PromotionResponseDto>> GetPromotionPaging(PromotionFilterDto input);
+        public Task<PromotionResponseDto> GetById(int id);
+        public Task Delete(int id);
+        public Task Update(UpdatePromotionDto input);
     }
 }

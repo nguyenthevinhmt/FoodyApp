@@ -37,51 +37,53 @@ namespace Foody.Application.Services.PromotionServices.Implements
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdatePromotion(UpdatePromotionDto input)
+        public async Task Update(UpdatePromotionDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == input.Id);
             if (promotion == null)
             {
-                throw new UserFriendlyException($"Chương trình khuyến mại có id = {input.Id} không tồn tại");
+                throw new UserFriendlyException($"Chương trình khuyến mại có id {input.Id} không tồn tại!");
             }
-
-            promotion.PromotionCode = input.PromotionCode;
-            promotion.Name = input.Name;
+            promotion.UpdatedAt = DateTime.Now;
+            promotion.IsActive = input.IsActive;
             promotion.Description = input.Description;
             promotion.DiscountPercent = input.DiscountPercent;
             promotion.StartTime = input.StartTime;
             promotion.EndTime = input.EndTime;
+            promotion.Name = input.Name;
             promotion.UpdatedAt = DateTime.Now;
             promotion.UpdateBy = currentUserId.ToString();
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PromotionResponseDto> getPromotionById(int id)
+        public async Task<PromotionResponseDto> GetById(int id)
         {
             var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id);
             if (promotion == null)
             {
-                throw new UserFriendlyException($"Chương trình khuyến mại có id={id} không tồn tại!");
+                throw new UserFriendlyException($"Chương trình khuyến mại có id {id} không tồn tại!");
             }
-            return new PromotionResponseDto
+            else
             {
-                Id = promotion.Id,
-                PromotionCode = promotion.PromotionCode,
-                StartTime = promotion.StartTime,
-                EndTime = promotion.EndTime,
-                CreatedAt = promotion.CreatedAt,
-                CreatedBy = promotion.CreatedBy,
-                Description = promotion.Description,
-                DiscountPercent = promotion.DiscountPercent,
-                IsActive = promotion.IsActive,
-                Name = promotion.Name
-            };
-
+                return new PromotionResponseDto
+                {
+                    Id = promotion.Id,
+                    PromotionCode = promotion.PromotionCode,
+                    StartTime = promotion.StartTime,
+                    EndTime = promotion.EndTime,
+                    CreatedAt = promotion.CreatedAt,
+                    CreatedBy = promotion.CreatedBy,
+                    Description = promotion.Description,
+                    DiscountPercent = promotion.DiscountPercent,
+                    IsActive = promotion.IsActive,
+                    Name = promotion.Name
+                };
+            }
         }
 
-        public async Task<PageResultDto<PromotionResponseDto>> getPromotionPaging(PromotionFilterDto input)
+        public async Task<PageResultDto<PromotionResponseDto>> GetPromotionPaging(PromotionFilterDto input)
         {
             var query = _context.Promotions.AsQueryable();
 
@@ -109,8 +111,6 @@ namespace Foody.Application.Services.PromotionServices.Implements
                 CreatedBy = p.CreatedBy,
                 Description = p.Description,
                 IsActive = p.IsActive,
-
-
             }).ToList();
             var pageResult = new PageResultDto<PromotionResponseDto>
             {
@@ -120,16 +120,16 @@ namespace Foody.Application.Services.PromotionServices.Implements
             return pageResult;
         }
 
-        public async Task DeletePromotion(int id)
+        public async Task Delete(int id)
         {
             var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id);
             if (promotion == null)
             {
-                throw new UserFriendlyException($"Phiếu giảm giá có id={id} không tồn tại!");
+                throw new UserFriendlyException($"Chương trình khuyến mại có id {id} không tồn tại!");
             }
-            promotion.IsActive = false;
+            promotion.IsDeleted = true;
             promotion.UpdatedAt = DateTime.Now;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

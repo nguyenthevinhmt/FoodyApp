@@ -39,11 +39,11 @@ namespace Foody.API.Controllers.PromotionController
         [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery] PromotionFilterDto input)
         {
-            var result = await _service.getPromotionPaging(input);
+            var result = await _service.GetPromotionPaging(input);
             return Ok(result);
         }
         /// <summary>
-        /// Lấy phiếu giảm giá theo id
+        /// Lấy chương trình khuyến mại theo id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -53,8 +53,7 @@ namespace Foody.API.Controllers.PromotionController
         {
             try
             {
-                var result = await _service.getPromotionById(id);
-                return Ok(result);
+                return Ok(await _service.GetById(id));
             }
             catch (Exception ex)
             {
@@ -69,12 +68,12 @@ namespace Foody.API.Controllers.PromotionController
         [Authorize]
         [AuthorizationFilter(UserTypes.Admin)]
         [HttpPut("update-promotion")]
-        public async Task<IActionResult> Update([FromForm] UpdatePromotionDto input)
+        public async Task<IActionResult> Update(UpdatePromotionDto input)
         {
             try
             {
-                await _service.UpdatePromotion(input);
-                return Ok("Update thành công");
+                await _service.Update(input);
+                return Ok("Cập nhật thông tin chương trình khuyến mãi thành công");
             }
             catch (Exception ex)
             {
@@ -93,7 +92,7 @@ namespace Foody.API.Controllers.PromotionController
         {
             try
             {
-                await _service.DeletePromotion(id);
+                await _service.Delete(id);
                 return Ok("Xóa thành công");
             }
             catch (Exception ex)
