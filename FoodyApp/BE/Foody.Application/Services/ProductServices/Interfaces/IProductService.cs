@@ -7,6 +7,7 @@ namespace Foody.Application.Services.ProductServices.Interfaces
     {
         public Task<string> CreateProduct(CreateProductDto input);
         public Task<PageResultDto<ProductResponseDto>> GetProductPaging(ProductFilterDto input);
+        public Task<PageResultDto<ProductResponseDto>> GetProductsByCategoryIdPaging(ProductFilter2Dto input);
 
         public Task<ProductResponseDto> GetProductById(int id);
         public Task UpdateProduct(UpdateProductDto input);

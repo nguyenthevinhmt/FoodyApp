@@ -2,20 +2,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { TokenResponse, UserLogin } from "../models/AuthModel";
 import baseURL from "../utils/baseUrl";
-export const login = async ({ email, password }: UserLogin) => {
+
+export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post(`${baseURL}/login`, {
+    const response = await axios.post(`${baseURL}/Auth/login`, {
       email,
       password,
     });
-    if (response) {
+
+    if (response.status === 200) {
       const accessToken: string = response.data.accessToken;
       const refreshToken: string = response.data.refreshToken;
       await saveToken({ accessToken, refreshToken });
       await intercepterToken();
       return response;
-    } else {
-      return null;
     }
   } catch (error) {
     console.log(error);
@@ -99,6 +99,9 @@ export const refreshAccessToken = async ({
       await saveToken({ accessToken, refreshToken });
       console.log("Đã refresh");
       return { accessToken, refreshToken };
+    } else {
+      console.log("Token đã hết hạn");
+      return null;
     }
   } catch (error) {
     console.log("Lỗi ở service");

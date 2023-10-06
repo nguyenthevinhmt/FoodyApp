@@ -66,7 +66,11 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryImageUrl = "no-image.png",
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8989),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1261),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -78,7 +82,11 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 2,
                             CategoryImageUrl = "no-image.png",
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8992),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1266),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -90,7 +98,11 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 3,
                             CategoryImageUrl = "no-image.png",
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8994),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1269),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -102,7 +114,11 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 4,
                             CategoryImageUrl = "no-image.png",
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8995),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1271),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -114,7 +130,11 @@ namespace Foody.Infrastructure.Migrations
                         {
                             Id = 5,
                             CategoryImageUrl = "no-image.png",
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8997),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1274),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -200,8 +220,8 @@ namespace Foody.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("ActualPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ActualPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -228,8 +248,8 @@ namespace Foody.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<string>("UpdateBy")
                         .HasColumnType("nvarchar(max)");
@@ -367,7 +387,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7034),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8690),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Không giảm giá",
                             DiscountPercent = 0.0,
@@ -382,7 +406,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7040),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8705),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Giảm giá 5%",
                             DiscountPercent = 5.0,
@@ -397,7 +425,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7041),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8707),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Giảm giá 10%",
                             DiscountPercent = 10.0,
@@ -412,7 +444,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7042),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8709),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Giảm giá 20%",
                             DiscountPercent = 20.0,
@@ -427,7 +463,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7043),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8710),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Giảm giá 25%",
                             DiscountPercent = 25.0,
@@ -442,7 +482,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7044),
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8711),
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             CreatedBy = "",
                             Description = "Giảm giá 50%",
                             DiscountPercent = 50.0,
@@ -518,11 +562,19 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 43, DateTimeKind.Local).AddTicks(8650),
                             CreatedBy = "",
                             Email = "Admin@gmail.com",
                             IsDeleted = false,
                             Password = "nuqNqnLqFPc7+on6MVYCOQXijEaVS1mX4tV/qkhvcO3qyHr8",
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 792, DateTimeKind.Local).AddTicks(5557),
+                            CreatedBy = "",
+                            Email = "Admin@gmail.com",
+                            IsDeleted = false,
+                            Password = "QcoAcWh++/5xdunI4q3dTIqIha67b4S872huG4XL/Wif0/K7",
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -531,11 +583,19 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 9, 29, 16, 42, 5, 46, DateTimeKind.Local).AddTicks(9329),
                             CreatedBy = "",
                             Email = "Customer@gmail.com",
                             IsDeleted = false,
                             Password = "GKvE255f4ogqoydh5ipLFSfRu9pRY/51S1nwO1gFSGFWF1KY",
+=======
+                            CreatedAt = new DateTime(2023, 9, 30, 15, 8, 1, 802, DateTimeKind.Local).AddTicks(2596),
+                            CreatedBy = "",
+                            Email = "Customer@gmail.com",
+                            IsDeleted = false,
+                            Password = "6tvZ/I1SBMzh+8UKFKUWBGyDY4XsaILy/7NF0kphvB6iRCkz",
+>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdateBy = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),

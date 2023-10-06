@@ -25,6 +25,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             _storageService = storageService;
             _httpContextAccessor = httpContextAccessor;
         }
+        //Tạo mới sản phẩm
         public async Task<string> CreateProduct(CreateProductDto input)
         {
             using (var CreateTransaction = await _context.Database.BeginTransactionAsync())
@@ -88,7 +89,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
 
         }
-
+        //Lấy sản phẩm theo id
         public async Task<ProductResponseDto> GetProductById(int id)
         {
             var query = await (from product in _context.Products
@@ -108,7 +109,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                                    Id = product.Id,
                                    Name = product.Name,
                                    Description = product.Description,
-                                   ActualPrice = product.ActualPrice,
+                                   ActualPrice = product.ActualPrice * result.DiscountPercent / 100,
                                    Price = product.Price,
                                    CategoryId = product.CategoryId,
                                    ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
@@ -125,6 +126,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             return query;
         }
 
+        //Lấy tất cả sản phẩm phân trang
         public async Task<PageResultDto<ProductResponseDto>> GetProductPaging(ProductFilterDto input)
         {
             var query = from product in _context.Products
@@ -144,7 +146,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                             Id = product.Id,
                             Name = product.Name,
                             Description = product.Description,
-                            ActualPrice = product.ActualPrice,
+                            ActualPrice = product.ActualPrice - (product.ActualPrice * result.DiscountPercent / 100),
                             Price = product.Price,
                             CategoryId = product.CategoryId,
                             CategoryName = cate.Name,
@@ -183,6 +185,64 @@ namespace Foody.Application.Services.ProductServices.Implements
             return pageResult;
         }
 
+        public async Task<PageResultDto<ProductResponseDto>> GetProductsByCategoryIdPaging(ProductFilter2Dto input)
+        {
+            var query = from product in _context.Products
+                        join productImage in _context.ProductImages on product.Id equals productImage.ProductId
+                        into pi
+                        from proImg in pi.DefaultIfEmpty()
+                        join category in _context.Categories on product.CategoryId equals category.Id
+                        into ppic
+                        from cate in ppic.DefaultIfEmpty()
+                        join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
+                        into picppm
+                        from proImgCatePP in picppm.DefaultIfEmpty()
+                        join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
+                        from result in results.DefaultIfEmpty()
+                        select new
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Description = product.Description,
+                            ActualPrice = product.ActualPrice,
+                            Price = product.Price,
+                            CategoryId = product.CategoryId,
+                            CategoryName = cate.Name,
+                            ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
+                            Promotion = result,
+                            CreateBy = product.CreatedBy,
+                            IsDeleted = product.IsDeleted,
+                            IsActive = product.IsActived,
+                            CategoryIsDelete = cate.IsDeleted
+                        };
+            query = query.Where(p => (p.IsDeleted == false && p.CategoryIsDelete == false)
+            && (p.IsActive == true) && (p.Promotion.IsActive == true)
+            && (input.CategoryId == null || p.CategoryId == Convert.ToInt32(input.CategoryId))); ;
+            var totalItem = await query.CountAsync();
+            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
+                    .Select(prod => new ProductResponseDto
+                    {
+                        Id = prod.Id,
+                        Name = prod.Name,
+                        Description = prod.Description,
+                        ActualPrice = prod.ActualPrice,
+                        Price = prod.Price,
+                        CategoryId = prod.Id,
+                        ProductImageUrl = prod.ProductImageUrl,
+                        Promotion = prod.Promotion,
+                        CreateBy = prod.CreateBy,
+                        IsDeleted = prod.IsDeleted,
+                        IsActive = prod.IsActive
+                    }).ToListAsync();
+            var pageResult = new PageResultDto<ProductResponseDto>
+            {
+                Item = listItem,
+                TotalItem = totalItem
+            };
+            return pageResult;
+        }
+
+        //Cập nhật thông tin sản phẩm
         public async Task UpdateProduct(UpdateProductDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);

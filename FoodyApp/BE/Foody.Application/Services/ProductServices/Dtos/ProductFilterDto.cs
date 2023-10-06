@@ -12,10 +12,10 @@ namespace Foody.Application.Services.ProductServices.Dtos
         public string CategoryId { get; set; }
         [FromQuery(Name = "startPrice")]
         [DefaultValue(0)]
-        public decimal StartPrice { get; set; }
+        public double StartPrice { get; set; }
         [FromQuery(Name = "endPrice")]
         [DefaultValue(999999999)]
-        public decimal EndPrice { get; set; } = decimal.MaxValue;
+        public double EndPrice { get; set; } = double.MaxValue;
 
     }
 }

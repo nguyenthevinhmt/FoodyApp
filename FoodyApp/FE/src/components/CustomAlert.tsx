@@ -1,5 +1,5 @@
 // Alert.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Modal, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -16,12 +16,13 @@ const Alert = ({ visible, message, onClose }: any) => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          height: 90,
+          height: 50,
         }}
       >
         <View
           style={{
-            backgroundColor: "white",
+            backgroundColor: "#fff",
+            // opacity: 0.5,
             padding: 20,
             borderRadius: 10,
             borderWidth: 1,
@@ -30,7 +31,7 @@ const Alert = ({ visible, message, onClose }: any) => {
             width: "75%",
           }}
         >
-          <Text style={{ marginVertical: 30 }}>{message}</Text>
+          <Text style={{ marginVertical: 30, color: "#111" }}>{message}</Text>
           <Button color="#007BFF" onPress={onClose} title="OK"></Button>
         </View>
       </View>
