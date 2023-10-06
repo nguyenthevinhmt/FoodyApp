@@ -10,7 +10,7 @@ namespace Foody.Domain.Entities
         public double DiscountPercent { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public IEnumerable<ProductPromotion> ProductPromotions { get; set; }
     }
 }

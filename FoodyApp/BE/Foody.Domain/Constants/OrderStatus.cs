@@ -4,8 +4,7 @@
     {
         public const int DRAFT = 1;
         public const int INPROGRESS = 2;
-        public const int PAYMENT_COMPLETE = 3;
-        public const int SUCCESS = 4;
-        public const int CANCELED = 5;
+        public const int SUCCESS = 3;
+        public const int CANCELED = 4;
     }
 }

@@ -7,6 +7,7 @@ using Foody.Share.Exceptions;
 using Foody.Share.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Foody.Application.Services.OrderServices.Implements
 {
@@ -37,6 +38,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                         {
                             UserId = currentUserId,
                             Status = OrderStatus.DRAFT,
+                            PaymentMethod = PaymentMethod.COD
                         });
                         await _context.SaveChangesAsync();
                     }
@@ -121,6 +123,43 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
             return shoppingCart;
         }
+
         #endregion
+
+        //Đổi trạng thái đơn hàng
+        public async Task UpdateOrderStatus(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            var status = (int)order.Status;
+            
+            switch (status)
+            {
+                case 1:
+                    order.Status = OrderStatus.INPROGRESS;
+                    break;
+                case 2:
+                    order.Status = OrderStatus.SUCCESS;
+                    break;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CancelOrderStatus(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if(order == null) {
+                throw new UserFriendlyException($"Đơn hàng có ID {orderId} không tồn tại");
+            }
+            else
+            {
+                order.Status = OrderStatus.CANCELED;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public Task<OrderResponseDto> GetOrderByUserId(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
