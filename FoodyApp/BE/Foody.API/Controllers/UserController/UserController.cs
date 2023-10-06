@@ -36,7 +36,7 @@ namespace Foody.API.Controllers.UserController
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("get-by-id")]
+        [HttpGet("get-by-id/{id}")]
         public IActionResult GetUserInfoById(int id)
         {
             try

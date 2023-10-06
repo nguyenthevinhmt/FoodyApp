@@ -103,16 +103,14 @@ namespace Foody.Application.Services.PromotionServices.Implements
             {
                 Id = p.Id,
                 PromotionCode = p.PromotionCode,
+                Name = p.Name,
+                DiscountPercent= p.DiscountPercent,
                 StartTime = p.StartTime,
                 EndTime = p.EndTime,
                 CreatedAt = p.CreatedAt,
                 CreatedBy = p.CreatedBy,
                 Description = p.Description,
-                DiscountPercent = p.DiscountPercent,
                 IsActive = p.IsActive,
-                Name = p.Name
-
-
             }).ToList();
             var pageResult = new PageResultDto<PromotionResponseDto>
             {
