@@ -56,7 +56,6 @@ namespace Foody.Application.Services.UserServices.Implements
             {
                 throw new UserFriendlyException($"Người dùng có id {input.Id} không tồn tại");
             }
-            user.UpdatedAt = DateTime.Now;
             user.FirstName = input.FirstName;
             user.LastName = input.LastName;
             user.PhoneNumber = input.PhoneNumber;

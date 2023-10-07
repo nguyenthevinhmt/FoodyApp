@@ -36,13 +36,14 @@ namespace Foody.API.Controllers.ProductController
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("get-product-by-category-id-paging")]
-        public async Task<IActionResult> getAllByCategoryIdPaging([FromQuery] ProductFilter2Dto input)
+        public async Task<IActionResult> getAllByCategoryIdPaging([FromQuery] ProductFilterByCategoryDto input)
         {
             try
             {
                 var result = await _service.GetProductsByCategoryIdPaging(input);
                 return Ok(result);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -60,7 +61,7 @@ namespace Foody.API.Controllers.ProductController
             try
             {
                 var result = await _service.CreateProduct(input);
-                return Ok($"Thêm thành công, sản phẩm có ID = {result}");
+                return Ok(result);
             }
             catch (Exception ex)
             {

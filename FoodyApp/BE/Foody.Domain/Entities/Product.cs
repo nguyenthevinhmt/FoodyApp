@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Domain.Entities
 {
-    public class Product : BaseEntity<int>
+    public class Product : BaseEntity<int>, ICreated, IUpdated, ISoftDeleted
     {
         [StringLength(250)]
         [Required(ErrorMessage = "Không được bỏ trống")]
@@ -22,5 +22,10 @@ namespace Foody.Domain.Entities
         public IEnumerable<Order> Orders { get; set; }
         public IEnumerable<ProductPromotion> ProductPromotion { get; set; }
         public bool IsActived { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string UpdateBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

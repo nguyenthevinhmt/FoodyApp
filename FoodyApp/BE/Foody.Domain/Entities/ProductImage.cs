@@ -2,12 +2,17 @@
 
 namespace Foody.Domain.Entities
 {
-    public class ProductImage : BaseEntity<int>
+    public class ProductImage : BaseEntity<int>, ICreated, IUpdated, ISoftDeleted
     {
         public string Description { get; set; }
         public string ProductImageUrl { get; set; }
         public long FileSize { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; }
+        public DateTime UpdatedAt { get; set; }
+        public string UpdateBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

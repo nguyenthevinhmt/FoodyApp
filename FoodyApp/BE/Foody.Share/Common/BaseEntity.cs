@@ -3,10 +3,20 @@
     public class BaseEntity<T>
     {
         public T Id { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public string CreatedBy { get; set; } = string.Empty;
+    }
+    public interface ICreated
+    {
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
+    }
+    public interface IUpdated
+    {
         public DateTime UpdatedAt { get; set; }
-        public string UpdateBy { get; set; } = string.Empty;
+        public string UpdateBy { get; set; }
+    }
+    public interface ISoftDeleted
+    {
         public bool IsDeleted { get; set; }
     }
 }
+
