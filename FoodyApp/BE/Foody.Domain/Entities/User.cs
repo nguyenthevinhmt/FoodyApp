@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Domain.Entities
 {
-    public class User : BaseEntity<int>
+    public class User : BaseEntity<int>, ICreated
     {
         [StringLength(250)]
         public string FirstName { get; set; }
@@ -20,6 +20,7 @@ namespace Foody.Domain.Entities
         public IEnumerable<UserAddress> UserAddresses { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
         public IEnumerable<Order> Orders { get; set; }
-
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string CreatedBy { get; set; }
     }
 }

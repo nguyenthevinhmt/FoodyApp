@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Domain.Entities
 {
-    public class UserAddress : BaseEntity<int>
+    public class UserAddress : BaseEntity<int>, ICreated, IUpdated
     {
         public int UserId { get; set; }
         public User User { get; set; }
@@ -38,5 +38,9 @@ namespace Foody.Domain.Entities
         /// Loại địa chỉ giao hàng (nhà riêng, công ty, khác)
         /// </summary>
         public int AddressType { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string UpdateBy { get; set; }
     }
 }

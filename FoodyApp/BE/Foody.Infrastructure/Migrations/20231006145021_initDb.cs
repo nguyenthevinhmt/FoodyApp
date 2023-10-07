@@ -8,11 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foody.Infrastructure.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:FoodyApp/BE/Foody.Infrastructure/Migrations/20230929094205_init.cs
-    public partial class init : Migration
-========
-    public partial class InitDb : Migration
->>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4:FoodyApp/BE/Foody.Infrastructure/Migrations/20230930080802_InitDb.cs
+    public partial class initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,11 +22,11 @@ namespace Foody.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     CategoryImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,10 +72,7 @@ namespace Foody.Infrastructure.Migrations
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,11 +91,11 @@ namespace Foody.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     IsActived = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -125,11 +118,11 @@ namespace Foody.Infrastructure.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     ProductCartId = table.Column<int>(type: "int", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,8 +152,7 @@ namespace Foody.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -183,11 +175,10 @@ namespace Foody.Infrastructure.Migrations
                     ProductImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileSize = table.Column<long>(type: "bigint", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -259,19 +250,11 @@ namespace Foody.Infrastructure.Migrations
                 columns: new[] { "Id", "CategoryImageUrl", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "UpdateBy", "UpdatedAt" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:FoodyApp/BE/Foody.Infrastructure/Migrations/20230929094205_init.cs
-                    { 1, "no-image.png", new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8989), "", "Các món cơm", false, "Cơm", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "no-image.png", new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8992), "", "Các món ăn nhanh", false, "Đồ ăn nhanh", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "no-image.png", new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8994), "", "Các đồ uống", false, "Đồ uống", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, "no-image.png", new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8995), "", "Các món bún", false, "Bún", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, "no-image.png", new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(8997), "", "Các món mì", false, "Mì", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
-========
-                    { 1, "no-image.png", new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1261), "", "Các món cơm", false, "Cơm", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "no-image.png", new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1266), "", "Các món ăn nhanh", false, "Đồ ăn nhanh", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "no-image.png", new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1269), "", "Các đồ uống", false, "Đồ uống", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, "no-image.png", new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1271), "", "Các món bún", false, "Bún", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, "no-image.png", new DateTime(2023, 9, 30, 15, 8, 1, 813, DateTimeKind.Local).AddTicks(1274), "", "Các món mì", false, "Mì", "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
->>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4:FoodyApp/BE/Foody.Infrastructure/Migrations/20230930080802_InitDb.cs
+                    { 1, "no-image.png", new DateTime(2023, 10, 6, 21, 50, 21, 518, DateTimeKind.Local).AddTicks(9233), null, "Các món cơm", false, "Cơm", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "no-image.png", new DateTime(2023, 10, 6, 21, 50, 21, 518, DateTimeKind.Local).AddTicks(9245), null, "Các món ăn nhanh", false, "Đồ ăn nhanh", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "no-image.png", new DateTime(2023, 10, 6, 21, 50, 21, 518, DateTimeKind.Local).AddTicks(9246), null, "Các đồ uống", false, "Đồ uống", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, "no-image.png", new DateTime(2023, 10, 6, 21, 50, 21, 518, DateTimeKind.Local).AddTicks(9248), null, "Các món bún", false, "Bún", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, "no-image.png", new DateTime(2023, 10, 6, 21, 50, 21, 518, DateTimeKind.Local).AddTicks(9249), null, "Các món mì", false, "Mì", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -279,35 +262,21 @@ namespace Foody.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "DiscountPercent", "EndTime", "IsActive", "IsDeleted", "Name", "PromotionCode", "StartTime", "UpdateBy", "UpdatedAt" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:FoodyApp/BE/Foody.Infrastructure/Migrations/20230929094205_init.cs
-                    { 1, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7034), "", "Không giảm giá", 0.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Không giảm giá", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7040), "", "Giảm giá 5%", 5.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 5%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 10, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7041), "", "Giảm giá 10%", 10.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 10%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 20, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7042), "", "Giảm giá 20%", 20.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 20%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 25, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7043), "", "Giảm giá 25%", 25.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 25%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 50, new DateTime(2023, 9, 29, 16, 42, 5, 51, DateTimeKind.Local).AddTicks(7044), "", "Giảm giá 50%", 50.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 50%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
-========
-                    { 1, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8690), "", "Không giảm giá", 0.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Không giảm giá", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8705), "", "Giảm giá 5%", 5.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 5%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 10, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8707), "", "Giảm giá 10%", 10.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 10%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 20, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8709), "", "Giảm giá 20%", 20.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 20%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 25, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8710), "", "Giảm giá 25%", 25.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 25%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 50, new DateTime(2023, 9, 30, 15, 8, 1, 812, DateTimeKind.Local).AddTicks(8711), "", "Giảm giá 50%", 50.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 50%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
->>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4:FoodyApp/BE/Foody.Infrastructure/Migrations/20230930080802_InitDb.cs
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Không giảm giá", 0.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Không giảm giá", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Giảm giá 5%", 5.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 5%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Giảm giá 10%", 10.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 10%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 20, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Giảm giá 20%", 20.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 20%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 25, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Giảm giá 25%", 25.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 25%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 50, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Giảm giá 50%", 50.0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Giảm giá 50%", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "IsDeleted", "LastName", "Password", "PhoneNumber", "RefreshToken", "RefreshTokenExpiryTime", "UpdateBy", "UpdatedAt", "UserType" },
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "LastName", "Password", "PhoneNumber", "RefreshToken", "RefreshTokenExpiryTime", "UserType" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:FoodyApp/BE/Foody.Infrastructure/Migrations/20230929094205_init.cs
-                    { 1, new DateTime(2023, 9, 29, 16, 42, 5, 43, DateTimeKind.Local).AddTicks(8650), "", "Admin@gmail.com", null, false, null, "nuqNqnLqFPc7+on6MVYCOQXijEaVS1mX4tV/qkhvcO3qyHr8", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, new DateTime(2023, 9, 29, 16, 42, 5, 46, DateTimeKind.Local).AddTicks(9329), "", "Customer@gmail.com", null, false, null, "GKvE255f4ogqoydh5ipLFSfRu9pRY/51S1nwO1gFSGFWF1KY", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
-========
-                    { 1, new DateTime(2023, 9, 30, 15, 8, 1, 792, DateTimeKind.Local).AddTicks(5557), "", "Admin@gmail.com", null, false, null, "QcoAcWh++/5xdunI4q3dTIqIha67b4S872huG4XL/Wif0/K7", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, new DateTime(2023, 9, 30, 15, 8, 1, 802, DateTimeKind.Local).AddTicks(2596), "", "Customer@gmail.com", null, false, null, "6tvZ/I1SBMzh+8UKFKUWBGyDY4XsaILy/7NF0kphvB6iRCkz", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
->>>>>>>> dea53bea39d2f420446064117c5444b2e3ad71d4:FoodyApp/BE/Foody.Infrastructure/Migrations/20230930080802_InitDb.cs
+                    { 1, new DateTime(2023, 10, 6, 21, 50, 21, 505, DateTimeKind.Local).AddTicks(4181), null, "Admin@gmail.com", null, null, "nkELcyytXfq3klMoMq23ovkzW8Ay2o4J2WTjx6y7T1CNM+f+", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, new DateTime(2023, 10, 6, 21, 50, 21, 511, DateTimeKind.Local).AddTicks(6506), null, "Customer@gmail.com", null, null, "OYu20Qv87Demo3dRH6S2t1PPWq/4WKGxEcMviHu9MVhufguS", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
                 });
 
             migrationBuilder.CreateIndex(

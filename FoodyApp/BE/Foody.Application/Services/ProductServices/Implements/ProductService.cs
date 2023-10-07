@@ -93,31 +93,35 @@ namespace Foody.Application.Services.ProductServices.Implements
         public async Task<ProductResponseDto> GetProductById(int id)
         {
             var query = await (from product in _context.Products
+                               where product.Id == id
                                join productImage in _context.ProductImages on product.Id equals productImage.ProductId
                                into pi
                                from proImg in pi.DefaultIfEmpty()
                                join category in _context.Categories on product.CategoryId equals category.Id
-                               into ppic
-                               from cate in ppic.DefaultIfEmpty()
                                join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
-                               into picppm
-                               from proImgCatePP in picppm.DefaultIfEmpty()
-                               join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
-                               from result in results.DefaultIfEmpty()
+                               join promotion in _context.Promotions on productPromotion.PromotionId equals promotion.Id
                                select new ProductResponseDto
                                {
                                    Id = product.Id,
                                    Name = product.Name,
                                    Description = product.Description,
-                                   ActualPrice = product.ActualPrice * result.DiscountPercent / 100,
+                                   ActualPrice = product.ActualPrice - (product.ActualPrice * promotion.DiscountPercent / 100),
                                    Price = product.Price,
                                    CategoryId = product.CategoryId,
+                                   CategoryName = category.Name,
                                    ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
-                                   Promotion = result,
+                                   Promotion = new PromotionResponseDto
+                                   {
+                                       Name = promotion.Name,
+                                       Description = promotion.Description,
+                                       PromotionCode = promotion.PromotionCode,
+                                       DiscountPercent = promotion.DiscountPercent,
+                                       IsActive = promotion.IsActive,
+                                   },
                                    CreateBy = product.CreatedBy,
                                    IsDeleted = product.IsDeleted,
                                    IsActive = product.IsActived
-                               }).Where(c => c.Id == id).FirstOrDefaultAsync();
+                               }).FirstOrDefaultAsync();
 
             if (query == null)
             {
@@ -134,24 +138,26 @@ namespace Foody.Application.Services.ProductServices.Implements
                         into pi
                         from proImg in pi.DefaultIfEmpty()
                         join category in _context.Categories on product.CategoryId equals category.Id
-                        into ppic
-                        from cate in ppic.DefaultIfEmpty()
                         join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
-                        into picppm
-                        from proImgCatePP in picppm.DefaultIfEmpty()
-                        join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
-                        from result in results.DefaultIfEmpty()
-                        select new
+                        join promotion in _context.Promotions on productPromotion.PromotionId equals promotion.Id
+                        select new ProductResponseDto
                         {
                             Id = product.Id,
                             Name = product.Name,
                             Description = product.Description,
-                            ActualPrice = product.ActualPrice - (product.ActualPrice * result.DiscountPercent / 100),
+                            ActualPrice = product.ActualPrice - (product.ActualPrice * promotion.DiscountPercent / 100),
                             Price = product.Price,
                             CategoryId = product.CategoryId,
-                            CategoryName = cate.Name,
+                            CategoryName = category.Name,
                             ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
-                            Promotion = result,
+                            Promotion = new PromotionResponseDto
+                            {
+                                Name = promotion.Name,
+                                Description = promotion.Description,
+                                PromotionCode = promotion.PromotionCode,
+                                DiscountPercent = promotion.DiscountPercent,
+                                IsActive = promotion.IsActive,
+                            },
                             CreateBy = product.CreatedBy,
                             IsDeleted = product.IsDeleted,
                             IsActive = product.IsActived
@@ -185,21 +191,16 @@ namespace Foody.Application.Services.ProductServices.Implements
             return pageResult;
         }
 
-        public async Task<PageResultDto<ProductResponseDto>> GetProductsByCategoryIdPaging(ProductFilter2Dto input)
+        public async Task<PageResultDto<ProductResponseDto>> GetProductsByCategoryIdPaging(ProductFilterByCategoryDto input)
         {
             var query = from product in _context.Products
                         join productImage in _context.ProductImages on product.Id equals productImage.ProductId
                         into pi
                         from proImg in pi.DefaultIfEmpty()
                         join category in _context.Categories on product.CategoryId equals category.Id
-                        into ppic
-                        from cate in ppic.DefaultIfEmpty()
                         join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
-                        into picppm
-                        from proImgCatePP in picppm.DefaultIfEmpty()
-                        join promotion in _context.Promotions on proImgCatePP.PromotionId equals promotion.Id into results
-                        from result in results.DefaultIfEmpty()
-                        select new
+                        join promotion in _context.Promotions on productPromotion.PromotionId equals promotion.Id
+                        select new ProductResponseDto
                         {
                             Id = product.Id,
                             Name = product.Name,
@@ -207,33 +208,25 @@ namespace Foody.Application.Services.ProductServices.Implements
                             ActualPrice = product.ActualPrice,
                             Price = product.Price,
                             CategoryId = product.CategoryId,
-                            CategoryName = cate.Name,
+                            CategoryName = category.Name,
                             ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
-                            Promotion = result,
+                            Promotion = new PromotionResponseDto
+                            {
+                                Name = promotion.Name,
+                                Description = promotion.Description,
+                                PromotionCode = promotion.PromotionCode,
+                                DiscountPercent = promotion.DiscountPercent,
+                                IsActive = promotion.IsActive,
+                            },
                             CreateBy = product.CreatedBy,
                             IsDeleted = product.IsDeleted,
                             IsActive = product.IsActived,
-                            CategoryIsDelete = cate.IsDeleted
                         };
-            query = query.Where(p => (p.IsDeleted == false && p.CategoryIsDelete == false)
+            query = query.Where(p => (p.IsDeleted == false)
             && (p.IsActive == true) && (p.Promotion.IsActive == true)
-            && (input.CategoryId == null || p.CategoryId == Convert.ToInt32(input.CategoryId))); ;
+            && (p.CategoryId == Convert.ToInt32(input.CategoryId)));
             var totalItem = await query.CountAsync();
-            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
-                    .Select(prod => new ProductResponseDto
-                    {
-                        Id = prod.Id,
-                        Name = prod.Name,
-                        Description = prod.Description,
-                        ActualPrice = prod.ActualPrice,
-                        Price = prod.Price,
-                        CategoryId = prod.Id,
-                        ProductImageUrl = prod.ProductImageUrl,
-                        Promotion = prod.Promotion,
-                        CreateBy = prod.CreateBy,
-                        IsDeleted = prod.IsDeleted,
-                        IsActive = prod.IsActive
-                    }).ToListAsync();
+            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize).ToListAsync();
             var pageResult = new PageResultDto<ProductResponseDto>
             {
                 Item = listItem,
