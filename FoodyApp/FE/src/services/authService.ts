@@ -109,3 +109,22 @@ export const refreshAccessToken = async ({
     console.log(error);
   }
 };
+
+export const register = async (email: string, password: string) => {
+  try {
+    const userType = 2;
+    const response = await axios.post(`${baseURL}/Auth/register`, {
+      email,
+      password,
+      userType
+    });
+
+    if (response.status === 200) {
+      console.log('Đăng ký thành công');
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

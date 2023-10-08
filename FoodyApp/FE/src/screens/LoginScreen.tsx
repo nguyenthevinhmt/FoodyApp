@@ -15,6 +15,7 @@ import {
   login,
 } from "../services/authService";
 import Alert from "../components/CustomAlert";
+import ScreenNames from "../utils/ScreenNames";
 
 export const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState<string>("Customer@gmail.com");
@@ -42,14 +43,14 @@ export const LoginScreen = ({ navigation }: any) => {
       setIsValidPassword(false);
     }
     const result = await login(email, password);
-    console.log(result);
+    //console.log(result);
 
     if (result) {
       const accessToken = await getAccessToken();
       const refreshToken = await getRefreshToken();
       console.log("accessToken", accessToken);
       console.log("refreshToken", refreshToken);
-      navigation.replace("MainScreen");
+      navigation.replace(ScreenNames.MAIN);
     } else {
       setAlertMessage("Email hoặc mật khẩu không đúng, mời đăng nhập lại");
       setShowAlert(true);
@@ -149,7 +150,7 @@ export const LoginScreen = ({ navigation }: any) => {
             style={[styles.button, styles.registerButton]}
             activeOpacity={0.7}
             onPress={() => {
-              navigation.navigate("RegisterScreen");
+              navigation.navigate(ScreenNames.REGISTER);
               setEmailError("");
               setIsValidEmail(false);
               setPasswordError("");

@@ -13,6 +13,8 @@ import {
   ValidationPassword,
   ValidationRePassword,
 } from "../utils/Validation";
+import { register } from "../services/authService";
+import ScreenNames from "../utils/ScreenNames";
 
 export const RegisterScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState<string>("");
@@ -25,7 +27,7 @@ export const RegisterScreen = ({ navigation }: any) => {
   const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
   const [isValidRePassword, setIsValidRePassword] = useState<boolean>(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const checkEmail = ValidationEmail(email);
     const checkPassword = ValidationPassword(password);
     const checkRePassword = ValidationPassword(rePassword);
@@ -54,7 +56,17 @@ export const RegisterScreen = ({ navigation }: any) => {
       hasError = true;
     }
 
-    if (!hasError) {
+    const result = await register(email, password);
+    if (result != null) {
+      hasError = true;
+      console.log(result);
+    }
+    else {
+      hasError = false;
+      console.log(result);
+    }
+
+    if (hasError == true) {
       // Nếu không có lỗi, thực hiện đăng kí thành công
       setEmailError("");
       setIsValidEmail(false);
@@ -63,6 +75,10 @@ export const RegisterScreen = ({ navigation }: any) => {
       setRePasswordError("");
       setIsValidRePassword(false);
       alert("Đăng kí thành công");
+      navigation.replace(ScreenNames.LOGIN)
+    }
+    else {
+      alert("Đăng kí không thành công");
     }
   };
 
@@ -176,7 +192,7 @@ export const RegisterScreen = ({ navigation }: any) => {
             style={[styles.button, styles.registerButton]}
             activeOpacity={0.7}
             onPress={() => {
-              navigation.navigate("LoginScreen");
+              navigation.navigate(ScreenNames.LOGIN);
             }}
           >
             <Text

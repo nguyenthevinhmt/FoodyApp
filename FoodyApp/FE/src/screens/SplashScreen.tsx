@@ -7,6 +7,7 @@ import {
   refreshAccessToken,
   saveToken,
 } from "../services/authService";
+import ScreenNames from "../utils/ScreenNames";
 
 export default function SplashScreen({ navigation, route }: any) {
   const logoImage = require("../assets/images/Logo_app.png");
@@ -18,11 +19,11 @@ export default function SplashScreen({ navigation, route }: any) {
       const newAccessToken = response?.accessToken;
       const newRefreshToken = response?.refreshToken;
       await saveToken({ newAccessToken, newRefreshToken });
-      navigation.navigate("MainScreen");
+      navigation.navigate(ScreenNames.MAIN);
     } catch (error) {
       console.log("Có lỗi khi refresh token");
       await Logout();
-      navigation.navigate("LoginScreen");
+      navigation.navigate(ScreenNames.LOGIN);
     }
   };
   useEffect(() => {
@@ -39,10 +40,10 @@ export default function SplashScreen({ navigation, route }: any) {
         if (decodedToken.exp < currentTime) {
           await setRefreshToken(objRefreshToken);
         } else {
-          navigation.replace("MainScreen");
+          navigation.replace(ScreenNames.MAIN);
         }
       } else {
-        navigation.replace("LoginScreen");
+        navigation.replace(ScreenNames.LOGIN);
       }
     };
 

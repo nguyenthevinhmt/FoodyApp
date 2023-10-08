@@ -5,6 +5,9 @@ import { RegisterScreen } from "./src/screens/RegisterScreen";
 import { useEffect, useState } from "react";
 import MainScreen from "./src/screens/MainScreen";
 import SplashScreen from "./src/screens/SplashScreen";
+import ScreenNames from "./src/utils/ScreenNames";
+import AccountScreen from "./src/screens/AccountScreen";
+import UserScreen from "./src/screens/UserScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -14,10 +17,12 @@ export default function App() {
         screenOptions={{ headerShown: false }}
         initialRouteName="SplashScreen"
       >
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name={ScreenNames.SPLASH} component={SplashScreen} />
+        <Stack.Screen name={ScreenNames.MAIN} component={MainScreen} />
+        <Stack.Screen name={ScreenNames.LOGIN} component={LoginScreen} />
+        <Stack.Screen name={ScreenNames.REGISTER} component={RegisterScreen} />
+        <Stack.Screen name={ScreenNames.USER} component={UserScreen} />
+        <Stack.Screen name={ScreenNames.ACCOUNT} component={AccountScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
