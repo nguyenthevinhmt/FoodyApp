@@ -6,10 +6,12 @@ namespace Foody.Application.Services.OrderServices.Interfaces
     {
         public Task<string> AddProductToCart(int productId);
         public Task RemoveProductFromCart(int id);
-        //public Task<CartResponse> GetCartByUserId();
-        public Task<CartResponse> GetCartByUserId();
-        public Task UpdateOrderStatus(int orderId);
+        public Task<CartResponseDto> GetCartByUserId();
+        public Task UpdateOrderStatus(UpdateOrderStatusDto input);
         public Task CancelOrderStatus(int orderId);
-        public Task<OrderResponseDto> GetOrderByUserId(int userId);
+        public Task<CartResponseDto> GetPendingOrder();
+        public Task<CartResponseDto> GetShippingOrder();
+        public Task<CartResponseDto> GetSuccessOrder();
+        public Task<CartResponseDto> GetCanceledOrder();
     }
 }

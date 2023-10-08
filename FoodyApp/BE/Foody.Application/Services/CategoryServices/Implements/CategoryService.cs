@@ -1,14 +1,14 @@
-﻿using Foody.Share.Exceptions;
-using Foody.Application.Services.CategoryServices.Dtos;
+﻿using Foody.Application.Services.CategoryServices.Dtos;
 using Foody.Application.Services.CategoryServices.Interfaces;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
+using Foody.Share.Exceptions;
+using Foody.Share.Shared;
+using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
-using Foody.Share.Shared;
-using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.CategoryServices.Implements
 {
@@ -81,7 +81,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 }
             }
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<CategoryResponseDto> GetCategoryById(int id)
@@ -117,7 +117,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);
             }
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
         }
 

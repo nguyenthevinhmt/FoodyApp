@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Foody.Domain.Constants
+﻿namespace Foody.Domain.Constants
 {
-    public enum PaymentMethod
+    public static class PaymentMethod
     {
-        COD = 1,
-        VNPAY= 2
+        public const int COD = 1;
+        public const int VNPAY = 2;
     }
 }
