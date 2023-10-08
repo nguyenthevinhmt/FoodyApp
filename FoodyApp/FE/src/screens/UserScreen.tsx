@@ -4,39 +4,35 @@ import { Logout } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
 import UserEditButton from "../components/UserEditButton";
 import { getById } from "../services/userService";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { getAccessToken } from "../services/authService";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function UserScreen({ navigation }: any) {
-  const [id, setId] = useState<number>();
   const [lastName, setLastName] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
 
-  useEffect(() => {
-    const getData = async (id: number) => {
-      const result = await getById(id);
-      setFirstName(result?.data["firstName"]);
-      setLastName(result?.data["lastName"]);
-    }
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        const jwt = require("jwt-decode");
+        const token = await getAccessToken();
+        const decode = jwt(token);
 
-    const getId = async () => {
-      const jwt = require("jwt-decode");
-      const token = await getAccessToken();
-      const decoded = jwt(token);
+        const userId = decode.sub;
+        console.log("User ID:", userId);
 
-      const userId = decoded.sub;
-      console.log('User ID:', userId);
-      
-      setId(userId);
-      getData(userId);
-    };
-
-    getId();
-  }, [])
+        const result = await getById(userId);
+        setFirstName(result?.data["firstName"]);
+        setLastName(result?.data["lastName"]);
+      };
+      getData();
+    }, [])
+  );
 
   //kiểm tra tên đã có chưa
   const check = () => {
-    if(firstName == null && lastName == null) {
+    if (firstName == null && lastName == null) {
       return false;
     } else {
       return true;
