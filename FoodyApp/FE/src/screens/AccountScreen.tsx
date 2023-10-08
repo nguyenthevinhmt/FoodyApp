@@ -14,31 +14,26 @@ export default function AccountScreen({ navigation }: any) {
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [isValidLastName, setIsValidLastName] = useState<boolean>(false);
     const [isValidFirstName, setIsValidFirstName] = useState<boolean>(false);
-    const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState<boolean>(false);
 
     useEffect(() => {
-        const getData = async (id: number) => {
-            const result = await getById(id);
+        const getData = async () => {
+            const jwt = require("jwt-decode");
+            const token = await getAccessToken();
+            const decode = jwt(token);
+
+            const userId = decode.sub;
+            console.log("User ID:", userId);
+
+            const result = await getById(userId);
+            setId(userId);
             setFirstName(result?.data["firstName"]);
             setLastName(result?.data["lastName"]);
             setEmail(result?.data["email"]);
             setPhoneNumber(result?.data["phoneNumber"]);
-        }
-
-        const getId = async () => {
-            const jwt = require("jwt-decode");
-            const token = await getAccessToken();
-            const decoded = jwt(token);
-
-            const userId = decoded.sub;
-            console.log('User ID:', userId);
-            
-            setId(userId);
-            getData(userId);
         };
 
-        getId();
+        getData();
     }, [])
 
     const handleUpdate = async () => {
@@ -46,10 +41,6 @@ export default function AccountScreen({ navigation }: any) {
 
         let hasError = false;
 
-        if (checkEmail !== null) {
-            setIsValidEmail(true);
-            hasError = true;
-        }
         if (lastName === "") {
             setIsValidLastName(true);
             hasError = true;
@@ -66,10 +57,9 @@ export default function AccountScreen({ navigation }: any) {
         if (hasError == false) {
             setIsValidLastName(true);
             setIsValidFirstName(true);
-            setIsValidEmail(true);
             setIsValidPhoneNumber(true);
             const result = await update(id, firstName, lastName, phoneNumber);
-            navigation.replace(ScreenNames.USER);
+            navigation.goBack();
         }
         else {
             alert("Sửa thông tin không thành công");
@@ -120,17 +110,15 @@ export default function AccountScreen({ navigation }: any) {
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có email"
-                        onChangeText={(value) => {
-                            setEmail(value);
-                        }}>
+                    >
                         <Text>{email}</Text>
                     </TextInput>
                 </View>
             </View>
-                        
+
             <View style={styles.buttonArea}>
                 <TouchableOpacity style={styles.returnButt} onPress={() => navigation.goBack()}>
-                    <Text style={{color: "#EE4D2D"}}>Trở lại</Text>
+                    <Text style={{ color: "#EE4D2D" }}>Trở lại</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -162,7 +150,7 @@ const styles = StyleSheet.create({
     },
     title: {
         width: "20%",
-        
+
     },
     input: {
         width: "80%",
