@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Foody.Application.Services.ProductServices.Dtos
 {
-    public class ProductFilter2Dto : FilterDto
+    public class ProductFilterByCategoryDto : FilterDto
     {
         public int CategoryId { get; set; }
     }
