@@ -1,6 +1,6 @@
 ﻿namespace Foody.Application.Services.OrderServices.Dtos
 {
-    public class CartResponse
+    public class CartResponseDto
     {
         public int OrderId { get; set; }
         public double TotalPrice { get; set; }
