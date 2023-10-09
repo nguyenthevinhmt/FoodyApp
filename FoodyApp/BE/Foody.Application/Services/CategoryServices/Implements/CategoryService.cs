@@ -38,7 +38,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 Name = input.Name,
                 Description = input.Description,
                 CreatedAt = DateTime.Now,
-                CreatedBy = currentUserId.ToString(),
+                CreatedBy = currentUserId,
             };
             //Thêm ảnh
             if (input.ThumbnailImage != null)
@@ -59,7 +59,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             category.IsDeleted = true;
             category.UpdatedAt = DateTime.Now;
-            category.UpdateBy = currentUserId.ToString();
+            category.UpdateBy = currentUserId;
 
             var productsToDelete = _context.Products
                 .Include(p => p.ProductImages)
@@ -111,7 +111,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             category.Name = input.Name;
             category.Description = input.Description;
             category.UpdatedAt = DateTime.Now;
-            category.UpdateBy = currentUserId.ToString();
+            category.UpdateBy = currentUserId;
             if (input.ThumbnailImage != null)
             {
                 category.CategoryImageUrl = await this.SaveFile(input.ThumbnailImage);

@@ -32,7 +32,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
                 IsActive = input.IsActive,
                 StartTime = input.StartTime,
                 EndTime = input.EndTime,
-                CreatedBy = currentUserId.ToString()
+                CreatedBy = currentUserId
             });
             await _context.SaveChangesAsync();
         }
@@ -53,7 +53,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
             promotion.EndTime = input.EndTime;
             promotion.Name = input.Name;
             promotion.UpdatedAt = DateTime.Now;
-            promotion.UpdateBy = currentUserId.ToString();
+            promotion.UpdateBy = currentUserId;
 
             await _context.SaveChangesAsync();
         }

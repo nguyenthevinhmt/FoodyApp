@@ -42,7 +42,7 @@
         /// <summary>
         /// Tên danh mục sản phẩm
         /// </summary>
-        public string CreateBy { get; set; }
+        public int CreateBy { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 

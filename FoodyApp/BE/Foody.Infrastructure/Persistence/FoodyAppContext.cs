@@ -28,5 +28,7 @@ namespace Foody.Infrastructure.Persistence
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<ProductPromotion> ProductPromotions { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<ProductCart> ProductsCarts { get; set;}
     }
 }

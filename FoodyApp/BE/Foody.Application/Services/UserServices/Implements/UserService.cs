@@ -21,7 +21,7 @@ namespace Foody.Application.Services.UserServices.Implements
             {
                 AddressType = input.AddressType,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = input.UserId.ToString(),
+                CreatedBy = input.UserId,
                 Province = input.Province,
                 UserId = input.UserId,
                 DetailAddress = input.DetailAddress,

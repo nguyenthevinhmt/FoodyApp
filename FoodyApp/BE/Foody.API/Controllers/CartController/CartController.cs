@@ -1,4 +1,5 @@
-﻿using Foody.Application.Services.OrderServices.Interfaces;
+﻿using Foody.Application.Services.CartServices.Interfaces;
+using Foody.Application.Services.OrderServices.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +10,8 @@ namespace Foody.API.Controllers.CartController
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly IOrderService _service;
-        public CartController(IOrderService service)
+        private readonly ICartService _service;
+        public CartController(ICartService service)
         {
             _service = service;
         }
@@ -23,12 +24,11 @@ namespace Foody.API.Controllers.CartController
         {
             try
             {
-
                 return Ok(await _service.GetCartByUserId());
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(ex.Message);
             }
         }
         /// <summary>

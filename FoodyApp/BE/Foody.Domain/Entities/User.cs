@@ -21,6 +21,6 @@ namespace Foody.Domain.Entities
         public DateTime RefreshTokenExpiryTime { get; set; }
         public IEnumerable<Order> Orders { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public string CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
     }
 }
