@@ -20,9 +20,5 @@ namespace Foody.Application.Services.CategoryServices.Dtos
         /// Mô tả category
         /// </summary>
         public string Description { get; set; }
-        /// <summary>
-        /// đường dẫn ảnh category
-        /// </summary>
-        public string CategoryImageUrl { get; set; }
     }
 }
