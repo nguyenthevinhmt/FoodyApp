@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import MainScreen from "./src/screens/MainScreen";
 import SplashScreen from "./src/screens/SplashScreen";
 import ScreenNames from "./src/utils/ScreenNames";
-import AccountScreen from "./src/screens/AccountScreen";
 import UserScreen from "./src/screens/UserScreen";
+import AccountScreen from "./src/screens/AccountScreen";
+import AddressScreen from "./src/screens/AddressScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name={ScreenNames.REGISTER} component={RegisterScreen} />
         <Stack.Screen name={ScreenNames.USER} component={UserScreen} />
         <Stack.Screen name={ScreenNames.ACCOUNT} component={AccountScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
+        <Stack.Screen name={ScreenNames.ADDRESS} component={AddressScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

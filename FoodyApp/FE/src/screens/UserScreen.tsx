@@ -64,7 +64,7 @@ export default function UserScreen({ navigation }: any) {
           <UserEditButton
             imageUrl={require('../assets/Icons/icons8-map-marker-100.png')}
             text="Địa chỉ"
-            onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}
+            onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
           />
         </View>
         <View style={styles.Button}>

@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.UserServices.Dtos;
 using Foody.Application.Services.UserServices.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.UserController
@@ -49,6 +50,24 @@ namespace Foody.API.Controllers.UserController
             }
         }
         /// <summary>
+        /// Lấy tất cả địa chỉ người dùng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("get-user-address-paging")]
+        public async Task<IActionResult> GetAllUserAddress([FromQuery] AddressFilterDto input)
+        {
+            try
+            {
+                var result = await _service.GetAddressForUserPaging(input);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// Thêm địa chỉ cho người dùng
         /// </summary>
         /// <param name="input"></param>
@@ -58,6 +77,24 @@ namespace Foody.API.Controllers.UserController
         {
             await _service.AddAddressForUser(input);
             return Ok("Thêm địa chỉ thành công");
+        }
+        /// <summary>
+        /// Cập nhật địa chỉ 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("update-address")]
+        public async Task<IActionResult> Update([FromForm] UpdateAddressDto input)
+        {
+            try
+            {
+                await _service.UpdateAddressForUser(input);
+                return Ok("Cập nhật địa chỉ thành công");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
