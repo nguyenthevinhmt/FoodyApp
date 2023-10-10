@@ -1,5 +1,4 @@
 ﻿using Foody.Application.Services.CartServices.Interfaces;
-using Foody.Application.Services.OrderServices.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,11 +36,11 @@ namespace Foody.API.Controllers.CartController
         /// <param name="productId"></param>
         /// <returns></returns>
         [HttpPost("add-product-to-cart")]
-        public async Task<IActionResult> Create(int productId)
+        public IActionResult Create(int productId)
         {
             try
             {
-                var result = await _service.AddProductToCart(productId);
+                var result = _service.AddProductToCart(productId);
                 return Ok(result);
             }
             catch (Exception ex)
