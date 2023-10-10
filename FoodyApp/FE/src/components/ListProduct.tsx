@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useState } from "react";
 import categoryService from "../services/categoryService";
 import productService from "../services/productService";
+import {baseURL_img} from "../utils/baseUrl"; 
 // import RNPickerSelect from 'react-native-picker-select';
 
 export default function ListProduct() {
@@ -16,12 +17,12 @@ export default function ListProduct() {
   useEffect(() => {
     categoryService.getAllCategory().then((response) => {
       setListCategory(response.data.item);
-      // console.log(response.data.item);
+      console.log(response.data.item);
     }
     ).catch((error) => {
       console.error('Lỗi khi lấy dữ liệu từ API getAllCategory:', error);
     });
-    productService.getAllProduct()
+    productService.getListProduct(1)
       .then((response) => {
         setListProduct(response.data.item);
         console.log(listProduct);
@@ -70,8 +71,12 @@ export default function ListProduct() {
           keyExtractor={(item: any) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.view4}>
-              <Image
+              {/* <Image
                 source={require("../assets/images/food1.png")}
+                style={styles.img2}
+              /> */}
+              <Image
+                source={{ uri: `${baseURL_img}${item.productImageUrl}` }}
                 style={styles.img2}
               />
               <Text style={styles.text4}>{item.name}</Text>
