@@ -11,7 +11,12 @@ const Tab = createMaterialTopTabNavigator();
 export default function OrderScreen() {
   return (
     <SafeAreaView style={{flex: 1}}>
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#EE4D2D',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: { fontSize: 12 },
+      }}>
       <Tab.Screen
         name="Chờ xử lý"
         component={PendingOrderScreen}

@@ -5,7 +5,9 @@ const ScreenNames = {
     REGISTER: "RegisterScreen",
     USER: "UserScreen",
     ACCOUNT: "Account and Security",
-    ADDRESS: "Address"
+    ADDRESS: "Address",
+    CREATEADDRESS: "Create Address",
+    UPDATEADDRESS: "Update Address"
 };
 
 export default ScreenNames;

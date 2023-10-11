@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: '#fff'
+        backgroundColor: "#F1EFEF"
     },
     boundary: {
         width: '100%',

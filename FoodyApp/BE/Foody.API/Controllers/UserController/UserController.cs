@@ -84,7 +84,7 @@ namespace Foody.API.Controllers.UserController
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("update-address")]
-        public async Task<IActionResult> Update([FromForm] UpdateAddressDto input)
+        public async Task<IActionResult> Update(UpdateAddressDto input)
         {
             try
             {

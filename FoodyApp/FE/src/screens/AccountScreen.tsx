@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#F2E1E1",
+        backgroundColor: "#F1EFEF",
     },
     listDetail: {
         backgroundColor: "#fff",
