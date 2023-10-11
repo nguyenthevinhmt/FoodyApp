@@ -27,7 +27,7 @@ namespace Foody.API.Controllers.OrderController
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(ex.Message);
             }
         }
         /// <summary>
@@ -43,7 +43,7 @@ namespace Foody.API.Controllers.OrderController
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(ex.Message);
             }
         }
         /// <summary>
@@ -59,7 +59,7 @@ namespace Foody.API.Controllers.OrderController
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(ex.Message);
             }
         }
         /// <summary>
@@ -75,7 +75,7 @@ namespace Foody.API.Controllers.OrderController
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(ex.Message);
             }
         }
         [HttpPut("update-order-status")]
@@ -91,12 +91,25 @@ namespace Foody.API.Controllers.OrderController
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("create")]
+        [HttpPost("create-order")]
         public async Task<IActionResult> Create([FromBody] CreateOrderDto input)
         {
             try
             {
                 await _service.CreateOrder(input);
+                return Ok("Thêm thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("create-order-from-cart")]
+        public async Task<IActionResult> CreateFromCart([FromBody] CreateOrderFromCartDto input)
+        {
+            try
+            {
+                await _service.CreateOrderFromCart(input);
                 return Ok("Thêm thành công");
             }
             catch (Exception ex)

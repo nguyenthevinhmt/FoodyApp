@@ -10,7 +10,6 @@ namespace Foody.Domain.Entities
     public class Cart : BaseEntity<int>, ICreated, ISoftDeleted
     {
         public int UserId { get; set; }
-        public int ProductCartId { get; set; }
         public IEnumerable<ProductCart> ProductCarts { get; set; }
         public IEnumerable<Product> Products { get; set; }
         #region Audit

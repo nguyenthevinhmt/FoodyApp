@@ -31,49 +31,51 @@ namespace Foody.Application.Services.CartServices.Implements
         public async Task<string> AddProductToCart(int productId)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                try
+                var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == currentUserId);
+                if (cart == null)
                 {
-                    var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == currentUserId);
-                    if (cart == null)
+                    
+                    cart = new Cart
                     {
-                        await _context.Carts.AddAsync(new Cart
-                        {
-                            UserId = currentUserId,
-                            CreatedBy = currentUserId,
-                            CreatedAt = DateTime.Now,
-                            IsDeleted = false,
-                        });
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(od => od.CartId == cart.Id && od.ProductId == productId);
-                        if (productCart == null)
-                        {
-                            await _context.ProductsCarts.AddAsync(new ProductCart
-                            {
-                                ProductId = productId,
-                                Quantity = 1,
-                                CartId = cart.Id
-                            });
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            productCart.Quantity += 1;
-                            await _context.SaveChangesAsync();
-                        }
-                    }
-                    await transaction.CommitAsync();
-                    return "Thêm thành công";
+                        UserId = currentUserId,
+                        CreatedBy = currentUserId,
+                        CreatedAt = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _context.Carts.AddAsync(cart);
+                    await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
+
+                var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == productId);
+                if (productCart == null)
                 {
-                    await transaction.RollbackAsync();
-                    return "Lỗi: " + ex.Message;
+                    // Nếu sản phẩm chưa có, thêm mới
+                    productCart = new ProductCart
+                    {
+                        ProductId = productId,
+                        Quantity = 1,
+                        CartId = cart.Id,
+                    };
+                    await _context.ProductsCarts.AddAsync(productCart);
+                    await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    // Nếu sản phẩm đã có, cập nhật số lượng
+                    productCart.Quantity += 1;
+                    await _context.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+                return "Thêm sản phẩm vào giỏ hàng thành công";
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return "Lỗi: " + ex.Message;
             }
         }
 
