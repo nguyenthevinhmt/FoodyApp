@@ -66,7 +66,7 @@ export default function UserScreen({ navigation }: any) {
           <UserEditButton
             imageUrl={require("../assets/Icons/icons8-map-marker-100.png")}
             text="Địa chỉ"
-            onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}
+            onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
           />
         </View>
         <View style={styles.Button}>
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F1EFEF"
   },
   profile: {
     width: "100%",
