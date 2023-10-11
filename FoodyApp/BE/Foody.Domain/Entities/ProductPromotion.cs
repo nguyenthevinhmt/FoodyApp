@@ -10,6 +10,6 @@ namespace Foody.Domain.Entities
         public Product Product { get; set; }
         public int PromotionId { get; set; }
         public Promotion Promotion { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

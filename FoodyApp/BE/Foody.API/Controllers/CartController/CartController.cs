@@ -36,11 +36,11 @@ namespace Foody.API.Controllers.CartController
         /// <param name="productId"></param>
         /// <returns></returns>
         [HttpPost("add-product-to-cart")]
-        public IActionResult Create(int productId)
+        public async Task<IActionResult> Create(int productId)
         {
             try
             {
-                var result = _service.AddProductToCart(productId);
+                var result = await _service.AddProductToCart(productId);
                 return Ok(result);
             }
             catch (Exception ex)
