@@ -4,7 +4,10 @@ const ScreenNames = {
     LOGIN: "LoginScreen",
     REGISTER: "RegisterScreen",
     USER: "UserScreen",
-    ACCOUNT: "Tài khoản và bảo mật"
+    ACCOUNT: "Account and Security",
+    ADDRESS: "Address",
+    CREATEADDRESS: "Create Address",
+    UPDATEADDRESS: "Update Address"
 };
 
 export default ScreenNames;
