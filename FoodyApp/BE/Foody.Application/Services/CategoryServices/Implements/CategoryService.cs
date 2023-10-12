@@ -105,7 +105,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             category.Name = input.Name;
             category.Description = input.Description;
             category.UpdatedAt = DateTime.Now;
-            category.UpdateBy = currentUserId.ToString();
+            category.UpdateBy = currentUserId;
 
             await _context.SaveChangesAsync();
 

@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.CartServices.Dtos;
 using Foody.Application.Services.OrderServices.Dtos;
+using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.OrderServices.Interfaces
 {
@@ -43,6 +44,17 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         public Task CreateOrderFromCart(CreateOrderFromCartDto input);
+        /// <summary>
+        /// Cập nhật trạng thái đơn hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public Task UpdateOrderStatus(UpdateOrderStatusDto input);
+        /// <summary>
+        /// Lấy tất cả đơn hàng theo trạng thái chờ duyệt role Admin
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        //public Task<PageResultDto<OrderResponseDto>> GetAllPendingOrders(OrderFilterDto input);
     }
 }

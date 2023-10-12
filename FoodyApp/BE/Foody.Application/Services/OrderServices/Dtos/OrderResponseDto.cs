@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Application.Services.OrderServices.Dtos
 {
@@ -9,5 +10,6 @@ namespace Foody.Application.Services.OrderServices.Dtos
         public List<OrderDetail> OrderDetails { get; set; }
         public double TotalAmount { get; set; }
         public List<InfoProductCartDto> Products { get; set; }
+        public UserAddressDto UserAddress { get; set; }
     }
 }

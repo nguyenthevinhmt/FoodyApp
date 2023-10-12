@@ -6,6 +6,7 @@ using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 using Foody.Share.Shared;
+using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Net.WebSockets;
@@ -27,7 +28,7 @@ namespace Foody.Application.Services.OrderServices.Implements
         //Đổi trạng thái đơn hàng
         public async Task UpdateOrderStatus(UpdateOrderStatusDto input)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == input.Id);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == input.OrderId);
             if (order == null)
             {
                 throw new UserFriendlyException("Không tìm thấy đơn hàng");
@@ -66,6 +67,16 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -103,6 +114,16 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -140,6 +161,16 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -177,6 +208,16 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -205,12 +246,25 @@ namespace Foody.Application.Services.OrderServices.Implements
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
+                if (userAddress == null)
+                {
+                    throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+                }
                 var newOrder = new Order
                 {
                     PaymentMethod = input.PaymentMethod,
                     Status = OrderStatus.INPROGRESS,
                     UserId = userId,
                     CreatedAt = DateTime.Now,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                    CreatedBy = userId,
                 };
                 await _context.Orders.AddAsync(newOrder);
                 await _context.SaveChangesAsync();
@@ -239,10 +293,29 @@ namespace Foody.Application.Services.OrderServices.Implements
             {
                 throw new UserFriendlyException("Giỏ hàng không tồn tại");
             }
+            
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var order = new Order { UserId = userId, CreatedAt = DateTime.Now, CreatedBy = userId };
+                var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
+                if (userAddress == null)
+                {
+                    throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+                }
+                var order = new Order { 
+                    UserId = userId, 
+                    CreatedAt = DateTime.Now, 
+                    CreatedBy = userId, 
+                    PaymentMethod = input.PaymentMethod != 0 ? input.PaymentMethod : PaymentMethod.COD,
+                    Status = OrderStatus.INPROGRESS,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                };
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
 
@@ -263,8 +336,19 @@ namespace Foody.Application.Services.OrderServices.Implements
                 throw new UserFriendlyException(ex.Message);
             }
         }
-        //Cần các chức năng như:
-        //- Thanh toán từ giỏ hàng: thanh toán tất cả sản phẩm trong giỏ hàng, thanh toán 1 hoặc nhiều sản phẩm trong giỏ hàng
-        //- Thanh toán sản phẩm đặt mua trực tiếp từ màn hình home
+
+        //public async Task<PageResultDto<OrderResponseDto>> GetAllPendingOrders(OrderFilterDto input)
+        //{
+        //    var query = await (_context.Orders.Where(o => o.Status == OrderStatus.INPROGRESS && (input.Keyword == null || o.Id == int.Parse(input.Keyword))
+        //                        && (input.CreateDate == null || o.CreatedAt.Date == input.CreateDate))).ToListAsync();
+        //    var result = new PageResultDto<OrderResponseDto>();
+        //    result.TotalItem = query.Count();
+        //    query = query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize).Select(c => new OrderResponseDto
+        //    {
+        //        Id = c.Id,
+        //        Products = 
+        //    });
+        //}
+       
     }
 }

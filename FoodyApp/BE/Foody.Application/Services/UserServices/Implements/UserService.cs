@@ -101,7 +101,7 @@ namespace Foody.Application.Services.UserServices.Implements
             address.Notes = input.Notes;
             address.AddressType = input.AddressType;
             address.UpdatedAt = DateTime.Now;
-            address.UpdateBy = input.UserId.ToString();
+            address.UpdateBy = input.UserId;
 
             await _context.SaveChangesAsync();
         }
