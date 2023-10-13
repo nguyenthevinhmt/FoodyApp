@@ -16,5 +16,7 @@ namespace Foody.Application.Services.OrderServices.Dtos
         public string Keyword {  get { return _keyword; } set { _keyword = value.Trim(); } }
         [FromQuery(Name = "createDate")]
         public DateTime? CreateDate {  get; set; }
+        [FromQuery(Name = "orderStatus")]
+        public int? orderStatus {  get; set; }
     }
 }
