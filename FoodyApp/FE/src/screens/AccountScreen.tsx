@@ -1,4 +1,10 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenNames from "../utils/ScreenNames";
 import { getAccessToken } from "../services/authService";
@@ -36,10 +42,10 @@ export default function AccountScreen({ navigation }: any) {
         getData();
     }, [])
 
-    const handleUpdate = async () => {
-        const checkEmail = ValidationEmail(email);
+  const handleUpdate = async () => {
+    const checkEmail = ValidationEmail(email);
 
-        let hasError = false;
+    let hasError = false;
 
         if (lastName === "") {
             setIsValidLastName(true);
@@ -65,46 +71,49 @@ export default function AccountScreen({ navigation }: any) {
             alert("Sửa thông tin không thành công");
         }
     }
+    }
 
-    return (
-        <View style={styles.container}>
-            <View>
-                <View style={styles.listDetail}>
-                    <Text style={styles.title}>Họ</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="chưa có họ"
-                        onChangeText={(value) => {
-                            setLastName(value);
-                        }}>
-                        <Text>{lastName}</Text>
-                    </TextInput>
-                </View>
+  return (
+    <View style={styles.container}>
+      <View>
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Họ</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có họ"
+            onChangeText={(value) => {
+              setLastName(value);
+            }}
+          >
+            <Text>{lastName}</Text>
+          </TextInput>
+        </View>
 
-                <View style={styles.listDetail}>
-                    <Text style={styles.title}>Tên</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="chưa có tên"
-                        onChangeText={(value) => {
-                            setFirstName(value);
-                        }}>
-                        <Text>{firstName}</Text>
-                    </TextInput>
-                </View>
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Tên</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có tên"
+            onChangeText={(value) => {
+              setFirstName(value);
+            }}
+          >
+            <Text>{firstName}</Text>
+          </TextInput>
+        </View>
 
-                <View style={styles.listDetail}>
-                    <Text style={styles.title}>Điện thoại</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="chưa có số điện thoại"
-                        onChangeText={(value) => {
-                            setPhoneNumber(value);
-                        }}>
-                        <Text>{phoneNumber}</Text>
-                    </TextInput>
-                </View>
-
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Điện thoại</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có số điện thoại"
+            onChangeText={(value) => {
+              setPhoneNumber(value);
+            }}
+          >
+            <Text>{phoneNumber}</Text>
+          </TextInput>
+        </View>
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Email</Text>
                     <TextInput
@@ -120,19 +129,20 @@ export default function AccountScreen({ navigation }: any) {
                 <TouchableOpacity style={styles.returnButt} onPress={() => navigation.goBack()}>
                     <Text style={{ color: "#EE4D2D" }}>Trở lại</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.confirmButt}
-                    onPress={() => {
-                        handleUpdate();
-                    }}>
-                    <Text style={{ color: "#fff" }}>Lưu thay đổi</Text>
                 </TouchableOpacity>
-            </View>
-        </View>
-    );
+
+        <TouchableOpacity
+          style={styles.confirmButt}
+          onPress={() => {
+            handleUpdate();
+          }}
+        >
+          <Text style={{ color: "#fff" }}>Lưu thay đổi</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
-const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -172,5 +182,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#EE4D2D",
+    }
     }
 });

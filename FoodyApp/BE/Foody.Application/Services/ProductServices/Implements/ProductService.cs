@@ -51,7 +51,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                         CategoryId = input.CategoryId,
                         IsActived = input.IsActive,
                         CreatedAt = DateTime.Now,
-                        CreatedBy = currentUserId.ToString(),
+                        CreatedBy = currentUserId,
                     };
 
                     //Xử lý thêm ảnh ở đây
@@ -62,7 +62,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                             {
                                 Description = $"Ảnh mô tả sản phẩm {input.Name}",
                                 CreatedAt = DateTime.Now,
-                                CreatedBy = currentUserId.ToString(),
+                                CreatedBy = currentUserId,
                                 FileSize = input.ThumbnailImage.Length,
                                 ProductImageUrl = await this.SaveFile(input.ThumbnailImage)
                             }
@@ -205,7 +205,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                             Id = product.Id,
                             Name = product.Name,
                             Description = product.Description,
-                            ActualPrice = product.ActualPrice,
+                            ActualPrice = product.ActualPrice - (product.ActualPrice * promotion.DiscountPercent / 100),
                             Price = product.Price,
                             CategoryId = product.CategoryId,
                             CategoryName = category.Name,
@@ -249,7 +249,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             product.Price = input.Price;
             product.ActualPrice = input.ActualPrice;
             product.UpdatedAt = DateTime.Now;
-            product.UpdateBy = currentUserId.ToString();
+            product.UpdateBy = currentUserId;
             product.IsActived = input.IsActive;
             // xử lý cập nhật ảnh
             if (input.ThumbnailImage != null)
@@ -280,7 +280,7 @@ namespace Foody.Application.Services.ProductServices.Implements
             }
             product.IsDeleted = true;
             product.UpdatedAt = DateTime.Now;
-            product.UpdateBy = currentUserId.ToString();
+            product.UpdateBy = currentUserId;
             await _context.SaveChangesAsync();
         }
 

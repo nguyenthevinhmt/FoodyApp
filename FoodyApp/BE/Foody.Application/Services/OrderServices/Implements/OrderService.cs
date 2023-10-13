@@ -5,8 +5,10 @@ using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 using Foody.Share.Shared;
+using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace Foody.Application.Services.OrderServices.Implements
 {
@@ -20,115 +22,12 @@ namespace Foody.Application.Services.OrderServices.Implements
             _httpContextAccessor = httpContextAccessor;
         }
 
-        #region quản lý đơn hàng nháp (giỏ hàng)
 
-        //Thêm sản phẩm vào giỏ hàng
-        public async Task<string> AddProductToCart(int productId)
-        {
-            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var order = await _context.Orders.FirstOrDefaultAsync(c => c.UserId == currentUserId);
-                    if (order == null)
-                    {
-                        await _context.Orders.AddAsync(new Order
-                        {
-                            UserId = currentUserId,
-                            Status = OrderStatus.DRAFT,
-                            PaymentMethod = PaymentMethod.COD
-                        });
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        var orderDetail = await _context.OrderDetails.Where(od => od.OrderId == order.Id && od.ProductId == productId).FirstOrDefaultAsync();
-                        if (orderDetail == null)
-                        {
-                            await _context.OrderDetails.AddAsync(new OrderDetail
-                            {
-                                ProductId = productId,
-                                Quantity = 1,
-                                OrderId = order.Id
-                            });
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            orderDetail.Quantity += 1;
-                            await _context.SaveChangesAsync();
-                        }
-                    }
-                    await transaction.CommitAsync();
-                    return "Thêm thành công";
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    return "Lỗi: " + ex.Message;
-                }
-            }
-        }
-
-        //Xóa sản phẩm khỏi giỏ hàng
-        public async Task RemoveProductFromCart(int productId)
-        {
-            var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.Id == productId);
-
-            if (orderDetail == null)
-            {
-                throw new UserFriendlyException("Không tìm thấy sản phẩm trong đơn nháp");
-            }
-
-            _context.OrderDetails.Remove(orderDetail);
-            await _context.SaveChangesAsync();
-        }
-        //Lấy danh sách sản phẩm trong giỏ hàng
-        public async Task<CartResponseDto> GetCartByUserId()
-        {
-            var userId = CommonUtils.GetUserId(_httpContextAccessor);
-            var shoppingCart = await (from ord in _context.Orders
-                                      join od in _context.OrderDetails on ord.Id equals od.OrderId
-                                      join product in _context.Products on od.ProductId equals product.Id
-                                      join pp in _context.ProductPromotions on product.Id equals pp.ProductId
-                                      join pro in _context.Promotions on pp.PromotionId equals pro.Id
-                                      where ord.UserId == userId && ord.Status == OrderStatus.DRAFT
-                                      && product.IsActived == true && product.IsDeleted == false
-                                      && pp.IsActive == true
-                                      group new { ord, od, product, pro } by ord.Id into grouped
-                                      select new CartResponseDto
-                                      {
-                                          OrderId = grouped.Key,
-                                          TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
-                                          Products = grouped.Select(p => new InfoProductCartDto
-                                          {
-                                              Id = p.product.Id,
-                                              Name = p.product.Name,
-                                              ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.pro.DiscountPercent / 100),
-                                              CategoryId = p.product.CategoryId,
-                                              Description = p.product.Description,
-                                              ProductImageUrl = p.product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
-                                              Quantity = p.od.Quantity,
-                                              CreateBy = p.product.CreatedBy,
-                                              Price = p.product.Price,
-                                              IsActive = p.product.IsActived,
-
-                                          }).ToList(),
-                                      }).FirstOrDefaultAsync();
-            if (shoppingCart == null)
-            {
-                throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
-            }
-            return shoppingCart;
-        }
-
-        #endregion
 
         //Đổi trạng thái đơn hàng
         public async Task UpdateOrderStatus(UpdateOrderStatusDto input)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == input.Id);
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == input.OrderId);
             if (order == null)
             {
                 throw new UserFriendlyException("Không tìm thấy đơn hàng");
@@ -151,7 +50,7 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
         }
 
-        public async Task<CartResponseDto> GetPendingOrder()
+        public async Task<List<OrderResponseDto>> GetPendingOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var order = await (from ord in _context.Orders
@@ -163,10 +62,20 @@ namespace Foody.Application.Services.OrderServices.Implements
                                && product.IsActived == true && product.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
-                               select new CartResponseDto
+                               select new OrderResponseDto
                                {
-                                   OrderId = grouped.Key,
-                                   TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -181,19 +90,62 @@ namespace Foody.Application.Services.OrderServices.Implements
                                        IsActive = p.product.IsActived,
 
                                    }).ToList(),
-                               }).FirstOrDefaultAsync();
+                               }).ToListAsync();
+            if (order == null)
+            {
+                throw new UserFriendlyException("Chưa có sản phẩm nào đang được xử lý");
+            }
+
+            return order;
+        }
+        public async Task<List<OrderResponseDto>> GetAcceptOrder()
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            var order = await (from ord in _context.Orders
+                               join od in _context.OrderDetails on ord.Id equals od.OrderId
+                               join product in _context.Products on od.ProductId equals product.Id
+                               join pp in _context.ProductPromotions on product.Id equals pp.ProductId
+                               join pro in _context.Promotions on pp.PromotionId equals pro.Id
+                               where ord.UserId == userId && ord.Status == OrderStatus.ACCEPTED
+                               && product.IsActived == true && product.IsDeleted == false
+                               && pp.IsActive == true
+                               group new { ord, od, product, pro } by ord.Id into grouped
+                               select new OrderResponseDto
+                               {
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
+                                   Products = grouped.Select(p => new InfoProductCartDto
+                                   {
+                                       Id = p.product.Id,
+                                       Name = p.product.Name,
+                                       ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.pro.DiscountPercent / 100),
+                                       CategoryId = p.product.CategoryId,
+                                       Description = p.product.Description,
+                                       ProductImageUrl = p.product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
+                                       Quantity = p.od.Quantity,
+                                       CreateBy = p.product.CreatedBy,
+                                       Price = p.product.Price,
+                                       IsActive = p.product.IsActived,
+
+                                   }).ToList(),
+                               }).ToListAsync();
             if (order == null)
             {
                 throw new UserFriendlyException("Chưa có sản phẩm nào đang được xử lý");
             }
             return order;
         }
-        /// <summary>
-        /// Lấy tất cả đơn hàng đang xử lý
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="UserFriendlyException"></exception>
-        public async Task<CartResponseDto> GetShippingOrder()
+        public async Task<List<OrderResponseDto>> GetShippingOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var order = await (from ord in _context.Orders
@@ -205,10 +157,20 @@ namespace Foody.Application.Services.OrderServices.Implements
                                && product.IsActived == true && product.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
-                               select new CartResponseDto
+                               select new OrderResponseDto
                                {
-                                   OrderId = grouped.Key,
-                                   TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -223,19 +185,14 @@ namespace Foody.Application.Services.OrderServices.Implements
                                        IsActive = p.product.IsActived,
 
                                    }).ToList(),
-                               }).FirstOrDefaultAsync();
+                               }).ToListAsync();
             if (order == null)
             {
                 throw new UserFriendlyException("Chưa có sản phẩm nào đang được vận chuyển");
             }
             return order;
         }
-        /// <summary>
-        /// Lấy tất cả đơn hàng đang xử lý
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="UserFriendlyException"></exception>
-        public async Task<CartResponseDto> GetSuccessOrder()
+        public async Task<List<OrderResponseDto>> GetSuccessOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var order = await (from ord in _context.Orders
@@ -247,10 +204,20 @@ namespace Foody.Application.Services.OrderServices.Implements
                                && product.IsActived == true && product.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
-                               select new CartResponseDto
+                               select new OrderResponseDto
                                {
-                                   OrderId = grouped.Key,
-                                   TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -265,19 +232,14 @@ namespace Foody.Application.Services.OrderServices.Implements
                                        IsActive = p.product.IsActived,
 
                                    }).ToList(),
-                               }).FirstOrDefaultAsync();
+                               }).ToListAsync();
             if (order == null)
             {
                 throw new UserFriendlyException("Bạn chưa đặt sản phẩm nào");
             }
             return order;
         }
-        /// <summary>
-        /// Lấy tất cả đơn hàng đã hủy
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="UserFriendlyException"></exception>
-        public async Task<CartResponseDto> GetCanceledOrder()
+        public async Task<List<OrderResponseDto>> GetCanceledOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var order = await (from ord in _context.Orders
@@ -289,10 +251,166 @@ namespace Foody.Application.Services.OrderServices.Implements
                                && product.IsActived == true && product.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
-                               select new CartResponseDto
+                               select new OrderResponseDto
                                {
-                                   OrderId = grouped.Key,
-                                   TotalPrice = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
+                                   Products = grouped.Select(p => new InfoProductCartDto
+                                   {
+                                       Id = p.product.Id,
+                                       Name = p.product.Name,
+                                       ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.pro.DiscountPercent / 100),
+                                       CategoryId = p.product.CategoryId,
+                                       Description = p.product.Description,
+                                       ProductImageUrl = p.product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
+                                       Quantity = p.od.Quantity,
+                                       CreateBy = p.product.CreatedBy,
+                                       Price = p.product.Price,
+                                       IsActive = p.product.IsActived,
+
+                                   }).ToList(),
+                               }).ToListAsync();
+            if (order == null)
+            {
+                throw new UserFriendlyException("Bạn chưa đặt sản phẩm nào");
+            }
+            return order;
+        }
+
+        public async Task CreateOrder(CreateOrderDto input)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
+                if (userAddress == null)
+                {
+                    throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+                }
+                var newOrder = new Order
+                {
+                    PaymentMethod = input.PaymentMethod,
+                    Status = OrderStatus.INPROGRESS,
+                    UserId = userId,
+                    CreatedAt = DateTime.Now,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                    CreatedBy = userId,
+                };
+                await _context.Orders.AddAsync(newOrder);
+                await _context.SaveChangesAsync();
+                var newOrderdetail = new OrderDetail
+                {
+                    ProductId = input.ProductId,
+                    Quantity = input.Quantity,
+                    OrderId = newOrder.Id
+                };
+                await _context.OrderDetails.AddAsync(newOrderdetail);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Lỗi khi tạo đơn hàng: " + ex.Message);
+            }
+
+        }
+
+        public async Task CreateOrderFromCart(CreateOrderFromCartDto input)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
+            if (cart == null)
+            {
+                throw new UserFriendlyException("Giỏ hàng không tồn tại");
+            }
+
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
+                if (userAddress == null)
+                {
+                    throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+                }
+                var order = new Order
+                {
+                    UserId = userId,
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = userId,
+                    PaymentMethod = input.PaymentMethod != 0 ? input.PaymentMethod : PaymentMethod.COD,
+                    Status = OrderStatus.INPROGRESS,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                };
+                await _context.Orders.AddAsync(order);
+                await _context.SaveChangesAsync();
+
+                foreach (var productCart in cart.ProductCarts)
+                {
+                    var orderDetail = new OrderDetail { OrderId = order.Id, ProductId = productCart.ProductId, Quantity = productCart.Quantity };
+                    await _context.OrderDetails.AddAsync(orderDetail);
+                    await _context.SaveChangesAsync();
+                }
+
+                _context.Carts.Remove(cart);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new UserFriendlyException(ex.Message);
+            }
+        }
+        public async Task<OrderResponseDto> GetOrderById(int id)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            var order = await (from ord in _context.Orders
+                               join od in _context.OrderDetails on ord.Id equals od.OrderId
+                               join product in _context.Products on od.ProductId equals product.Id
+                               join pp in _context.ProductPromotions on product.Id equals pp.ProductId
+                               join pro in _context.Promotions on pp.PromotionId equals pro.Id
+                               where ord.UserId == userId && ord.Id == id
+                               && product.IsActived == true && product.IsDeleted == false
+                               && pp.IsActive == true
+                               group new { ord, od, product, pro } by ord.Id into grouped
+                               select new OrderResponseDto
+                               {
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
                                    Products = grouped.Select(p => new InfoProductCartDto
                                    {
                                        Id = p.product.Id,
@@ -310,12 +428,61 @@ namespace Foody.Application.Services.OrderServices.Implements
                                }).FirstOrDefaultAsync();
             if (order == null)
             {
-                throw new UserFriendlyException("Bạn chưa đặt sản phẩm nào");
+                throw new UserFriendlyException("Đơn hàng không tồn tại");
             }
             return order;
         }
-        //Cần các chức năng như:
-        //- Thanh toán từ giỏ hàng: thanh toán tất cả sản phẩm trong giỏ hàng, thanh toán 1 hoặc nhiều sản phẩm trong giỏ hàng
-        //- Thanh toán sản phẩm đặt mua trực tiếp từ màn hình home
+        public async Task<PageResultDto<AdminOrderDto>> GetAllOrders(OrderFilterDto input)
+        {
+            var query = await (from ord in _context.Orders
+                               join od in _context.OrderDetails on ord.Id equals od.OrderId
+                               join product in _context.Products on od.ProductId equals product.Id
+                               join pp in _context.ProductPromotions on product.Id equals pp.ProductId
+                               join pro in _context.Promotions on pp.PromotionId equals pro.Id
+                               where product.IsActived == true && product.IsDeleted == false
+                               && pp.IsActive == true
+                               group new { ord, od, product, pro } by ord.Id into grouped
+                               select new AdminOrderDto
+                               {
+                                   Id = grouped.Key,
+                                   TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   CustomerFullName = grouped.Select(c => (c.ord.User.FullName).ToString()).FirstOrDefault(),
+                                   OrderStatus = grouped.Select(c => c.ord.Status).FirstOrDefault(),
+                                   CreatedDate = grouped.Select(c => c.ord.CreatedAt).FirstOrDefault(),
+                                   UserAddress = grouped.Select(ud => new UserAddressDto
+                                   {
+                                       Province = ud.ord.Province,
+                                       AddressType = ud.ord.AddressType,
+                                       District = ud.ord.District,
+                                       DetailAddress = ud.ord.DetailAddress,
+                                       StreetAddress = ud.ord.StreetAddress,
+                                       Notes = ud.ord.Notes,
+                                       Ward = ud.ord.Ward,
+                                   }).FirstOrDefault(),
+                                   Products = grouped.Select(p => new InfoProductCartDto
+                                   {
+                                       Id = p.product.Id,
+                                       Name = p.product.Name,
+                                       ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.pro.DiscountPercent / 100),
+                                       CategoryId = p.product.CategoryId,
+                                       Description = p.product.Description,
+                                       ProductImageUrl = p.product.ProductImages.Select(o => o.ProductImageUrl).FirstOrDefault(),
+                                       Quantity = p.od.Quantity,
+                                       CreateBy = p.product.CreatedBy,
+                                       Price = p.product.Price,
+                                       IsActive = p.product.IsActived,
+
+                                   }).ToList(),
+                               }).Where(c => (!input.orderStatus.HasValue || c.OrderStatus == input.orderStatus)
+                               && (input.Keyword == null || c.Id.ToString() == input.Keyword)
+                               && (input.CreateDate == null || c.CreatedDate.Value.Date == input.CreateDate.Value.Date)).ToListAsync();
+         
+            var result = new PageResultDto<AdminOrderDto>();
+            result.TotalItem = query.Count();
+            query = query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize).ToList();
+            result.Item = query;
+            return result;
+        }
+
     }
 }

@@ -10,9 +10,9 @@ namespace Foody.Domain.Entities
         public int ProductId { get; set; }
         public Product Product { get; }
         public DateTime UpdatedAt { get; set; }
-        public string UpdateBy { get; set; }
+        public int UpdateBy { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
