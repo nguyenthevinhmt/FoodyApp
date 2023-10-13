@@ -38,7 +38,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
                 Name = input.Name,
                 Description = input.Description,
                 CreatedAt = DateTime.Now,
-                CreatedBy = currentUserId.ToString(),
+                CreatedBy = currentUserId,
             };
             await _context.Categories.AddAsync(categoryCreate);
             await _context.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             }
             category.IsDeleted = true;
             category.UpdatedAt = DateTime.Now;
-            category.UpdateBy = currentUserId.ToString();
+            category.UpdateBy = currentUserId;
 
             var productsToDelete = _context.Products
                 .Include(p => p.ProductImages)
@@ -105,7 +105,7 @@ namespace Foody.Application.Services.CategoryServices.Implements
             category.Name = input.Name;
             category.Description = input.Description;
             category.UpdatedAt = DateTime.Now;
-            category.UpdateBy = currentUserId.ToString();
+            category.UpdateBy = currentUserId;
 
             await _context.SaveChangesAsync();
 

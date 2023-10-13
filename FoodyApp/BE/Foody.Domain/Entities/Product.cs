@@ -21,11 +21,14 @@ namespace Foody.Domain.Entities
         public IEnumerable<ProductImage> ProductImages { get; set; }
         public IEnumerable<Order> Orders { get; set; }
         public IEnumerable<ProductPromotion> ProductPromotion { get; set; }
+        public IEnumerable<Cart> Carts { get; set; }
+        public IEnumerable<ProductCart> ProductCarts { get; set; }
+
         public bool IsActived { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public string UpdateBy { get; set; }
+        public int UpdateBy { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
     }
 }

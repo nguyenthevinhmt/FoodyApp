@@ -1,5 +1,7 @@
 using Foody.Application.Services.AuthServices.Implements;
 using Foody.Application.Services.AuthServices.Interfaces;
+using Foody.Application.Services.CartServices.Implements;
+using Foody.Application.Services.CartServices.Interfaces;
 using Foody.Application.Services.CategoryServices.Implements;
 using Foody.Application.Services.CategoryServices.Interfaces;
 using Foody.Application.Services.FileStoreService.Implements;
@@ -109,6 +111,7 @@ namespace Foody.API
             builder.Services.AddScoped<IStorageService, FileStorageService>();
             builder.Services.AddScoped<IPromotionService, PromotionService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             var app = builder.Build();
 
