@@ -7,12 +7,13 @@ interface ProductComponentProps {
     imageUrl: ImageSourcePropType;
     name: string;
     actualPrice: number;
-    price: number
+    price: number,
+    onNavigation: () => void
 }
 
-const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, actualPrice, price }) => {
+const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, actualPrice, price, onNavigation }) => {
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onNavigation}>
             <Image source={imageUrl} style={styles.image} />
             <View style={styles.productDetail}>
                 <Text style={styles.name}>{name}</Text>

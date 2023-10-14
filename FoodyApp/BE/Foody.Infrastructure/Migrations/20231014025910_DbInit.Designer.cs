@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    [Migration("20231012081514_UpdateDb")]
-    partial class UpdateDb
+    [Migration("20231014025910_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 976, DateTimeKind.Local).AddTicks(3231),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2621),
                             CreatedBy = 0,
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -101,7 +101,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 976, DateTimeKind.Local).AddTicks(3242),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2630),
                             CreatedBy = 0,
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -112,7 +112,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 976, DateTimeKind.Local).AddTicks(3243),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2631),
                             CreatedBy = 0,
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -123,7 +123,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 976, DateTimeKind.Local).AddTicks(3244),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2632),
                             CreatedBy = 0,
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -134,7 +134,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 976, DateTimeKind.Local).AddTicks(3245),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2633),
                             CreatedBy = 0,
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -576,20 +576,20 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 967, DateTimeKind.Local).AddTicks(8195),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 351, DateTimeKind.Local).AddTicks(7847),
                             CreatedBy = 0,
                             Email = "Admin@gmail.com",
-                            Password = "Du+2n4ogXkSIVFc6pICvFfb8p5aURj7WddOyubphntexChUA",
+                            Password = "0HoTQl43HVfw6ka3hQBNyNyhVHayGShqv2YSABeDJ4Tr8+hl",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 12, 15, 15, 13, 970, DateTimeKind.Local).AddTicks(9496),
+                            CreatedAt = new DateTime(2023, 10, 14, 9, 59, 10, 355, DateTimeKind.Local).AddTicks(2504),
                             CreatedBy = 0,
                             Email = "Customer@gmail.com",
-                            Password = "9BZbMJMmR1OShgxTJdxAIa4ffiBq0eUV/tEWmr5HC/4LymXH",
+                            Password = "zNcikwGOP5Lv7vO/K9P+nurqJemRhNVQtAA9T4oPYg2mOECb",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 2
                         });

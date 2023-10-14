@@ -2,6 +2,7 @@ import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import { useState } from "react";
+import ScreenNames from "../utils/ScreenNames";
 
 function emtyOrder() {
     return (
@@ -13,7 +14,7 @@ function emtyOrder() {
     );
 }
 
-const ShippingOrderScreen = () => {
+const ShippingOrderScreen = ({navigation}: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
     const [shown, setShown] = useState(true);
 
@@ -36,6 +37,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -43,6 +45,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -50,6 +53,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -57,6 +61,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -64,6 +69,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -71,6 +77,7 @@ const ShippingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
             </View>
         </ScrollView>

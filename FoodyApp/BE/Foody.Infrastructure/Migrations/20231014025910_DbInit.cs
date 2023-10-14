@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foody.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class DbInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,6 @@ namespace Foody.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    CategoryImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -133,6 +132,13 @@ namespace Foody.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DetailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    AddressType = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -290,14 +296,14 @@ namespace Foody.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Category",
-                columns: new[] { "Id", "CategoryImageUrl", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "UpdateBy", "UpdatedAt" },
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "UpdateBy", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "no-image.png", new DateTime(2023, 10, 12, 13, 41, 9, 715, DateTimeKind.Local).AddTicks(9924), 0, "Các món cơm", false, "Cơm", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "no-image.png", new DateTime(2023, 10, 12, 13, 41, 9, 715, DateTimeKind.Local).AddTicks(9930), 0, "Các món ăn nhanh", false, "Đồ ăn nhanh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "no-image.png", new DateTime(2023, 10, 12, 13, 41, 9, 715, DateTimeKind.Local).AddTicks(9931), 0, "Các đồ uống", false, "Đồ uống", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, "no-image.png", new DateTime(2023, 10, 12, 13, 41, 9, 715, DateTimeKind.Local).AddTicks(9932), 0, "Các món bún", false, "Bún", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, "no-image.png", new DateTime(2023, 10, 12, 13, 41, 9, 715, DateTimeKind.Local).AddTicks(9934), 0, "Các món mì", false, "Mì", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2621), 0, "Các món cơm", false, "Cơm", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2630), 0, "Các món ăn nhanh", false, "Đồ ăn nhanh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2631), 0, "Các đồ uống", false, "Đồ uống", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2632), 0, "Các món bún", false, "Bún", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, new DateTime(2023, 10, 14, 9, 59, 10, 361, DateTimeKind.Local).AddTicks(2633), 0, "Các món mì", false, "Mì", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -318,8 +324,8 @@ namespace Foody.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "LastName", "Password", "PhoneNumber", "RefreshToken", "RefreshTokenExpiryTime", "UserType" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 10, 12, 13, 41, 9, 706, DateTimeKind.Local).AddTicks(5593), 0, "Admin@gmail.com", null, null, "X+U+REnr0w2PW6Zf9km8cAVzhW/j5Y9rEKoltlBwyD9UKTao", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, new DateTime(2023, 10, 12, 13, 41, 9, 710, DateTimeKind.Local).AddTicks(3956), 0, "Customer@gmail.com", null, null, "V5H94b85MbaYO+1oRNoIBBVvhRcUlnROeGvr1HFZYFOfBQwv", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
+                    { 1, new DateTime(2023, 10, 14, 9, 59, 10, 351, DateTimeKind.Local).AddTicks(7847), 0, "Admin@gmail.com", null, null, "0HoTQl43HVfw6ka3hQBNyNyhVHayGShqv2YSABeDJ4Tr8+hl", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, new DateTime(2023, 10, 14, 9, 59, 10, 355, DateTimeKind.Local).AddTicks(2504), 0, "Customer@gmail.com", null, null, "zNcikwGOP5Lv7vO/K9P+nurqJemRhNVQtAA9T4oPYg2mOECb", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
                 });
 
             migrationBuilder.CreateIndex(

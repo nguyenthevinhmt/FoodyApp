@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Logout } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
 import UserEditButton from "../components/UserEditButton";
-import { getById } from "../services/userService";
+import { getUserById } from "../services/userService";
 import { useCallback, useState } from "react";
 import { getAccessToken } from "../services/authService";
 import { useFocusEffect } from "@react-navigation/native";
@@ -22,7 +22,7 @@ export default function UserScreen({ navigation }: any) {
         const userId = decode.sub;
         console.log("User ID:", userId);
 
-        const result = await getById(userId);
+        const result = await getUserById(userId);
         setFirstName(result?.data["firstName"]);
         setLastName(result?.data["lastName"]);
       };

@@ -7,7 +7,8 @@ const ScreenNames = {
     ACCOUNT: "Account and Security",
     ADDRESS: "Address",
     CREATEADDRESS: "Create Address",
-    UPDATEADDRESS: "Update Address"
+    UPDATEADDRESS: "Update Address",
+    PRODUCT: "Detail Product"
 };
 
 export default ScreenNames;

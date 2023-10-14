@@ -1,0 +1,38 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { TokenResponse } from "../models/AuthModel";
+import baseURL from "../utils/baseUrl";
+
+axios.interceptors.request.use(
+    function (config) {
+      // Do something before request is sent
+      return config;
+    },
+    function (error) {
+      // Do something with request error
+      return Promise.reject(error);
+    }
+  );
+
+axios.interceptors.response.use(
+    function (response) {
+        return response;
+    },
+    function (error) {
+        console.error(error);
+        return Promise.reject(error);
+    }
+);
+
+//lấy thông tin sản phẩm theo id
+export const getProductById = async (id: number) => {
+    try {
+        const response = await axios.get(`${baseURL}/Product/get-product-by-id/${id}`);
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

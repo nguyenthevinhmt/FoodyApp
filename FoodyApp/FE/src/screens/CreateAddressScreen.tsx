@@ -5,7 +5,6 @@ import { createAddress } from "../services/userService";
 
 export default function CreateAddressScreen({ navigation, route }: any) {
     const addressType = route.params['addressType'];
-    console.log('address:', addressType);
 
     const [userId, setUserId] = useState(0);
     const [Province, setProvince] = useState('');

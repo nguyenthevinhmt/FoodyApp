@@ -1,6 +1,7 @@
 import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
+import ScreenNames from "../utils/ScreenNames";
 import { useState } from "react";
 
 function emtyOrder() {
@@ -13,7 +14,7 @@ function emtyOrder() {
     );
 }
 
-const PendingOrderScreen = () => {
+const PendingOrderScreen = ( {navigation}: any ) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
     const [shown, setShown] = useState(true);
 
@@ -36,6 +37,7 @@ const PendingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
 
                 <ProductComponent
@@ -43,34 +45,7 @@ const PendingOrderScreen = () => {
                     name="Cơm rang dưa bò"
                     actualPrice={45000}
                     price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
+                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT)}
                 />
             </View>
         </ScrollView>
