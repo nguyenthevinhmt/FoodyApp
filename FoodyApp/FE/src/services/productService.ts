@@ -36,3 +36,20 @@ export const getProductById = async (id: number) => {
         return null;
     }
 }
+
+//lấy tất cả sản phẩm được khuyến mãi
+export const getProductDiscount = async () => {
+    try {
+        const params = {
+            PageSize: 100,
+            PageIndex: 1
+        }
+        const response = await axios.get(`${baseURL}/Product/get-product-discount-paging`, {params});
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

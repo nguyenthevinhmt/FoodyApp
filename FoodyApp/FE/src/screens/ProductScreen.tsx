@@ -1,9 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from 'react';
+import React, { useRef } from 'react';
 import PagerView from 'react-native-pager-view';
 import { getProductById } from "../services/productService";
 import { useEffect, useState } from "react";
+import Modal from 'react-native-modal';
+
 
 interface ImageItem {
   id: string;
@@ -17,30 +19,45 @@ const images: ImageItem[] = [
 ];
 
 const ProductScreen: React.FC = ({ navigation, route }: any) => {
+  const Id = route.params['productId'];
+  console.log(Id);
+  //kiểm tra sản phẩm có được giảm giá ko thì sẽ hiển thị icon lên
+  const [discount, checkDiscount] = useState(true);
 
-  //id sản phẩm sẽ được truyền theo tham số từ các trang khác
-  const [productId, setProductId] = useState(6)
-
+  const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [actualPrice, setActualPrice] = useState(0);
   const [description, setDescription] = useState('');
-  const [imgUrl, setImgUrl] = useState('');
+  const [imgUrl, setImgUrl] = useState('http://192.168.1.10:5010');
 
   useEffect(() => {
     const getData = async () => {
-      const result = await getProductById(6);
+      const result = await getProductById(Id);
 
       setName(result?.data['name']);
       setPrice(result?.data['price']);
       setActualPrice(result?.data['actualPrice']);
       setDescription(result?.data['description']);
       setImgUrl('http://192.168.1.10:5010' + result?.data['productImageUrl']);
-      console.log(imgUrl);
+
+      if(result?.data['promotion'] != null) {
+        checkDiscount(true);
+      }
+      else {
+        checkDiscount(false);
+      }
     };
 
     getData();
   }, []);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,7 +77,10 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
       <View style={styles.title}>
         <View style={styles.name}>
           <Text style={{ fontSize: 16, fontWeight: '600' }}>{name}</Text>
-          <Image source={require('../assets/Icons/discount.png')} style={styles.discountIcon} />
+          {discount ?
+            <Image source={require('../assets/Icons/discount.png')} style={styles.discountIcon} />
+            : ''
+          }
         </View>
         <View style={styles.price}>
           <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>đ{price}</Text>
@@ -92,7 +112,7 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
       </View>
 
       <View style={styles.buttArea}>
-        <TouchableOpacity style={styles.buttLeft}>
+        <TouchableOpacity style={styles.buttLeft} onPress={toggleModal} >
           <Image source={require('../assets/Icons/add-cart.png')} style={styles.addCartIcon} />
           <Text style={{ color: '#EE4D2D' }}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
@@ -102,6 +122,80 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
         </TouchableOpacity>
       </View>
 
+      <Modal 
+        isVisible={isModalVisible} 
+        style={styles.bottomSheet}
+        onBackdropPress={toggleModal} // Đóng modal khi chạm vào ngoài vùng hiển thị
+        onSwipeComplete={toggleModal} // Đóng modal khi vuốt xuống
+        swipeDirection="down" // Cho phép vuốt xuống để đóng modal
+        >
+        <View style={styles.bottomSheetContainer}>
+          <View style={styles.headerBottomSheet}>
+            <TouchableOpacity>
+              <Text style={{
+                color: '#EE4D2D'
+              }}>Xóa tất cả</Text>
+            </TouchableOpacity>
+
+            <Text style={{fontSize: 18, fontWeight: '600'}}>Giỏ hàng</Text>
+
+            <TouchableOpacity style={{justifyContent: 'flex-start'}} onPress={() => {toggleModal()}}>
+              <Text style={{
+                fontSize: 20
+              }}>X</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.bottomSheetContent}>
+            <View style={styles.productCart}>
+              <View style={{width: '30%'}}>
+              <Image source={{ uri: imgUrl }} style={styles.bottomSheetImage} />
+              </View>
+        
+              <View style={styles.productDetail}>
+                <Text style={styles.productCartName}>{name}</Text>
+                <Text style={styles.productCartActualPrice}>đ{actualPrice}</Text>
+                <Text style={styles.productCartPrice}>đ{price}</Text>
+                <View style={styles.quantity}>
+                  <TouchableOpacity style={styles.minus} onPress={() => {
+                    setQuantity(() => {
+                      if(quantity == 1) {
+                        return 0
+                      }
+                      else {
+                        return quantity - 1
+                      }
+                    })
+                  }}>
+                    <Text style={{fontSize: 10, fontWeight: '700', color: '#EE4D2D'}}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={{marginHorizontal: 10, fontWeight: '700'}}>{quantity}</Text>
+                  <TouchableOpacity style={styles.plus} onPress={() => {
+                    setQuantity(quantity+1)
+                  }}>
+                    <Text style={{fontSize: 10, fontWeight: '700', color: '#fff'}}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          
+          <View style={styles.footer}>
+            <View style={{
+              width: '65%', 
+              justifyContent: 'center', 
+              alignItems: 'flex-end', 
+              paddingRight: 10,
+            }}>
+              <Text style={{color: '#EE4D2D', fontWeight: '600'}}>đ{price*quantity}</Text>
+            </View>
+            <TouchableOpacity style={styles.orderButton} onPress={() => { }}>
+              <Text style={{color: '#fff'}}>Giao hàng</Text>
+            </TouchableOpacity>
+          </View>
+          
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -198,7 +292,111 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EE4D2D'
+  },
+
+  bottomSheet: {
+    justifyContent: 'flex-end', 
+    margin: 0,
+  },
+
+  bottomSheetContainer: {
+    backgroundColor: 'white', 
+    height: '70%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
+  },
+
+  headerBottomSheet: {
+    height: 30,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 15,
+    paddingHorizontal: 20, 
+  },
+
+  bottomSheetContent: {
+    width: '100%',
+    height: '80%',
+    backgroundColor: '#F1EFEF'
+  },
+
+  productCart: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    backgroundColor: '#fff'
+  },
+
+  bottomSheetImage: {
+    width: 100,
+    height: 100,
+  },
+
+  productDetail: {
+    width: '70%',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+
+  productCartName: {
+    paddingBottom: 3,
+    fontSize: 16,
+  },
+
+  productCartActualPrice: {
+    paddingBottom: 3,
+    color: '#B4B4B3',
+    textDecorationLine: 'line-through'
+  },
+
+  productCartPrice: {
+    paddingBottom: 3,
+    color: '#EE4D2D',
+    fontWeight: '600'
+  },
+
+  quantity: {
+    flexDirection: 'row'
+  },
+
+  minus: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#EE4D2D',
+    alignItems: 'center',
+    backgroundColor: '#fff'
+  },
+
+  plus: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#EE4D2D',
+    alignItems: 'center',
+    backgroundColor: '#EE4D2D'
+  },
+
+  footer: {
+    width: '100%',
+    height: 40,
+    flexDirection: 'row',
+  },
+
+  orderButton: {
+    width: '35%',
+    alignItems: 'center',
+    backgroundColor: '#EE4D2D',
+    justifyContent: 'center', 
+    margin: 0,
   }
+
 });
 
 export default ProductScreen;
