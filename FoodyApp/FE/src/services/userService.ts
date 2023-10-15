@@ -25,7 +25,7 @@ axios.interceptors.response.use(
 );
 
 //lấy thông tin người dùng theo id
-export const getById = async (id: number) => {
+export const getUserById = async (id: number) => {
     try {
         const response = await axios.get(`${baseURL}/User/get-by-id/${id}`);
         if (response.status == 200) {
@@ -38,7 +38,7 @@ export const getById = async (id: number) => {
 }
 
 //cập nhật thông tin người dùng
-export const update = async (id: number, firstName: string, lastName: string, phoneNumber: string) => {
+export const updateUser = async (id: number, firstName: string, lastName: string, phoneNumber: string) => {
     try {
         const response = await axios.put(`${baseURL}/User/update-user-infor`, {
             id,

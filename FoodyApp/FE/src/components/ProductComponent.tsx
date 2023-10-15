@@ -4,16 +4,17 @@ import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View, D
 const windowWidth = Dimensions.get('window').width;
 
 interface ProductComponentProps {
-    imageUrl: ImageSourcePropType;
+    imageUrl: string;
     name: string;
     actualPrice: number;
-    price: number
+    price: number,
+    onNavigation: () => void
 }
 
-const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, actualPrice, price }) => {
+const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, actualPrice, price, onNavigation }) => {
     return (
-        <TouchableOpacity style={styles.container}>
-            <Image source={imageUrl} style={styles.image} />
+        <TouchableOpacity style={styles.container} onPress={onNavigation}>
+            <Image source={{uri: imageUrl}} style={styles.image} />
             <View style={styles.productDetail}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.actualPrice}>đ{actualPrice}</Text>

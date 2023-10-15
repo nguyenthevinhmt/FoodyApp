@@ -2,19 +2,19 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View } from 'react-native';
 
 interface OrderProductComponentProps {
-    imageUrl: ImageSourcePropType;
+    imageUrl: string;
     name: string;
     actualPrice: number;
     price: number,
     quantity: number,
-    totalPrice: number
+    totalPrice: number,
 }
 
 const OrderProductComponent: React.FC<OrderProductComponentProps> = ({ imageUrl, name, actualPrice, price, quantity, totalPrice }) => {
     return (
         <View style={styles.container}>
             <View style={styles.product}>
-                <Image source={imageUrl} style={styles.image} />
+                <Image source={{uri: imageUrl}} style={styles.image} />
                 <View style={styles.productDetail}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.actualPrice}>đ{actualPrice}</Text>
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         flexDirection: 'column',
+        marginVertical: 5,
         backgroundColor: '#fff'
     },
     product: {

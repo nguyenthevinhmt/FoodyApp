@@ -83,7 +83,7 @@ namespace Foody.API.Controllers.OrderController
         /// Lấy tất cả đơn hàng đã mua 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("get-all-succes-order")]
+        [HttpGet("get-all-success-order")]
         public async Task<IActionResult> GetSuccessOrder()
         {
             try

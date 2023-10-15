@@ -13,6 +13,7 @@ namespace Foody.Application.Services.ProductServices.Interfaces
         public Task UpdateProduct(UpdateProductDto input);
         public Task DeleteProduct(int id);
         public Task UpdatePromotionToProduct(int promotionId, int productId);
+        public Task<PageResultDto<ProductResponseDto>> GetProductDiscountedPaging(FilterDto input);
         //public Task<PageResultDto<ProductResponseDto>> GetProductPagingAdmin(ProductFilterDto input);
     }
 }

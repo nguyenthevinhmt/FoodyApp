@@ -3,6 +3,7 @@ using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.ProductServices.Dtos;
 using Foody.Application.Services.ProductServices.Interfaces;
 using Foody.Share.Constants;
+using Foody.Share.Shared.FilterDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +45,24 @@ namespace Foody.API.Controllers.ProductController
                 return Ok(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Lấy tất cả sản phẩm được giảm giá
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("get-product-discount-paging")]
+        public async Task<IActionResult> getAllProductDiscountPaging([FromQuery] FilterDto input)
+        {
+            try
+            {
+                var result = await _service.GetProductDiscountedPaging(input);
+                return Ok(result);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }

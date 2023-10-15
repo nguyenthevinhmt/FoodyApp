@@ -1,7 +1,12 @@
 import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import OrderProductComponent from "../components/OrderProductComponent";
+import ScreenNames from "../utils/ScreenNames";
+import { getAllOrderShipping } from "../services/orderService";
+import { getProductDiscount } from "../services/productService";
+import { useFocusEffect } from "@react-navigation/native";
 
 function emtyOrder() {
     return (
@@ -13,14 +18,53 @@ function emtyOrder() {
     );
 }
 
-const ShippingOrderScreen = () => {
+const ShippingOrderScreen = ({navigation}: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
     const [shown, setShown] = useState(true);
+    const [order, setOrder] = useState([]);
+    const [product, setProduct] = useState([]);
+
+    useFocusEffect(
+        useCallback(() => {
+          const getData = async () => {
+            
+
+            const orderResponse = await getAllOrderShipping();
+            setOrder(orderResponse?.data);
+
+            const productDiscountResponse = await getProductDiscount();
+            setProduct(productDiscountResponse?.data.item);
+          };
+
+          getData();
+        }, [])
+    );
+    
+    useEffect(() => {
+        if (Array.isArray(order) && order.length === 0) {
+          setShown(true);
+        } else {
+          setShown(false);
+        }
+      }, [order]);
 
     return (
         <ScrollView style={styles.container}>
             
             {shown ? emtyOrder() : ''}
+
+            {//áp dụng với mỗi order chỉ có 1 sản phẩm
+            order.map((value) => (
+                <OrderProductComponent
+                    key={value['id']}
+                    imageUrl={`http://192.168.1.10:5010${value['products'][0]['productImageUrl']}`}
+                    name={value['products'][0]['name']}
+                    actualPrice={value['products'][0]['actualPrice']}
+                    price={value['products'][0]['price']}
+                    quantity={value['products'][0]['quantity']}
+                    totalPrice={value['totalAmount']}
+                />
+            ))}
 
             <View style={styles.boundary}>
                 <View style={styles.divider} />
@@ -31,47 +75,18 @@ const ShippingOrderScreen = () => {
             </View>
 
             <View style={styles.suggestion}>
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
-
-                <ProductComponent
-                    imageUrl={require('../assets/images/food-demo.jpg')}
-                    name="Cơm rang dưa bò"
-                    actualPrice={45000}
-                    price={35000}
-                />
+                {
+                    product.map((value) => (
+                        <ProductComponent
+                            key={value['id']}
+                            imageUrl={`http://192.168.1.10:5010${value['productImageUrl']}`}
+                            name={value['name']}
+                            actualPrice={value['actualPrice']}
+                            price={value['price']}
+                            onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, {productId: value['id']})}
+                        />
+                    ))
+                }
             </View>
         </ScrollView>
     );

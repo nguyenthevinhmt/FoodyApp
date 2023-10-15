@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddressComponent from "../components/AddressComponent";
 import AddAddressComponent from "../components/AddAddressComponent";
 import { useFocusEffect } from "@react-navigation/native";
-import { getAllAddress, getById } from "../services/userService";
+import { getAllAddress, getUserById } from "../services/userService";
 
 
 export default function AddressScreen({ navigation }: any) {
@@ -16,8 +16,6 @@ export default function AddressScreen({ navigation }: any) {
     const [addressList, setAddressList] = useState([]);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-
-    
 
     useFocusEffect(
         useCallback(() => {
@@ -32,7 +30,7 @@ export default function AddressScreen({ navigation }: any) {
                 const responseAddress = await getAllAddress(userId);
                 setAddressList(responseAddress?.data.item);
 
-                const responseUser = await getById(userId);
+                const responseUser = await getUserById(userId);
                 setName(responseUser?.data['firstName'] + ' ' + responseUser?.data['lastName']);
                 setPhone(responseUser?.data['phoneNumber']);
             };

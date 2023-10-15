@@ -310,6 +310,65 @@ namespace Foody.Application.Services.ProductServices.Implements
             return "/" + FILE_STORE_FOLDER + "/images/" + fileName;
         }
 
+        //Lấy tất cả sản phẩm được giảm giá
+        public async Task<PageResultDto<ProductResponseDto>> GetProductDiscountedPaging(FilterDto input)
+        {
+            var query = from product in _context.Products
+                        join productImage in _context.ProductImages on product.Id equals productImage.ProductId
+                        into pi
+                        from proImg in pi.DefaultIfEmpty()
+                        join category in _context.Categories on product.CategoryId equals category.Id
+                        join productPromotion in _context.ProductPromotions on product.Id equals productPromotion.ProductId
+                        join promotion in _context.Promotions on productPromotion.PromotionId equals promotion.Id
+                        select new ProductResponseDto
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Description = product.Description,
+                            ActualPrice = product.ActualPrice - (product.ActualPrice * promotion.DiscountPercent / 100),
+                            Price = product.Price,
+                            CategoryId = product.CategoryId,
+                            CategoryName = category.Name,
+                            ProductImageUrl = proImg.ProductImageUrl != null ? proImg.ProductImageUrl : null,
+                            Promotion = new PromotionResponseDto
+                            {
+                                Name = promotion.Name,
+                                Description = promotion.Description,
+                                PromotionCode = promotion.PromotionCode,
+                                DiscountPercent = promotion.DiscountPercent,
+                                IsActive = promotion.IsActive,
+                            },
+                            CreateBy = product.CreatedBy,
+                            IsDeleted = product.IsDeleted,
+                            IsActive = product.IsActived
+                        };
 
+            query = query.Where(p => (p.IsDeleted == false)
+            && (p.IsActive == true) && (p.Promotion.IsActive == true)
+            && (p.Promotion.DiscountPercent != 0));
+
+            var totalItem = await query.CountAsync();
+            var listItem = await query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize)
+                    .Select(prod => new ProductResponseDto
+                    {
+                        Id = prod.Id,
+                        Name = prod.Name,
+                        Description = prod.Description,
+                        ActualPrice = prod.ActualPrice,
+                        Price = prod.Price,
+                        CategoryId = prod.Id,
+                        ProductImageUrl = prod.ProductImageUrl,
+                        Promotion = prod.Promotion,
+                        CreateBy = prod.CreateBy,
+                        IsDeleted = prod.IsDeleted,
+                        IsActive = prod.IsActive
+                    }).ToListAsync();
+            var pageResult = new PageResultDto<ProductResponseDto>
+            {
+                Item = listItem,
+                TotalItem = totalItem
+            };
+            return pageResult;
+        }
     }
 }
