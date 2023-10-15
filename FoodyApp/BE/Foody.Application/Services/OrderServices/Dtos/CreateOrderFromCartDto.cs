@@ -10,5 +10,7 @@ namespace Foody.Application.Services.OrderServices.Dtos
     {
         public int CartId { get; set; } 
         public int PaymentMethod { get; set; }
+        //public UserAddressDto UserAddress { get; set; }
+        public int AddressType { get; set; }
     }
 }

@@ -205,7 +205,7 @@ namespace Foody.Application.Services.ProductServices.Implements
                             Id = product.Id,
                             Name = product.Name,
                             Description = product.Description,
-                            ActualPrice = product.ActualPrice,
+                            ActualPrice = product.ActualPrice - (product.ActualPrice * promotion.DiscountPercent / 100),
                             Price = product.Price,
                             CategoryId = product.CategoryId,
                             CategoryName = category.Name,

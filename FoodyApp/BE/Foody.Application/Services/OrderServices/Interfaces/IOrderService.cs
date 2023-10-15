@@ -1,5 +1,6 @@
 ﻿using Foody.Application.Services.CartServices.Dtos;
 using Foody.Application.Services.OrderServices.Dtos;
+using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.OrderServices.Interfaces
 {
@@ -15,22 +16,27 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// Lấy đơn hàng ở trạng thái khởi tạo
         /// </summary>
         /// <returns></returns>
-        public Task<OrderResponseDto> GetPendingOrder();
+        public Task<List<OrderResponseDto>> GetPendingOrder();
+        /// <summary>
+        /// Lấy đơn hàng đã được duyệt
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<OrderResponseDto>> GetAcceptOrder();
         /// <summary>
         /// Lấy đơn hàng ở trạng thái đang giao
         /// </summary>
         /// <returns></returns>
-        public Task<OrderResponseDto> GetShippingOrder();
+        public Task<List<OrderResponseDto>> GetShippingOrder();
         /// <summary>
         /// Lấy đơn hàng ở trạng thái giao thành công
         /// </summary>
         /// <returns></returns>
-        public Task<OrderResponseDto> GetSuccessOrder();
+        public Task<List<OrderResponseDto>> GetSuccessOrder();
         /// <summary>
         /// Lấy tất cả đơn đã hủy
         /// </summary>
         /// <returns></returns>
-        public Task<OrderResponseDto> GetCanceledOrder();
+        public Task<List<OrderResponseDto>> GetCanceledOrder();
         /// <summary>
         /// Tạo mới đơn hàng trực tiếp
         /// </summary>
@@ -43,6 +49,23 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         public Task CreateOrderFromCart(CreateOrderFromCartDto input);
+        /// <summary>
+        /// Cập nhật trạng thái đơn hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public Task UpdateOrderStatus(UpdateOrderStatusDto input);
+        /// <summary>
+        /// Chi tiết đơn hàng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<OrderResponseDto> GetOrderById(int id);
+        /// <summary>
+        /// Lấy tất cả đơn hàng theo trạng thái chờ duyệt role Admin
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public Task<PageResultDto<AdminOrderDto>> GetAllOrders(OrderFilterDto input);
     }
 }

@@ -15,6 +15,23 @@ namespace Foody.API.Controllers.OrderController
             _service = service;
         }
         /// <summary>
+        /// Lấy đơn hàng theo id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get-by-id/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                return Ok(await _service.GetOrderById(id));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        } 
+        /// <summary>
         /// Lấy tất cả đơn hàng đang chờ xử lý
         /// </summary>
         /// <returns></returns>
@@ -24,6 +41,22 @@ namespace Foody.API.Controllers.OrderController
             try
             {
                 return Ok(await _service.GetPendingOrder());
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Lấy tất cả đơn hàng đã được admin accept
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get-all-accepeted-order")]
+        public async Task<IActionResult> GetAllAcceptedOrder()
+        {
+            try
+            {
+                return Ok(await _service.GetAcceptOrder());
             }
             catch (Exception ex)
             {
@@ -113,6 +146,18 @@ namespace Foody.API.Controllers.OrderController
                 return Ok("Thêm thành công");
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("admin/all-pending-order")]
+        public async Task<IActionResult> GetListOrderPendingAdmin([FromQuery]OrderFilterDto input)
+        {
+            try
+            {
+                return Ok(await _service.GetAllOrders(input));
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }

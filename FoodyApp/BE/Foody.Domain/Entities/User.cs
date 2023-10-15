@@ -1,5 +1,6 @@
 ﻿using Foody.Domain.Common;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Foody.Domain.Entities
 {
@@ -9,6 +10,11 @@ namespace Foody.Domain.Entities
         public string FirstName { get; set; }
         [StringLength(250)]
         public string LastName { get; set; }
+        [NotMapped] 
+        public string FullName
+        {
+            get { return $"{FirstName} {LastName}"; }
+        }
         [StringLength(20)]
         public string PhoneNumber { get; set; }
         [StringLength(250)]
