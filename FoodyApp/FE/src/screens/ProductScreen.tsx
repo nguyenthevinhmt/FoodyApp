@@ -5,22 +5,12 @@ import PagerView from 'react-native-pager-view';
 import { getProductById } from "../services/productService";
 import { useEffect, useState } from "react";
 import Modal from 'react-native-modal';
+import { getCartByUser } from "../services/cartService";
+import ScreenNames from "../utils/ScreenNames";
 
-
-interface ImageItem {
-  id: string;
-  uri: number;
-}
-
-const images: ImageItem[] = [
-  { id: '2', uri: require('../assets/images/food1.jpg') },
-  { id: '3', uri: require('../assets/images/food-demo.jpg') },
-  { id: '4', uri: require('../assets/images/Sausage-Kid-Mania-1.jpg') },
-];
-
-const ProductScreen: React.FC = ({ navigation, route }: any) => {
+const ProductScreen = ({ navigation, route }: any) => {
   const Id = route.params['productId'];
-  console.log(Id);
+
   //kiểm tra sản phẩm có được giảm giá ko thì sẽ hiển thị icon lên
   const [discount, checkDiscount] = useState(true);
 
@@ -31,17 +21,21 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
   const [description, setDescription] = useState('');
   const [imgUrl, setImgUrl] = useState('http://192.168.1.10:5010');
 
+  const [cartProducts, setCartProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+
   useEffect(() => {
     const getData = async () => {
-      const result = await getProductById(Id);
+      //lấy thông tin sản phẩm theo id
+      const product = await getProductById(Id);
 
-      setName(result?.data['name']);
-      setPrice(result?.data['price']);
-      setActualPrice(result?.data['actualPrice']);
-      setDescription(result?.data['description']);
-      setImgUrl('http://192.168.1.10:5010' + result?.data['productImageUrl']);
+      setName(product?.data['name']);
+      setPrice(product?.data['price']);
+      setActualPrice(product?.data['actualPrice']);
+      setDescription(product?.data['description']);
+      setImgUrl('http://192.168.1.10:5010' + product?.data['productImageUrl']);
 
-      if(result?.data['promotion'] != null) {
+      if (product?.data['promotion'] != null) {
         checkDiscount(true);
       }
       else {
@@ -52,12 +46,23 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const getCart = async () => {
+      //lấy thông tin sản phẩm trong giỏ hàng
+      const cartValue = await getCartByUser();
+      setCartProducts(cartValue?.data['products']);
+      setCart(cartValue?.data);
+    }
+
+    getCart();
+  }, []);
+
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,11 +71,7 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
 
           <Image source={{ uri: imgUrl }} style={styles.image} />
 
-          {images.map((image) => (
-            <View key={image.id} style={styles.page}>
-              <Image source={image.uri} style={styles.image} />
-            </View>
-          ))}
+
         </PagerView>
       </View>
 
@@ -117,18 +118,26 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
           <Text style={{ color: '#EE4D2D' }}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttRight}>
+        <TouchableOpacity style={styles.buttRight}
+          onPress={() => navigation.navigate(ScreenNames.CREATE_ORDER, {
+            id: Id,
+            productName: name,
+            price: price,
+            actualPrice: actualPrice,
+            imgUrl: imgUrl,
+            quantity: quantity
+          })}>
           <Text style={{ color: '#fff' }}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
 
-      <Modal 
-        isVisible={isModalVisible} 
+      <Modal
+        isVisible={isModalVisible}
         style={styles.bottomSheet}
         onBackdropPress={toggleModal} // Đóng modal khi chạm vào ngoài vùng hiển thị
         onSwipeComplete={toggleModal} // Đóng modal khi vuốt xuống
         swipeDirection="down" // Cho phép vuốt xuống để đóng modal
-        >
+      >
         <View style={styles.bottomSheetContainer}>
           <View style={styles.headerBottomSheet}>
             <TouchableOpacity>
@@ -137,9 +146,9 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
               }}>Xóa tất cả</Text>
             </TouchableOpacity>
 
-            <Text style={{fontSize: 18, fontWeight: '600'}}>Giỏ hàng</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>Giỏ hàng</Text>
 
-            <TouchableOpacity style={{justifyContent: 'flex-start'}} onPress={() => {toggleModal()}}>
+            <TouchableOpacity style={{ justifyContent: 'flex-start' }} onPress={() => { toggleModal() }}>
               <Text style={{
                 fontSize: 20
               }}>X</Text>
@@ -147,53 +156,60 @@ const ProductScreen: React.FC = ({ navigation, route }: any) => {
           </View>
 
           <View style={styles.bottomSheetContent}>
-            <View style={styles.productCart}>
-              <View style={{width: '30%'}}>
-              <Image source={{ uri: imgUrl }} style={styles.bottomSheetImage} />
-              </View>
-        
-              <View style={styles.productDetail}>
-                <Text style={styles.productCartName}>{name}</Text>
-                <Text style={styles.productCartActualPrice}>đ{actualPrice}</Text>
-                <Text style={styles.productCartPrice}>đ{price}</Text>
-                <View style={styles.quantity}>
-                  <TouchableOpacity style={styles.minus} onPress={() => {
-                    setQuantity(() => {
-                      if(quantity == 1) {
-                        return 0
-                      }
-                      else {
-                        return quantity - 1
-                      }
-                    })
-                  }}>
-                    <Text style={{fontSize: 10, fontWeight: '700', color: '#EE4D2D'}}>-</Text>
-                  </TouchableOpacity>
-                  <Text style={{marginHorizontal: 10, fontWeight: '700'}}>{quantity}</Text>
-                  <TouchableOpacity style={styles.plus} onPress={() => {
-                    setQuantity(quantity+1)
-                  }}>
-                    <Text style={{fontSize: 10, fontWeight: '700', color: '#fff'}}>+</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+
+            {//lỗi chưa xử lý được quantity của riêng từng sản phẩm
+              //   cartProducts.map((value) => (
+              //     <View style={styles.productCart} key={value['id']}>
+              //       <View style={{ width: '30%' }}>
+              //         <Image source={{ uri: `http://192.168.1.10:5010${value['productImageUrl']}` }} style={styles.bottomSheetImage} />
+              //       </View>
+
+              //       <View style={styles.productDetail}>
+              //         <Text style={styles.productCartName}>{value['name']}</Text>
+              //         <Text style={styles.productCartActualPrice}>đ{value['actualPrice']}</Text>
+              //         <Text style={styles.productCartPrice}>đ{value['price']}</Text>
+              //         <View style={styles.quantity}>
+              //           <TouchableOpacity style={styles.minus} onPress={() => {
+              //             setQuantity(() => {
+              //               if (quantity == 1) {
+              //                 return 0
+              //               }
+              //               else {
+              //                 return quantity - 1
+              //               }
+              //             })
+              //           }}>
+              //             <Text style={{ fontSize: 10, fontWeight: '700', color: '#EE4D2D' }}>-</Text>
+              //           </TouchableOpacity>
+              //           <Text style={{ marginHorizontal: 10, fontWeight: '700' }}>{quantity}</Text>
+              //           <TouchableOpacity style={styles.plus} onPress={() => {
+              //             setQuantity(quantity + 1)
+              //           }}>
+              //             <Text style={{ fontSize: 10, fontWeight: '700', color: '#fff' }}>+</Text>
+              //           </TouchableOpacity>
+              //         </View>
+              //       </View>
+              //     </View>
+              //   ))
+              // 
+            }
+
           </View>
-          
+
           <View style={styles.footer}>
             <View style={{
-              width: '65%', 
-              justifyContent: 'center', 
-              alignItems: 'flex-end', 
+              width: '65%',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
               paddingRight: 10,
             }}>
-              <Text style={{color: '#EE4D2D', fontWeight: '600'}}>đ{price*quantity}</Text>
+              <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>đ{ }</Text>
             </View>
-            <TouchableOpacity style={styles.orderButton} onPress={() => { }}>
-              <Text style={{color: '#fff'}}>Giao hàng</Text>
+            <TouchableOpacity style={styles.orderButton}>
+              <Text style={{ color: '#fff' }}>Giao hàng</Text>
             </TouchableOpacity>
           </View>
-          
+
         </View>
       </Modal>
     </SafeAreaView>
@@ -295,12 +311,12 @@ const styles = StyleSheet.create({
   },
 
   bottomSheet: {
-    justifyContent: 'flex-end', 
+    justifyContent: 'flex-end',
     margin: 0,
   },
 
   bottomSheetContainer: {
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
     height: '70%',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -315,7 +331,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 15,
-    paddingHorizontal: 20, 
+    paddingHorizontal: 20,
   },
 
   bottomSheetContent: {
@@ -393,7 +409,7 @@ const styles = StyleSheet.create({
     width: '35%',
     alignItems: 'center',
     backgroundColor: '#EE4D2D',
-    justifyContent: 'center', 
+    justifyContent: 'center',
     margin: 0,
   }
 

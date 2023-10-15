@@ -96,3 +96,26 @@ export const getAllOrderCancel = async () => {
         return null;
     }
 }
+
+//tạo order mới trực tiếp từ sản phẩm
+export const createOrder = async (productId: number, paymentMethod: number, quantity: number, addressType: number) => {
+    try {
+        const token = await getAccessToken();
+        const response = await axios.post(`${baseURL}/Order/create-order`, {
+            'productId': productId,
+            'paymentMethod': paymentMethod,
+            'quantity': quantity,
+            'addressType': addressType
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

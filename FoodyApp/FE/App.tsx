@@ -12,6 +12,7 @@ import AddressScreen from "./src/screens/AddressScreen";
 import CreateAddressScreen from "./src/screens/CreateAddressScreen";
 import UpdateAddressScreen from "./src/screens/UpdateAddressScreen";
 import ProductScreen from "./src/screens/ProductScreen";
+import CreateOrderScreen from "./src/screens/CreateOrderScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
         <Stack.Screen name={ScreenNames.CREATEADDRESS} component={CreateAddressScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
         <Stack.Screen name={ScreenNames.UPDATEADDRESS} component={UpdateAddressScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
         <Stack.Screen name={ScreenNames.PRODUCT} component={ProductScreen} />
+        <Stack.Screen name={ScreenNames.CREATE_ORDER} component={CreateOrderScreen} options={{headerShown: true, headerStyle: {backgroundColor: '#EE4D2D'}}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

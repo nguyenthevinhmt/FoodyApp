@@ -37,7 +37,7 @@ namespace Foody.Application.Services.CartServices.Implements
                 var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == currentUserId);
                 if (cart == null)
                 {
-                    
+
                     cart = new Cart
                     {
                         UserId = currentUserId,
@@ -82,7 +82,7 @@ namespace Foody.Application.Services.CartServices.Implements
         //Xóa sản phẩm khỏi giỏ hàng
         public async Task RemoveProductFromCart(int productId)
         {
-            var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(od => od.Id == productId);
+            var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(od => od.ProductId == productId);
 
             if (productCart == null)
             {

@@ -2,10 +2,11 @@ import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import OrderProductComponent from "../components/OrderProductComponent";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ScreenNames from "../utils/ScreenNames";
 import { getAllOrderSuccess } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
+import { useFocusEffect } from "@react-navigation/native";
 
 function emtyOrder() {
     return (
@@ -23,24 +24,29 @@ const SuccessOrderScreen = ({navigation}: any) => {
     const [order, setOrder] = useState([]);
     const [product, setProduct] = useState([]);
 
-    useEffect(() => {
-        const getData = async () => {
+    useFocusEffect(
+        useCallback(() => {
+          const getData = async () => {
+            
+
             const orderResponse = await getAllOrderSuccess();
             setOrder(orderResponse?.data);
 
             const productDiscountResponse = await getProductDiscount();
             setProduct(productDiscountResponse?.data.item);
-        };
+          };
 
-        getData();
-
-        if (order == null) {
-            setShown(true);
+          getData();
+        }, [])
+    );
+    
+    useEffect(() => {
+        if (Array.isArray(order) && order.length === 0) {
+          setShown(true);
+        } else {
+          setShown(false);
         }
-        else {
-            setShown(false);
-        }
-    }, []);
+      }, [order]);
 
     return (
         <ScrollView style={styles.container}>
