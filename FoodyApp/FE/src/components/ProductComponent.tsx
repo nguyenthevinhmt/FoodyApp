@@ -17,8 +17,8 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, act
             <Image source={{uri: imageUrl}} style={styles.image} />
             <View style={styles.productDetail}>
                 <Text style={styles.name}>{name}</Text>
-                <Text style={styles.actualPrice}>đ{actualPrice}</Text>
-                <Text style={styles.price}>đ{price}</Text>
+                <Text style={styles.actualPrice}>đ{price}</Text>
+                <Text style={styles.price}>đ{actualPrice}</Text>
             </View>
 
         </TouchableOpacity>

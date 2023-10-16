@@ -152,8 +152,8 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
 
                             <View style={styles.productDetail}>
                                 <Text style={styles.productCartName}>{route.params['productName']}</Text>
-                                <Text style={styles.productCartActualPrice}>đ{route.params['actualPrice']}</Text>
-                                <Text style={styles.productCartPrice}>đ{route.params['price']}</Text>
+                                <Text style={styles.productCartActualPrice}>đ{route.params['price']}</Text>
+                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice']}</Text>
                                 <Text>X{route.params['quantity']}</Text>
                             </View>
                         </View>
@@ -240,7 +240,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền hàng</Text>
-                            <Text>đ90000</Text>
+                            <Text>đ{route.params['actualPrice']}</Text>
                         </View>
 
                         <View style={{
@@ -250,7 +250,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền phí vận chuyển</Text>
-                            <Text>đ30000</Text>
+                            <Text>đ0</Text>
                         </View>
 
                         <View style={{
@@ -267,7 +267,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             <Text style={{
                                 color: '#EE4D2D',
                                 fontSize: 18
-                            }}>đ120000</Text>
+                            }}>đ{route.params['actualPrice']}</Text>
                         </View>
                     </View>
 
@@ -280,7 +280,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     alignItems: 'flex-end',
                     paddingRight: 10,
                 }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>đ120000</Text>
+                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice']}</Text>
                 </View>
                 <TouchableOpacity 
                     style={styles.orderButton} 

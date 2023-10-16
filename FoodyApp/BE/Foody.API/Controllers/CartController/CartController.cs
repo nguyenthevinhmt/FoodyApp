@@ -48,6 +48,11 @@ namespace Foody.API.Controllers.CartController
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// xóa sản phẩm khỏi giỏ hàng
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         [HttpDelete("delete-product-from-cart")]
         public async Task<IActionResult> Delete(int productId)
         {
@@ -55,6 +60,24 @@ namespace Foody.API.Controllers.CartController
             {
                 await _service.RemoveProductFromCart(productId);
                 return Ok("Xóa thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Thay đổi số lượng sản phẩm theo id và số lượng
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        [HttpPut("update-cart-quantity")]
+        public async Task<IActionResult> Update(int productId, int quantity)
+        {
+            try
+            {
+                return Ok(await _service.UpdateQuantity(productId, quantity));
             }
             catch (Exception ex)
             {

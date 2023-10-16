@@ -71,13 +71,6 @@ export default function UserScreen({ navigation }: any) {
         </View>
         <View style={styles.Button}>
           <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-loyalty-card-80.png")}
-            text="Ví Voucher"
-            onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}
-          />
-        </View>
-        <View style={styles.Button}>
-          <UserEditButton
             imageUrl={require("../assets/Icons/icons8-bill-100.png")}
             text="Lịch sử"
             onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}

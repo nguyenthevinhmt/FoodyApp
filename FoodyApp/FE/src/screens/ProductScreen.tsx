@@ -84,14 +84,14 @@ const ProductScreen = ({ navigation, route }: any) => {
           }
         </View>
         <View style={styles.price}>
-          <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>đ{price}</Text>
+          <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>đ{actualPrice}</Text>
         </View>
         <View style={styles.actualPrice}>
           <Text style={{
             fontSize: 12,
             color: '#B4B4B3',
             textDecorationLine: 'line-through'
-          }}>đ{actualPrice}</Text>
+          }}>đ{price}</Text>
         </View>
       </View>
 
