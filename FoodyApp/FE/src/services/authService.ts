@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { TokenResponse, UserLogin } from "../models/AuthModel";
-import baseURL from "../utils/baseUrl";
+import {baseURL} from "../utils/baseUrl";
 
 export const login = async (email: string, password: string) => {
   try {

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { TokenResponse } from "../models/AuthModel";
-import baseURL from "../utils/baseUrl";
+import {baseURL} from "../utils/baseUrl";
 
 axios.interceptors.request.use(
     function (config) {

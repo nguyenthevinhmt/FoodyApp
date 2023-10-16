@@ -7,6 +7,7 @@ import ScreenNames from "../utils/ScreenNames";
 import { getAllOrderCancel } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
 import { useFocusEffect } from "@react-navigation/native";
+import { baseURL_img } from "../utils/baseUrl";
 
 function emtyOrder() {
     return (
@@ -57,7 +58,7 @@ const CancelOrderScreen = ({navigation}: any) => {
             order.map((value) => (
                 <OrderProductComponent
                     key={value['id']}
-                    imageUrl={`http://192.168.1.10:5010${value['products'][0]['productImageUrl']}`}
+                    imageUrl={`${baseURL_img}${value['products'][0]['productImageUrl']}`}
                     name={value['products'][0]['name']}
                     actualPrice={value['products'][0]['actualPrice']}
                     price={value['products'][0]['price']}
@@ -79,7 +80,7 @@ const CancelOrderScreen = ({navigation}: any) => {
                     product.map((value) => (
                         <ProductComponent
                             key={value['id']}
-                            imageUrl={`http://192.168.1.10:5010${value['productImageUrl']}`}
+                            imageUrl={`${baseURL_img}${value['productImageUrl']}`}
                             name={value['name']}
                             actualPrice={value['actualPrice']}
                             price={value['price']}

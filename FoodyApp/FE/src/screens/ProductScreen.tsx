@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Modal from 'react-native-modal';
 import { getCartByUser } from "../services/cartService";
 import ScreenNames from "../utils/ScreenNames";
+import { baseURL_img } from "../utils/baseUrl";
 
 const ProductScreen = ({ navigation, route }: any) => {
   const Id = route.params['productId'];
@@ -19,7 +20,7 @@ const ProductScreen = ({ navigation, route }: any) => {
   const [price, setPrice] = useState(0);
   const [actualPrice, setActualPrice] = useState(0);
   const [description, setDescription] = useState('');
-  const [imgUrl, setImgUrl] = useState('http://192.168.1.10:5010');
+  const [imgUrl, setImgUrl] = useState(baseURL_img);
 
   const [cartProducts, setCartProducts] = useState([]);
   const [cart, setCart] = useState([]);
@@ -33,7 +34,7 @@ const ProductScreen = ({ navigation, route }: any) => {
       setPrice(product?.data['price']);
       setActualPrice(product?.data['actualPrice']);
       setDescription(product?.data['description']);
-      setImgUrl('http://192.168.1.10:5010' + product?.data['productImageUrl']);
+      setImgUrl(baseURL_img + product?.data['productImageUrl']);
 
       if (product?.data['promotion'] != null) {
         checkDiscount(true);
