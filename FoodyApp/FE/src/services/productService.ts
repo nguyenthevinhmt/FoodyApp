@@ -54,15 +54,24 @@ export const getProductDiscount = async () => {
     }
 }
 
-class productService {
-    static getListProduct = (pageIndex: number) => {
+//lấy tất cả sản phẩm theo tên, danh mục
+export const getListProduct = async (Name: string | null, CategoryId: number | null, PageSize: number, pageIndex: number) => {
+    try {
         const params = {
+            Name: Name,
+            CategoryId: CategoryId,
             startPrice: 0,
             endPrice: 9999999,
-            PageSize: 20,
+            PageSize: PageSize,
             PageIndex: pageIndex
         }
-        return axios.get(`${baseURL}/Product/get-product-paging`, { params });
+        const response = await axios.get(`${baseURL}/Product/get-product-paging`, { params });
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
     }
 }
-export default productService;
+

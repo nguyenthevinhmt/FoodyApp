@@ -27,7 +27,7 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, act
 
 const styles = StyleSheet.create({
     container: {
-        width: "45%",
+        width: "100%",
         marginVertical: 10,
         flexDirection: 'column',
         justifyContent: 'flex-start',

@@ -1,44 +1,28 @@
-import { Button, View, Text, StyleSheet, FlatList, TextInput, Image } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, FlatList, TextInput, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useState } from "react";
-import categoryService from "../services/categoryService";
-import productService from "../services/productService";
+import {getAllCategory} from "../services/categoryService";
+import {getListProduct} from "../services/productService";
 import {baseURL_img} from "../utils/baseUrl"; 
+import ScreenNames from "../utils/ScreenNames";
 // import RNPickerSelect from 'react-native-picker-select';
 
-export default function ListProduct() {
+const ListProduct = ({ navigation, route }: any) => {
   const [listCategory, setListCategory] = useState([]);
   const [listProduct, setListProduct] = useState([]);
-  // const [productDetail, setPoductDetail] = useState(Object);
-  // const [Name, setName] = useState(String);
-  // const [categoryId, setCategoryId] = useState(String);
-  // const [endPrice, setEndPrice] = useState(String);
-  // const [startPrice, setStartPrice] = useState(String);
-  useEffect(() => {
-    categoryService.getAllCategory().then((response) => {
-      setListCategory(response.data.item);
-      console.log(response.data.item);
-    }
-    ).catch((error) => {
-      console.error('Lỗi khi lấy dữ liệu từ API getAllCategory:', error);
-    });
-    productService.getListProduct(1)
-      .then((response) => {
-        setListProduct(response.data.item);
-        console.log(listProduct);
-      })
-      .catch((error) => {
-        console.error('Lỗi khi lấy dữ liệu từ API getAllProduct:', error);
-      });
 
-    // productService.getProductbyId('5')
-    //   .then((response) => {
-    //     console.log('Detail:', response.data)
-    //     setPoductDetail(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Lỗi khi lấy dữ liệu từ API getProductbyId:', error);
-    //   });
+  useEffect(() => {
+    const getData = async () => {
+      //danh sách các danh mục
+      const categories = await getAllCategory();
+      setListCategory(categories?.data.item);
+      
+      //danh sách món ăn 
+      const products = await getListProduct(1);
+      setListProduct(products?.data.item);
+    }
+    
+    getData();
   }, []);
 
   return (
@@ -50,38 +34,45 @@ export default function ListProduct() {
         />
         <Text style={styles.text1}>Danh mục món ăn </Text>
       </View>
+
+      <View style={{marginVertical: 5 ,height: 70}}>
       <FlatList
         horizontal
         data={listCategory}
         keyExtractor={(item: any) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.view2}>
-            <Text style={styles.text2}>{item.description}</Text>
+          <View style={{ justifyContent: 'center', height: 70 }}>
+            <TouchableOpacity style={styles.view2}>
+              <Text style={styles.text2}>{item.name}</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
+      </View>
+
       <View style={styles.view3}>
         <View style={styles.view3_1}>
           <Text style={styles.text1}>Món ăn đề xuất</Text>
+          <TouchableOpacity style={{flex: 1}}>
           <Text style={styles.text3}>Xem tất cả {">"} </Text>
+          </TouchableOpacity>
         </View>
 
         <FlatList
           data={listProduct}
-          keyExtractor={(item: any) => item.id.toString()}
+          keyExtractor={(item: any) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.view4}>
-              {/* <Image
-                source={require("../assets/images/food1.png")}
-                style={styles.img2}
-              /> */}
+    
+            <TouchableOpacity style={styles.view4} onPress={() => navigation.navigate(ScreenNames.PRODUCT, {productId: item.id})}>
               <Image
                 source={{ uri: `${baseURL_img}${item.productImageUrl}` }}
                 style={styles.img2}
               />
+              <View style={{flexDirection: "row", paddingTop: 5, paddingLeft: 5}}>
               <Text style={styles.text4}>{item.name}</Text>
-              <Text style={styles.text4}>-   {item.description}</Text>
-            </View>
+              <Text style={styles.text4_1}>  -   {item.description}</Text>
+              </View>
+            </TouchableOpacity>
           )}
         />
       </View>
@@ -92,18 +83,26 @@ const styles = StyleSheet.create({
   container: {
     padding: 7,
     flex: 1,
+    justifyContent: 'space-between',
   },
   view1: {
     flexDirection: 'row'
   },
   view2: {
-    height: 40,
-    // backgroundColor: 'pink'
+    flexDirection: 'column',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    marginRight: 10,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: '#EE4D2D'
   },
   view3: {
     flexDirection: 'column',
-    height: 300,
-    // backgroundColor: 'pink'
+    //height: 320,
+    //backgroundColor: 'pink'
   },
   view3_1: {
     flexDirection: 'row',
@@ -121,11 +120,9 @@ const styles = StyleSheet.create({
     color: 'orange',
   },
   text2: {
-    margin: 5,
-    width: 65,
-    height: 40,
+    width: 90,
     fontSize: 13,
-    color: 'black',
+    color: '#EE4D2D',
     textAlign: 'center',
     // backgroundColor: 'red'
   },
@@ -138,7 +135,10 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
   },
   text4: {
-    padding: 7,
+    fontSize: 16,
+    fontWeight: '500'
+  },
+  text4_1: {
     fontSize: 15,
     color: 'black',
     // backgroundColor: 'red'
@@ -152,3 +152,5 @@ const styles = StyleSheet.create({
     height: 80
   }
 });
+
+export default ListProduct;

@@ -131,7 +131,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                                     ))
                                 }
                             </View>
-
                         </View>
                     </Modal>
 
@@ -425,8 +424,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: 0,
     }
-
-
 });
 
 export default CreateOrderScreen;

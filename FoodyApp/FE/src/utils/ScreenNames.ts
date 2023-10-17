@@ -10,6 +10,9 @@ const ScreenNames = {
     UPDATEADDRESS: "Update Address",
     PRODUCT: "Detail Product",
     CREATE_ORDER: "Create Order",
+    ALL_PRODUCT: "All Product",
+    PRODUCT_BY_CATEGORY: "Product by category",
+    PRODUCT_SEARCH: "Product Search Result",
 };
 
 export default ScreenNames;

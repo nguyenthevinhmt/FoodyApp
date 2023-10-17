@@ -78,14 +78,15 @@ const PendingOrderScreen = ( {navigation}: any ) => {
             <View style={styles.suggestion}>
                 {
                     product.map((value) => (
-                        <ProductComponent
-                            key={value['id']}
-                            imageUrl={`${baseURL_img}${value['productImageUrl']}`}
-                            name={value['name']}
-                            actualPrice={value['actualPrice']}
-                            price={value['price']}
-                            onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, {productId: value['id']})}
-                        />
+                        <View style={{ width: '47%', marginHorizontal: 5 }} key={value['id']}>
+                            <ProductComponent
+                                imageUrl={`${baseURL_img}${value['productImageUrl']}`}
+                                name={value['name']}
+                                actualPrice={value['actualPrice']}
+                                price={value['price']}
+                                onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
+                            />
+                        </View>
                     ))
                 }
             </View>
@@ -115,9 +116,9 @@ const styles = StyleSheet.create({
     suggestion: {
         width: '100%',
         maxHeight: 10000,
-        //backgroundColor: "#fca",
+        paddingHorizontal: 5,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
         alignContent: 'space-around',
     }
