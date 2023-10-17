@@ -14,6 +14,8 @@ using Foody.Application.Services.PromotionServices.Implements;
 using Foody.Application.Services.PromotionServices.Interfaces;
 using Foody.Application.Services.UserServices.Implements;
 using Foody.Application.Services.UserServices.Interfaces;
+using Foody.Application.Services.VnpayService.Implements;
+using Foody.Application.Services.VnpayService.Interfaces;
 using Foody.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -113,6 +115,7 @@ namespace Foody.API
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IVnpayService, VnpayService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
