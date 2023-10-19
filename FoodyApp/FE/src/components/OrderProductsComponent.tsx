@@ -1,29 +1,32 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View } from 'react-native';
+import { baseURL_img } from '../utils/baseUrl';
 
-interface OrderProductComponentProps {
-    imageUrl: string;
-    name: string;
-    actualPrice: number;
-    price: number,
-    quantity: number,
+interface OrderProductsComponentProps {
+    products: any[],
     totalPrice: number,
 }
 
-const OrderProductComponent: React.FC<OrderProductComponentProps> = ({ imageUrl, name, actualPrice, price, quantity, totalPrice }) => {
+const OrderProductsComponent: React.FC<OrderProductsComponentProps> = ({ products, totalPrice }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.product}>
-                <Image source={{uri: imageUrl}} style={styles.image} />
-                <View style={styles.productDetail}>
-                    <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.actualPrice}>{price.toLocaleString()}đ</Text>
-                    <Text style={styles.price}>{actualPrice.toLocaleString()}đ</Text>
+            {products ? 
+            products.map((value) => (
+                <View style={styles.product} key={value['id']}>
+                    <Image source={{ uri: `${baseURL_img}${value['productImageUrl']}` }} style={styles.image} />
+                    <View style={styles.productDetail}>
+                        <Text style={styles.name}>{value['name']}</Text>
+                        <Text style={styles.actualPrice}>{(value['price'] | 0).toLocaleString()}đ</Text>
+                        <Text style={styles.price}>{(value['actualPrice'] | 0).toLocaleString()}đ</Text>
+                        <Text style={styles.quantity}>x{value['quantity']}</Text>
+                    </View>
                 </View>
-            </View>
+            ))
+            : ''
+            }
+            
 
             <View style={styles.totalPrice}>
-                <Text style={{color: '#B4B4B3'}}>{quantity} sản phẩm</Text>
                 <Text>Thành tiền:   <Text style={{color: '#EE4D2D', fontWeight: '600'}}>{totalPrice.toLocaleString()}đ</Text></Text>
             </View>
 
@@ -46,6 +49,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         backgroundColor: '#fff'
     },
+
     product: {
         width: "100%",
         height: 100,
@@ -56,40 +60,53 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#BCA37F'
     },
+
     image: {
         width: 80,
         height: 80,
         marginRight: 10,
         marginLeft: 5,
     },
+
     productDetail: {
         flexDirection: 'column'
     },
+
     name: {
         fontSize: 20,
     },
+
     actualPrice: {
         alignSelf: 'flex-end',
         fontSize: 13,
         color: '#B4B4B3',
         textDecorationLine: 'line-through'
     },
+
     price: {
         alignSelf: 'flex-end',
         fontSize: 13,
         color: '#EE4D2D',
         fontWeight: '600'
     },
+
+    quantity: { 
+        alignSelf: 'flex-end',
+        color: '#B4B4B3', 
+        alignItems: 'flex-end' 
+    },
+
     totalPrice: {
         width: '100%',
         height: 40,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         paddingHorizontal: 10,
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#BCA37F'
     },
+
     buttonArea: {
         width: '100%',
         height: 60,
@@ -97,6 +114,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
+
     button: {
         width: 140,
         height: 40,
@@ -105,8 +123,7 @@ const styles = StyleSheet.create({
         alignItem: 'center',
         marginRight: 10,
         borderRadius: 8
-        
     }
 });
 
-export default OrderProductComponent;
+export default OrderProductsComponent;

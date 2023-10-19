@@ -7,7 +7,7 @@ interface ProductComponentProps {
     imageUrl: string;
     name: string;
     actualPrice: number;
-    price: number,
+    price: number;
     onNavigation: () => void
 }
 
@@ -17,8 +17,8 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, act
             <Image source={{uri: imageUrl}} style={styles.image} />
             <View style={styles.productDetail}>
                 <Text style={styles.name}>{name}</Text>
-                <Text style={styles.actualPrice}>đ{price}</Text>
-                <Text style={styles.price}>đ{actualPrice}</Text>
+                <Text style={styles.actualPrice}>{price.toLocaleString()}đ</Text>
+                <Text style={styles.price}>{actualPrice.toLocaleString()}đ</Text>
             </View>
 
         </TouchableOpacity>

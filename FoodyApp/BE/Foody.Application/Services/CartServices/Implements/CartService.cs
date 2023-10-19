@@ -25,7 +25,7 @@ namespace Foody.Application.Services.CartServices.Implements
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-        #region quản lý đơn hàng nháp (giỏ hàng)
+            #region quản lý đơn hàng nháp (giỏ hàng)
 
         //Thêm sản phẩm vào giỏ hàng
         public async Task<string> AddProductToCart(int productId)
@@ -131,7 +131,7 @@ namespace Foody.Application.Services.CartServices.Implements
             return shoppingCart;
         }
 
-        public async Task<string> UpdateQuantity(int productId, int quantity)
+        public async Task<string> UpdateQuantity(UpdateCartDto input)
         {
             var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
             try
@@ -143,14 +143,14 @@ namespace Foody.Application.Services.CartServices.Implements
                 }
                 else
                 {
-                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == productId);
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == input.productId);
                     if (productCart == null)
                     {
-                        throw new UserFriendlyException("Không tìm thấy sản phẩm trong giỏ hàng!");
+                        throw new UserFriendlyException("Không tìm thấy sản phẩm có trong giỏ hàng!");
                     }
                     else
                     {
-                        int value = productCart.Quantity + quantity;
+                        int value = productCart.Quantity + input.quantity;
                         if (value <= 0)
                         {
                             _context.ProductsCarts.Remove(productCart);

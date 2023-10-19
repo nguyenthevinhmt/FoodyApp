@@ -8,6 +8,7 @@ import { getAllOrderCancel } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
 import { useFocusEffect } from "@react-navigation/native";
 import { baseURL_img } from "../utils/baseUrl";
+import OrderProductsComponent from "../components/OrderProductsComponent";
 
 function emtyOrder() {
     return (
@@ -54,15 +55,10 @@ const CancelOrderScreen = ({navigation}: any) => {
             
             {shown ? emtyOrder() : ''}
 
-            {//áp dụng với mỗi order chỉ có 1 sản phẩm
-            order.map((value) => (
-                <OrderProductComponent
+            {order.map((value) => (
+                <OrderProductsComponent
                     key={value['id']}
-                    imageUrl={`${baseURL_img}${value['products'][0]['productImageUrl']}`}
-                    name={value['products'][0]['name']}
-                    actualPrice={value['products'][0]['actualPrice']}
-                    price={value['products'][0]['price']}
-                    quantity={value['products'][0]['quantity']}
+                    products={value['products']}
                     totalPrice={value['totalAmount']}
                 />
             ))}

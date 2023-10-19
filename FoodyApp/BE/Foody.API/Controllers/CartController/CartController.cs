@@ -1,4 +1,5 @@
-﻿using Foody.Application.Services.CartServices.Interfaces;
+﻿using Foody.Application.Services.CartServices.Dtos;
+using Foody.Application.Services.CartServices.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,11 +74,11 @@ namespace Foody.API.Controllers.CartController
         /// <param name="quantity"></param>
         /// <returns></returns>
         [HttpPut("update-cart-quantity")]
-        public async Task<IActionResult> Update(int productId, int quantity)
+        public async Task<IActionResult> Update(UpdateCartDto input)
         {
             try
             {
-                return Ok(await _service.UpdateQuantity(productId, quantity));
+                return Ok(await _service.UpdateQuantity(input));
             }
             catch (Exception ex)
             {

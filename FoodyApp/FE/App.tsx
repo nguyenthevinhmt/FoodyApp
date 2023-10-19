@@ -16,6 +16,7 @@ import CreateOrderScreen from "./src/screens/CreateOrderScreen";
 import AllProductScreen from "./src/screens/AllProductScreen";
 import ProductByCategoryScreen from "./src/screens/ProductByCategoryScreen";
 import ProductSearchScreen from "./src/screens/ProductSearchScreen";
+import CreateCartOrderScreen from "./src/screens/CreateCartOrderScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -39,6 +40,7 @@ export default function App() {
         <Stack.Screen name={ScreenNames.ALL_PRODUCT} component={AllProductScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_BY_CATEGORY} component={ProductByCategoryScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_SEARCH} component={ProductSearchScreen} />
+        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

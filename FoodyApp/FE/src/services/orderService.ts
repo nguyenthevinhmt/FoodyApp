@@ -119,3 +119,29 @@ export const createOrder = async (productId: number, paymentMethod: number, quan
         return null;
     }
 }
+
+//tạo order mới từ cart
+export const createCartOrder = async (cartId : number, paymentMethod: number, addressType: number) => {
+    try {
+        const token = await getAccessToken();
+        
+        const params = {
+            cartId: cartId,
+            paymentMethod: paymentMethod,
+            addressType: addressType
+        };
+
+        const response = await axios.post(`${baseURL}/Order/create-order-from-cart`, params, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

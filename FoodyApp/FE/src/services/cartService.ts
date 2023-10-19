@@ -44,12 +44,42 @@ export const getCartByUser = async () => {
 }
 
 //thêm sản phẩm vào cart
-export const  addProductToCart = async (id: number) => {
+export const addProductToCart = async (id: number) => {
     try {
         const token = await getAccessToken();
-        const response = await axios.post(`${baseURL}/Cart/add-product-to-cart`, {
-            'productId': id
+        const response = await axios.post(`${baseURL}/Cart/add-product-to-cart?productId=${id}`, null
+            , {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    Accept: 'application/json'
+                }
+            });
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+//cập nhật số lượng sản phẩm
+export const updateProductQuantity = async (id: number, quantity: number) => {
+    try {
+        const token = await getAccessToken();
+
+        const params = {
+            productId: id,
+            quantity: quantity
+        }
+
+        const response = await axios.put(`${baseURL}/Cart/update-cart-quantity`, params, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                Accept: 'application/json'
+            }
         });
+        
         if (response.status == 200) {
             return response;
         }

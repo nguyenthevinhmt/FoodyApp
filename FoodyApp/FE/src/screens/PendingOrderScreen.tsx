@@ -3,7 +3,7 @@ import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import ScreenNames from "../utils/ScreenNames";
 import { useState, useEffect, useCallback } from "react";
-import OrderProductComponent from "../components/OrderProductComponent";
+import OrderProductsComponent from "../components/OrderProductsComponent";
 import { getAllOrderPending } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
 import { useFocusEffect } from "@react-navigation/native";
@@ -54,18 +54,15 @@ const PendingOrderScreen = ( {navigation}: any ) => {
             
             {shown ? emtyOrder() : ''}
 
-            {//áp dụng với mỗi order chỉ có 1 sản phẩm
-            order.map((value) => (
-                <OrderProductComponent
+            {order.map((value) => (
+                <OrderProductsComponent
                     key={value['id']}
-                    imageUrl={`${baseURL_img}${value['products'][0]['productImageUrl']}`}
-                    name={value['products'][0]['name']}
-                    actualPrice={value['products'][0]['actualPrice']}
-                    price={value['products'][0]['price']}
-                    quantity={value['products'][0]['quantity']}
+                    products={value['products']}
                     totalPrice={value['totalAmount']}
                 />
             ))}
+
+
 
             <View style={styles.boundary}>
                 <View style={styles.divider} />

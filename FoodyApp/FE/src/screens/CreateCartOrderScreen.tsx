@@ -5,14 +5,18 @@ import PagerView from 'react-native-pager-view';
 import { getProductById } from "../services/productService";
 import { useEffect, useState } from "react";
 import Modal from 'react-native-modal';
+import { getCartByUser } from "../services/cartService";
 import AddressComponent from "../components/AddressComponent";
 import { useFocusEffect } from "@react-navigation/native";
 import { getAccessToken } from "../services/authService";
 import { getAllAddress, getUserById } from "../services/userService";
-import { createOrder } from "../services/orderService";
+import { createCartOrder } from "../services/orderService";
+import { baseURL_img } from "../utils/baseUrl";
 
-const CreateOrderScreen = ({ navigation, route }: any) => {
-    const productId = route.params['id'];
+const CreateCartOrderScreen = ({ navigation, route }: any) => {
+    const cartId = route.params['cartId'];
+    const products = route.params['products'];
+    const totalPrice = route.params['totalPrice'] | 0;
 
     //thông tin địa chỉ
     const [addressList, setAddressList] = useState([]);
@@ -53,7 +57,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
     );
 
     const handleOrder = async () => {
-        const result = await createOrder(productId, paymentMethod, route.params['quantity'], addressList[addressIndex]['addressType']);
+        const result = await createCartOrder(cartId, paymentMethod, addressIndex);
         console.log(result);
     }
 
@@ -64,7 +68,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.scroll}>
                 <ScrollView>
                     <View style={styles.address}>
@@ -134,7 +138,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         </View>
                     </Modal>
 
-
                     <View style={styles.listProduct}>
                         <Text style={{
                             marginTop: 10,
@@ -144,18 +147,24 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Thông tin sản phẩm
                         </Text>
-                        <View style={styles.productCart}>
-                            <View style={{ width: '30%' }}>
-                                <Image source={{ uri: route.params['imgUrl'] }} style={styles.bottomSheetImage} />
-                            </View>
 
-                            <View style={styles.productDetail}>
-                                <Text style={styles.productCartName}>{route.params['productName']}</Text>
-                                <Text style={styles.productCartActualPrice}>đ{route.params['price']}</Text>
-                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice']}</Text>
-                                <Text>X{route.params['quantity']}</Text>
+                        
+                        {products.map((value: any) => (
+                            <View style={styles.productCart} key={value.id}>
+                                <View style={{ width: '30%' }}>
+                                    <Image source={{ uri: `${baseURL_img}${value['productImageUrl']}` }} style={styles.bottomSheetImage} />
+                                </View>
+
+                                <View style={styles.productDetail}>
+                                    <Text style={styles.productCartName}>{value['productName']}</Text>
+                                    <Text style={styles.productCartActualPrice}>{value['price'].toLocaleString()}đ</Text>
+                                    <Text style={styles.productCartPrice}>{value['actualPrice'].toLocaleString()}đ</Text>
+                                    <Text>X{value['quantity']}</Text>
+                                </View>
                             </View>
-                        </View>
+                        ))}
+
+                        
                     </View>
 
                     <View style={{ marginTop: 5, backgroundColor: '#fff' }}>
@@ -239,7 +248,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền hàng</Text>
-                            <Text>{route.params['actualPrice']}đ</Text>
+                            <Text>{totalPrice.toLocaleString()}đ</Text>
                         </View>
 
                         <View style={{
@@ -266,7 +275,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             <Text style={{
                                 color: '#EE4D2D',
                                 fontSize: 18
-                            }}>{route.params['actualPrice']}đ</Text>
+                            }}>{totalPrice}đ</Text>
                         </View>
                     </View>
 
@@ -279,7 +288,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     alignItems: 'flex-end',
                     paddingRight: 10,
                 }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice']}</Text>
+                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>{totalPrice.toLocaleString()}đ</Text>
                 </View>
                 <TouchableOpacity 
                     style={styles.orderButton} 
@@ -290,7 +299,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                 </TouchableOpacity>
             </View>
 
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -353,8 +362,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 10,
         paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        borderBottomWidth: 0.7,
+        borderColor: '#B4B4B3'
     },
 
     bottomSheetImage: {
@@ -426,4 +436,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CreateOrderScreen;
+export default CreateCartOrderScreen;
