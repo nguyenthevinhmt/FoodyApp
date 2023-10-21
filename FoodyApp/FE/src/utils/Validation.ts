@@ -23,6 +23,7 @@ export const ValidationEmail = (email: string) => {
   }
   return null;
 };
+
 export const ValidationPassword = (password: string) => {
   if (password.trim() === "") {
     return "Mật khẩu không được bỏ trống!";
@@ -36,6 +37,7 @@ export const ValidationPassword = (password: string) => {
     return null;
   }
 };
+
 export const ValidationRePassword = (password: string, rePassword: string) => {
   if (password.trim() !== rePassword.trim()) {
     return "Mật khẩu không khớp";

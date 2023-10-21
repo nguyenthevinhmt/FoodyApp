@@ -66,6 +66,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -114,6 +115,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -161,6 +163,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -208,6 +211,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -255,6 +259,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -401,6 +406,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
+                                   PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,

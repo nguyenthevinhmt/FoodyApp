@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View, Dimensions } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View } from 'react-native';
 
 interface AddressComponentProps {
     addressType: number;
@@ -18,6 +18,7 @@ const imageUrls: { [key: number]: ImageSourcePropType } = {
     2: require('../assets/Icons/department-icon.png'),
     3: require('../assets/Icons/save-icon.png'),
   };
+
 const titles: { [key: number]: string } = {
     1: 'Nhà',
     2: 'Công ty',
@@ -25,7 +26,6 @@ const titles: { [key: number]: string } = {
   };
 
 const AddressComponent: React.FC<AddressComponentProps> = ({addressType, province, district, ward, street, detail, name, phoneNumber, onNavigate }) => {
-
     const img = imageUrls[addressType];
     const title = titles[addressType];
     
@@ -54,28 +54,32 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor: '#fff',
     },
+
     left: {
         width: '10%',
         alignItems: 'center',
         paddingTop: 5,
-        //backgroundColor: '#dda'
     },
+
     image: {
         width: 25,
         height: 25,
     },
+
     right: {
         width: '90%',
-        //backgroundColor: '#cca'
     },
+
     title: {
         fontSize: 20,
         marginBottom: 5,
     },
+
     address: {
         fontSize: 13,
         marginBottom: 5,
     },
+    
     info: {
         fontSize: 13,
         marginBottom: 5,

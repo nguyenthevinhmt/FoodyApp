@@ -1,7 +1,6 @@
 // Alert.js
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, Modal, Button } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Alert = ({ visible, message, onClose }: any) => {
   return (

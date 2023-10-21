@@ -2,7 +2,6 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, } from "react-nati
 import { getAccessToken } from "../services/authService";
 import { useEffect, useState } from "react";
 import { getUserById, updateUser } from "../services/userService";
-import { ValidationEmail } from "../utils/Validation";
 
 export default function AccountScreen({ navigation }: any) {
   const [id, setId] = useState<number>(1);
@@ -32,7 +31,6 @@ export default function AccountScreen({ navigation }: any) {
   }, [])
 
   const handleUpdate = async () => {
-
     let hasError = false;
 
     if (hasError == false) {
@@ -44,74 +42,75 @@ export default function AccountScreen({ navigation }: any) {
     }
   }
 
-return (
-  <View style={styles.container}>
-    <View>
-      <View style={styles.listDetail}>
-        <Text style={styles.title}>Họ</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="chưa có họ"
-          onChangeText={(value) => {
-            setLastName(value);
-          }}
-        >
-          <Text>{lastName}</Text>
-        </TextInput>
+  return (
+    <View style={styles.container}>
+      <View>
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Họ</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có họ"
+            onChangeText={(value) => {
+              setLastName(value);
+            }}
+          >
+            <Text>{lastName}</Text>
+          </TextInput>
+        </View>
+
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Tên</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có tên"
+            onChangeText={(value) => {
+              setFirstName(value);
+            }}
+          >
+            <Text>{firstName}</Text>
+          </TextInput>
+        </View>
+
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Điện thoại</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có số điện thoại"
+            onChangeText={(value) => {
+              setPhoneNumber(value);
+            }}
+          >
+            <Text>{phoneNumber}</Text>
+          </TextInput>
+        </View>
+
+        <View style={styles.listDetail}>
+          <Text style={styles.title}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="chưa có email"
+            editable={false}
+          >
+            <Text>{email}</Text>
+          </TextInput>
+        </View>
       </View>
 
-      <View style={styles.listDetail}>
-        <Text style={styles.title}>Tên</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="chưa có tên"
-          onChangeText={(value) => {
-            setFirstName(value);
-          }}
-        >
-          <Text>{firstName}</Text>
-        </TextInput>
-      </View>
+      <View style={styles.buttonArea}>
+        <TouchableOpacity style={styles.returnButt} onPress={() => navigation.goBack()}>
+          <Text style={{ color: "#EE4D2D" }}>Trở lại</Text>
+        </TouchableOpacity>
 
-      <View style={styles.listDetail}>
-        <Text style={styles.title}>Điện thoại</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="chưa có số điện thoại"
-          onChangeText={(value) => {
-            setPhoneNumber(value);
-          }}
-        >
-          <Text>{phoneNumber}</Text>
-        </TextInput>
-      </View>
-      <View style={styles.listDetail}>
-        <Text style={styles.title}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="chưa có email"
-          editable={false}
-        >
-          <Text>{email}</Text>
-        </TextInput>
+        <TouchableOpacity
+          style={styles.confirmButt}
+          onPress={() => {
+            handleUpdate();
+          }}>
+          <Text style={{ color: "#fff" }}>Lưu thay đổi</Text>
+        </TouchableOpacity>
       </View>
     </View>
-
-    <View style={styles.buttonArea}>
-      <TouchableOpacity style={styles.returnButt} onPress={() => navigation.goBack()}>
-        <Text style={{ color: "#EE4D2D" }}>Trở lại</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.confirmButt}
-        onPress={() => {
-          handleUpdate();
-        }}>
-        <Text style={{ color: "#fff" }}>Lưu thay đổi</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
@@ -122,6 +121,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F1EFEF",
   },
+
   listDetail: {
     backgroundColor: "#fff",
     width: "100%",
@@ -130,17 +130,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
+
   title: {
     width: "20%",
-
   },
+
   input: {
     width: "80%",
     textAlign: "right",
   },
+
   buttonArea: {
     width: "100%",
   },
+
   returnButt: {
     width: "100%",
     height: 50,
@@ -148,6 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff"
   },
+
   confirmButt: {
     width: "100%",
     height: 50,

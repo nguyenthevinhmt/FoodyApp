@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, View, Image, Text, Button } from "react-native";
+import { useEffect } from "react";
+import { StyleSheet, View, Image, Text } from "react-native";
 import {
   Logout,
   getAccessToken,
@@ -9,7 +9,7 @@ import {
 } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
 
-export default function SplashScreen({ navigation, route }: any) {
+export default function SplashScreen({ navigation }: any) {
   const logoImage = require("../assets/images/Logo_app.png");
   const jwt_decode = require("jwt-decode");
 
@@ -18,6 +18,7 @@ export default function SplashScreen({ navigation, route }: any) {
       const response = await refreshAccessToken(objRefreshToken);
       const newAccessToken = response?.accessToken;
       const newRefreshToken = response?.refreshToken;
+      
       await saveToken({ newAccessToken, newRefreshToken });
       navigation.navigate(ScreenNames.MAIN);
     } catch (error) {
@@ -26,6 +27,7 @@ export default function SplashScreen({ navigation, route }: any) {
       navigation.navigate(ScreenNames.LOGIN);
     }
   };
+
   useEffect(() => {
     const checkTokenValidity = async () => {
       const accessToken = await getAccessToken();
@@ -55,6 +57,7 @@ export default function SplashScreen({ navigation, route }: any) {
       clearTimeout(timer);
     };
   }, []);
+
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logoImage} />
@@ -71,14 +74,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+
   logo: {
     width: 150,
     height: 215,
   },
+
   textLogo: {
     color: "#FFF",
     textAlign: "center",
-    // fontFamily: "InknutAntqua-Regular",
     fontSize: 20,
   },
 });

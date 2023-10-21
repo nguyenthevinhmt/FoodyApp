@@ -44,73 +44,79 @@ export default function UpdateAddressScreen({ navigation, route }: any) {
             <View>
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Tỉnh/ Thành phố</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setProvince(value);
                         }}>
-                            <Text>{Province}</Text>
+                        <Text>{Province}</Text>
                     </TextInput>
                 </View>
 
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Quận/ Huyện</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setDistrict(value);
                         }}>
-                            <Text>{District}</Text>
+                        <Text>{District}</Text>
                     </TextInput>
                 </View>
 
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Phường/ Xã</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setWard(value);
                         }}>
-                            <Text>{Ward}</Text>
+                        <Text>{Ward}</Text>
                     </TextInput>
                 </View>
 
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Đường</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setStreetAddress(value);
                         }}>
-                            <Text>{StreetAddress}</Text>
+                        <Text>{StreetAddress}</Text>
                     </TextInput>
                 </View>
 
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Chi tiết</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setDetailAddress(value);
                         }}>
-                            <Text>{DetailAddress}</Text>
+                        <Text>{DetailAddress}</Text>
                     </TextInput>
                 </View>
 
                 <View style={styles.listDetail}>
                     <Text style={styles.title}>Mô tả thêm</Text>
+
                     <TextInput
                         style={styles.input}
                         placeholder="chưa có"
                         onChangeText={(value) => {
                             setNotes(value);
                         }}>
-                            <Text>{Notes}</Text>
+                        <Text>{Notes}</Text>
                     </TextInput>
                 </View>
             </View>
@@ -139,6 +145,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#F1EFEF",
     },
+
     listDetail: {
         backgroundColor: "#fff",
         width: "100%",
@@ -148,17 +155,21 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 3
     },
+
     title: {
         width: "30%",
 
     },
+
     input: {
         width: "70%",
         textAlign: "right",
     },
+
     buttonArea: {
         width: "100%",
     },
+
     returnButt: {
         width: "100%",
         height: 50,
@@ -166,6 +177,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#fff"
     },
+
     confirmButt: {
         width: "100%",
         height: 50,

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Button, Image } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Logout } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
@@ -49,6 +49,7 @@ export default function UserScreen({ navigation }: any) {
           }}
           source={require("../assets/Icons/icons8-male-user-96.png")}
         />
+
         <Text style={{ fontSize: 20, color: "#fff" }}>
           {check() ? `${lastName} ${firstName}` : "Không tên"}
         </Text>
@@ -62,6 +63,7 @@ export default function UserScreen({ navigation }: any) {
             onNavigate={() => navigation.navigate(ScreenNames.ACCOUNT)}
           />
         </View>
+
         <View style={styles.Button}>
           <UserEditButton
             imageUrl={require("../assets/Icons/icons8-map-marker-100.png")}
@@ -69,20 +71,15 @@ export default function UserScreen({ navigation }: any) {
             onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
           />
         </View>
-        <View style={styles.Button}>
-          <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-loyalty-card-80.png")}
-            text="Ví Voucher"
-            onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}
-          />
-        </View>
+
         <View style={styles.Button}>
           <UserEditButton
             imageUrl={require("../assets/Icons/icons8-bill-100.png")}
             text="Lịch sử"
-            onNavigate={() => navigation.navigate(ScreenNames.LOGIN)}
+            onNavigate={() => navigation.navigate(ScreenNames.ORDER, { screen: 'Đã vận chuyển' })}
           />
         </View>
+
         <View style={styles.Button}>
           <UserEditButton
             imageUrl={require("../assets/Icons/icons8-logout-rounded-100.png")}
@@ -97,6 +94,7 @@ export default function UserScreen({ navigation }: any) {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -104,6 +102,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F1EFEF"
   },
+
   profile: {
     width: "100%",
     height: "30%",
@@ -112,11 +111,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+
   listButton: {
-    //backgroundColor: '#ffc',
     width: "100%",
     height: "70%",
   },
+
   Button: {
     width: "100%",
     height: 60,

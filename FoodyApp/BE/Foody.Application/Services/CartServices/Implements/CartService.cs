@@ -25,7 +25,7 @@ namespace Foody.Application.Services.CartServices.Implements
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-        #region quản lý đơn hàng nháp (giỏ hàng)
+            #region quản lý đơn hàng nháp (giỏ hàng)
 
         //Thêm sản phẩm vào giỏ hàng
         public async Task<string> AddProductToCart(int productId)
@@ -129,6 +129,47 @@ namespace Foody.Application.Services.CartServices.Implements
                 throw new UserFriendlyException("Chưa có sản phẩm nào trong giỏ hàng");
             }
             return shoppingCart;
+        }
+
+        public async Task<string> UpdateQuantity(UpdateCartDto input)
+        {
+            var currentUserId = CommonUtils.GetUserId(_httpContextAccessor);
+            try
+            {
+                var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == currentUserId);
+                if (cart == null)
+                {
+                    throw new UserFriendlyException("Chưa tồn tại giỏ hàng!");
+                }
+                else
+                {
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == input.productId);
+                    if (productCart == null)
+                    {
+                        throw new UserFriendlyException("Không tìm thấy sản phẩm có trong giỏ hàng!");
+                    }
+                    else
+                    {
+                        int value = productCart.Quantity + input.quantity;
+                        if (value <= 0)
+                        {
+                            _context.ProductsCarts.Remove(productCart);
+                            await _context.SaveChangesAsync();
+                            return "sản phẩm đã được xóa khỏi giỏ hàng";
+                        }
+                        else
+                        {
+                            productCart.Quantity = value;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+                return "Cập nhật số lượng thành công.";
+            }
+            catch (Exception ex)
+            {
+                return "Lỗi: " + ex.Message;
+            }
         }
 
         #endregion

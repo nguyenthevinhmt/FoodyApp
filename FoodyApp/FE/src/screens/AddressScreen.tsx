@@ -1,5 +1,4 @@
 import { Text, View, StyleSheet, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenNames from "../utils/ScreenNames";
 import { getAccessToken } from "../services/authService";
 import { useCallback, useEffect, useState } from "react";
@@ -35,11 +34,10 @@ export default function AddressScreen({ navigation }: any) {
                 setPhone(responseUser?.data['phoneNumber']);
             };
 
-
             getData();
         }, [])
     );
-    
+
     useEffect(() => {
         if (addressList.some(value => value['addressType'] == 1)) {
             setCheckHome(false);
@@ -124,10 +122,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#F1EFEF",
     },
+
     addArea: {
         width: '100%',
         marginBottom: 20
     },
+
     title: {
         width: '100%',
         height: 60,
@@ -135,8 +135,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         paddingLeft: 10,
     },
+
     detailArea: {
-
     },
-
 });
