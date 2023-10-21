@@ -1,12 +1,13 @@
-import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
+import { Text, StyleSheet, View, ScrollView } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
-import OrderProductComponent from "../components/OrderProductComponent";
 import { useState, useEffect, useCallback } from "react";
 import ScreenNames from "../utils/ScreenNames";
 import { getAllOrderSuccess } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
 import { useFocusEffect } from "@react-navigation/native";
+import { baseURL_img } from "../utils/baseUrl";
+import OrderProductsComponent from "../components/OrderProductsComponent";
 
 function emtyOrder() {
     return (
@@ -18,7 +19,7 @@ function emtyOrder() {
     );
 }
 
-const SuccessOrderScreen = ({navigation}: any) => {
+const SuccessOrderScreen = ({ navigation }: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
     const [shown, setShown] = useState(true);
     const [order, setOrder] = useState([]);
@@ -26,43 +27,37 @@ const SuccessOrderScreen = ({navigation}: any) => {
 
     useFocusEffect(
         useCallback(() => {
-          const getData = async () => {
-            
+            const getData = async () => {
+                const orderResponse = await getAllOrderSuccess();
+                setOrder(orderResponse?.data);
 
-            const orderResponse = await getAllOrderSuccess();
-            setOrder(orderResponse?.data);
+                const productDiscountResponse = await getProductDiscount();
+                setProduct(productDiscountResponse?.data.item);
+            };
 
-            const productDiscountResponse = await getProductDiscount();
-            setProduct(productDiscountResponse?.data.item);
-          };
-
-          getData();
+            getData();
         }, [])
     );
-    
+
     useEffect(() => {
         if (Array.isArray(order) && order.length === 0) {
-          setShown(true);
+            setShown(true);
         } else {
-          setShown(false);
+            setShown(false);
         }
-      }, [order]);
+    }, [order]);
 
     return (
         <ScrollView style={styles.container}>
-            
+
             {shown ? emtyOrder() : ''}
 
-            {//áp dụng với mỗi order chỉ có 1 sản phẩm
-            order.map((value) => (
-                <OrderProductComponent
+            {order.map((value) => (
+                <OrderProductsComponent
                     key={value['id']}
-                    imageUrl={`http://192.168.1.10:5010${value['products'][0]['productImageUrl']}`}
-                    name={value['products'][0]['name']}
-                    actualPrice={value['products'][0]['actualPrice']}
-                    price={value['products'][0]['price']}
-                    quantity={value['products'][0]['quantity']}
+                    products={value['products']}
                     totalPrice={value['totalAmount']}
+                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER, { orderId: value['id'] }) }}
                 />
             ))}
 
@@ -75,17 +70,17 @@ const SuccessOrderScreen = ({navigation}: any) => {
             </View>
 
             <View style={styles.suggestion}>
-                {
-                    product.map((value) => (
+                {product.map((value) => (
+                    <View style={{ width: '47%', marginHorizontal: 5 }} key={value['id']}>
                         <ProductComponent
-                            key={value['id']}
-                            imageUrl={`http://192.168.1.10:5010${value['productImageUrl']}`}
+                            imageUrl={`${baseURL_img}${value['productImageUrl']}`}
                             name={value['name']}
                             actualPrice={value['actualPrice']}
                             price={value['price']}
-                            onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, {productId: value['id']})}
+                            onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
                         />
-                    ))
+                    </View>
+                ))
                 }
             </View>
         </ScrollView>
@@ -98,6 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: "#F1EFEF"
     },
+
     boundary: {
         width: '100%',
         height: 40,
@@ -105,20 +101,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+
     divider: {
         flex: 1,
-        height: 1, // Độ dày của đường kẻ
+        height: 1,
         marginHorizontal: 5,
-        backgroundColor: '#B4B4B3', // Màu của đường kẻ
+        backgroundColor: '#B4B4B3',
     },
+
     suggestion: {
         width: '100%',
         maxHeight: 10000,
-        //backgroundColor: "#fca",
+        paddingHorizontal: 5,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
         alignContent: 'space-around',
     }
 });
+
 export default SuccessOrderScreen;

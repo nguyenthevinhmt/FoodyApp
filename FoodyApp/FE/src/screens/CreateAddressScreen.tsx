@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#F1EFEF",
     },
+
     listDetail: {
         backgroundColor: "#fff",
         width: "100%",
@@ -135,17 +136,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 3
     },
+
     title: {
         width: "30%",
-
     },
+
     input: {
         width: "70%",
         textAlign: "right",
     },
+
     buttonArea: {
         width: "100%",
     },
+
     returnButt: {
         width: "100%",
         height: 50,
@@ -153,6 +157,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#fff"
     },
+
     confirmButt: {
         width: "100%",
         height: 50,

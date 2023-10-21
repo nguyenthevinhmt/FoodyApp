@@ -24,6 +24,7 @@ export default function MainScreen() {
                   tintColor: focused ? "#EE4D2D" : "gray",
                 }}
               />
+
               <Text
                 style={{ color: focused ? "#EE4D2D" : "gray", fontSize: 12 }}
               >
@@ -35,6 +36,7 @@ export default function MainScreen() {
         name="Home"
         component={HomeScreen}
       />
+
       <Tab.Screen
         options={{
           headerShown: false,
@@ -48,6 +50,7 @@ export default function MainScreen() {
                   tintColor: focused ? "#EE4D2D" : "gray",
                 }}
               />
+
               <Text
                 style={{ color: focused ? "#EE4D2D" : "gray", fontSize: 12 }}
               >
@@ -59,6 +62,7 @@ export default function MainScreen() {
         name="Order"
         component={OrderScreen}
       />
+
       <Tab.Screen
         options={{
           headerShown: false,
@@ -72,6 +76,7 @@ export default function MainScreen() {
                   tintColor: focused ? "#EE4D2D" : "gray",
                 }}
               />
+
               <Text
                 style={{ color: focused ? "#EE4D2D" : "gray", fontSize: 12 }}
               >
@@ -83,6 +88,7 @@ export default function MainScreen() {
         name="Promotion"
         component={PromotionScreen}
       />
+
       <Tab.Screen
         options={{
           headerShown: false,
@@ -96,6 +102,7 @@ export default function MainScreen() {
                   tintColor: focused ? "#EE4D2D" : "gray",
                 }}
               />
+
               <Text
                 style={{ color: focused ? "#EE4D2D" : "gray", fontSize: 12 }}
               >
@@ -107,6 +114,7 @@ export default function MainScreen() {
         name="Cart"
         component={CartScreen}
       />
+
       <Tab.Screen
         options={{
           headerShown: false,
@@ -120,6 +128,7 @@ export default function MainScreen() {
                   tintColor: focused ? "#EE4D2D" : "gray",
                 }}
               />
+
               <Text
                 style={{ color: focused ? "#EE4D2D" : "gray", fontSize: 12 }}
               >

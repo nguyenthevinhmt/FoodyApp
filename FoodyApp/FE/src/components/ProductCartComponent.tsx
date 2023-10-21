@@ -1,0 +1,125 @@
+import React, { useState } from 'react';
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
+import { updateProductQuantity } from '../services/cartService';
+
+interface ProductCartComponentProps {
+    productId: number
+    imageUrl: string;
+    name: string;
+    actualPrice: number;
+    price: number;
+    Quantity: number;
+    onNavigation: () => void
+}
+
+const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, imageUrl, name, actualPrice, price, Quantity, onNavigation }) => {
+    const [quantity, setQuantity] = useState(Quantity);
+
+    const handleUpdate = async (update_quantity: number) => {
+        const result = await updateProductQuantity(productId, update_quantity);
+        if (result != null)
+            setQuantity(quantity + update_quantity);
+    }
+
+    return (
+        <TouchableOpacity style={styles.container} onPress={onNavigation}>
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+
+            <View style={styles.productDetail}>
+                <View>
+                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.price}>{price.toLocaleString()}đ</Text>
+                    <Text style={styles.actualPrice}>{actualPrice.toLocaleString()}đ</Text>
+                </View>
+
+                <View style={styles.updateQuantity}>
+                    <TouchableOpacity style={styles.subtraction} onPress={() => handleUpdate(-1)}>
+                        <Image source={require('../assets/Icons/subtraction-logo.png')} style={styles.quantity_logo} />
+                    </TouchableOpacity>
+
+                    <Text style={styles.quantity}>{quantity}</Text>
+
+                    <TouchableOpacity style={styles.addition} onPress={() => handleUpdate(1)}>
+                        <Image source={require('../assets/Icons/addition-logo.png')} style={styles.quantity_logo} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        marginVertical: 10,
+        paddingVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: '#fff'
+    },
+
+    image: {
+        width: 110,
+        height: 110,
+        marginHorizontal: 10,
+    },
+
+    productDetail: {
+        height: 110,
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    },
+
+    name: {
+        fontSize: 16,
+        fontWeight: '500'
+    },
+
+    price: {
+        fontSize: 12,
+        color: '#B4B4B3',
+        textDecorationLine: 'line-through'
+    },
+
+    actualPrice: {
+        fontSize: 12,
+        color: '#EE4D2D',
+        fontWeight: '600'
+    },
+
+    updateQuantity: {
+        flexDirection: 'row',
+    },
+
+    subtraction: {
+        width: 25,
+        height: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 0.7,
+        borderColor: '#EE4D2D'
+    },
+
+    quantity: {
+        marginHorizontal: 15
+    },
+
+    addition: {
+        width: 25,
+        height: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 0.7,
+        borderColor: '#EE4D2D',
+        backgroundColor: '#EE4D2D'
+    },
+
+    quantity_logo: {
+        width: 20,
+        height: 20
+    }
+});
+
+export default ProductCartComponent;

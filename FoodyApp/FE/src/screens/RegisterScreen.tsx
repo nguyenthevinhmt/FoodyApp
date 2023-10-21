@@ -91,6 +91,7 @@ export const RegisterScreen = ({ navigation }: any) => {
             style={styles.logoImage}
           />
         </View>
+
         <View style={styles.formLogin}>
           <View style={[styles.inputField, isValidEmail && styles.fieldError]}>
             <Image
@@ -113,9 +114,11 @@ export const RegisterScreen = ({ navigation }: any) => {
               }}
             ></TextInput>
           </View>
+
           {isValidEmail ? (
             <Text style={styles.textError}>{emailError}</Text>
           ) : null}
+
           <View
             style={[styles.inputField, isValidPassword && styles.fieldError]}
           >
@@ -125,6 +128,7 @@ export const RegisterScreen = ({ navigation }: any) => {
               height={16}
               style={{ marginRight: 10 }}
             />
+
             <TextInput
               style={styles.emailField}
               placeholder="Password"
@@ -140,9 +144,11 @@ export const RegisterScreen = ({ navigation }: any) => {
               }}
             ></TextInput>
           </View>
+
           {isValidPassword ? (
             <Text style={styles.textError}>{passwordError}</Text>
           ) : null}
+
           <View
             style={[styles.inputField, isValidPassword && styles.fieldError]}
           >
@@ -152,6 +158,7 @@ export const RegisterScreen = ({ navigation }: any) => {
               height={16}
               style={{ marginRight: 10 }}
             />
+
             <TextInput
               style={styles.emailField}
               placeholder="Nhập lại mật khẩu"
@@ -167,9 +174,11 @@ export const RegisterScreen = ({ navigation }: any) => {
               }}
             ></TextInput>
           </View>
+
           {isValidRePassword ? (
             <Text style={styles.textError}>{rePasswordError}</Text>
           ) : null}
+
           <TouchableOpacity
             style={[styles.button, styles.loginButton]}
             activeOpacity={0.7}
@@ -188,6 +197,7 @@ export const RegisterScreen = ({ navigation }: any) => {
               Đăng kí
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.button, styles.registerButton]}
             activeOpacity={0.7}
@@ -211,6 +221,7 @@ export const RegisterScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,6 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "100%",
   },
+
   logoApp: {
     width: "100%",
     justifyContent: "center",
@@ -227,13 +239,16 @@ const styles = StyleSheet.create({
     margin: "auto",
     flex: 1,
   },
+
   logoImage: {
     width: 150,
     height: 127,
   },
+
   formLogin: {
     flex: 3,
   },
+
   inputField: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -245,16 +260,16 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     marginTop: 15,
   },
+
   emailField: {
-    // borderWidth: 1,
     backgroundColor: "#fafafa",
     padding: 8,
-    // borderColor: "#ccc",
     borderRadius: 9,
     width: "90%",
     alignItems: "center",
     justifyContent: "center",
   },
+
   password: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -266,24 +281,29 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     marginTop: 30,
   },
+
   textError: {
     color: "red",
     fontSize: 12,
     textAlign: "left",
     marginLeft: 6,
   },
+
   fieldError: {
     borderColor: "red",
   },
+
   button: {
     justifyContent: "center",
     marginTop: 20,
     paddingVertical: 15,
     borderRadius: 10,
   },
+
   loginButton: {
     backgroundColor: "#EE4D2D",
   },
+
   registerButton: {
     backgroundColor: "#FFF",
     borderWidth: 1,
