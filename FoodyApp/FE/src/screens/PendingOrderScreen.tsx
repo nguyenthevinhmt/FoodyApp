@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, ScrollView, Image } from "react-native";
+import { Text, StyleSheet, View, ScrollView } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import ScreenNames from "../utils/ScreenNames";
@@ -19,7 +19,7 @@ function emtyOrder() {
     );
 }
 
-const PendingOrderScreen = ( {navigation}: any ) => {
+const PendingOrderScreen = ({ navigation }: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
     const [shown, setShown] = useState(true);
     const [order, setOrder] = useState([]);
@@ -27,31 +27,28 @@ const PendingOrderScreen = ( {navigation}: any ) => {
 
     useFocusEffect(
         useCallback(() => {
-          const getData = async () => {
-            
+            const getData = async () => {
+                const orderResponse = await getAllOrderPending();
+                setOrder(orderResponse?.data);
 
-            const orderResponse = await getAllOrderPending();
-            setOrder(orderResponse?.data);
+                const productDiscountResponse = await getProductDiscount();
+                setProduct(productDiscountResponse?.data.item);
+            };
 
-            const productDiscountResponse = await getProductDiscount();
-            setProduct(productDiscountResponse?.data.item);
-          };
-
-          getData();
+            getData();
         }, [])
     );
-    
+
     useEffect(() => {
         if (Array.isArray(order) && order.length === 0) {
-          setShown(true);
+            setShown(true);
         } else {
-          setShown(false);
+            setShown(false);
         }
-      }, [order]);
+    }, [order]);
 
     return (
         <ScrollView style={styles.container}>
-            
             {shown ? emtyOrder() : ''}
 
             {order.map((value) => (
@@ -59,10 +56,9 @@ const PendingOrderScreen = ( {navigation}: any ) => {
                     key={value['id']}
                     products={value['products']}
                     totalPrice={value['totalAmount']}
+                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER, { orderId: value['id'] }) }}
                 />
             ))}
-
-
 
             <View style={styles.boundary}>
                 <View style={styles.divider} />
@@ -97,6 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: "#F1EFEF"
     },
+
     boundary: {
         width: '100%',
         height: 40,
@@ -104,12 +101,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+
     divider: {
         flex: 1,
-        height: 1, // Độ dày của đường kẻ
+        height: 1,
         marginHorizontal: 5,
-        backgroundColor: '#B4B4B3', // Màu của đường kẻ
+        backgroundColor: '#B4B4B3',
     },
+
     suggestion: {
         width: '100%',
         maxHeight: 10000,
@@ -120,4 +119,5 @@ const styles = StyleSheet.create({
         alignContent: 'space-around',
     }
 });
+
 export default PendingOrderScreen;

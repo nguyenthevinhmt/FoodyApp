@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { TokenResponse, UserLogin } from "../models/AuthModel";
-import {baseURL} from "../utils/baseUrl";
+import { TokenResponse } from "../models/AuthModel";
+import { baseURL } from "../utils/baseUrl";
 
 export const login = async (email: string, password: string) => {
   try {
@@ -22,6 +22,7 @@ export const login = async (email: string, password: string) => {
     return null;
   }
 };
+
 export const saveToken = async ({ accessToken, refreshToken }: any) => {
   try {
     await AsyncStorage.setItem("accessToken", accessToken ? accessToken : "");
@@ -34,6 +35,7 @@ export const saveToken = async ({ accessToken, refreshToken }: any) => {
     console.error("Lỗi khi lưu trữ token:", error);
   }
 };
+
 export const getAccessToken = async () => {
   try {
     const accessToken = await AsyncStorage.getItem("accessToken");
@@ -43,6 +45,7 @@ export const getAccessToken = async () => {
     return null;
   }
 };
+
 export const getRefreshToken = async () => {
   try {
     const refreshToken = await AsyncStorage.getItem("refreshToken");
@@ -52,6 +55,7 @@ export const getRefreshToken = async () => {
     return null;
   }
 };
+
 export const Logout = async () => {
   try {
     await AsyncStorage.removeItem("accessToken");
@@ -60,6 +64,7 @@ export const Logout = async () => {
     console.error("Lỗi khi xóa token:", error);
   }
 };
+
 axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent
@@ -80,10 +85,12 @@ export const intercepterToken = async () =>
       }
       return config;
     },
+
     function (error) {
       return Promise.reject(error);
     }
   );
+
 export const refreshAccessToken = async ({
   accessToken,
   refreshToken,
@@ -93,19 +100,22 @@ export const refreshAccessToken = async ({
       accessToken,
       refreshToken,
     });
+
     if (newToken) {
       const accessToken: string = newToken.data.accessToken;
       const refreshToken: string = newToken.data.refreshToken;
+
       await saveToken({ accessToken, refreshToken });
       console.log("Đã refresh");
+
       return { accessToken, refreshToken };
     } else {
       console.log("Token đã hết hạn");
       return null;
     }
   } catch (error) {
+    return null;
     console.log("Lỗi ở service");
-
     console.log(error);
   }
 };

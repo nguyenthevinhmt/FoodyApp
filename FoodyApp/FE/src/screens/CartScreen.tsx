@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ProductCartComponent from "../components/ProductCartComponent";
 import ScreenNames from "../utils/ScreenNames";
 import { baseURL_img } from "../utils/baseUrl";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { getCartByUser } from "../services/cartService";
 
@@ -27,7 +27,6 @@ export default function CartScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.header}>
         <View style={styles.price}>
           <Text style={{ fontSize: 12 }}>Tổng thanh toán: </Text>
@@ -43,8 +42,7 @@ export default function CartScreen({ navigation }: any) {
                   'cartId': cartId,
                   'products': products,
                   'totalPrice': totalPrice,
-                }
-              )
+                })
             }
           }}>
           <Text style={{ color: '#fff' }}>Đặt hàng</Text>
@@ -52,25 +50,21 @@ export default function CartScreen({ navigation }: any) {
       </View>
 
       <ScrollView style={styles.cartDetail}>
-
         {
-          products ?
-            products.map((value) => (
-              <ProductCartComponent
-                key={value['id']}
-                productId={value['id']}
-                imageUrl={`${baseURL_img}${value['productImageUrl']}`}
-                name={value['name']}
-                actualPrice={value['actualPrice']}
-                price={value['price']}
-                Quantity={value['quantity']}
-                onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
-              />
-            ))
-            : ''
+          products ? products.map((value) => (
+            <ProductCartComponent
+              key={value['id']}
+              productId={value['id']}
+              imageUrl={`${baseURL_img}${value['productImageUrl']}`}
+              name={value['name']}
+              actualPrice={value['actualPrice']}
+              price={value['price']}
+              Quantity={value['quantity']}
+              onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
+            />
+          )) : ''
         }
       </ScrollView>
-
     </SafeAreaView>
   );
 }

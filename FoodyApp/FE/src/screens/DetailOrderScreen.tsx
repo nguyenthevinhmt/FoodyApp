@@ -2,38 +2,35 @@ import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback } from 'react';
 import { useState } from "react";
-import Modal from 'react-native-modal';
 import AddressComponent from "../components/AddressComponent";
 import { useFocusEffect } from "@react-navigation/native";
 import { getAccessToken } from "../services/authService";
-import { getAllAddress, getUserById } from "../services/userService";
-import { createCartOrder } from "../services/orderService";
+import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
+import { getOrderById } from "../services/orderService";
 
-const CreateCartOrderScreen = ({ navigation, route }: any) => {
-    const cartId = route.params['cartId'];
-    const products = route.params['products'];
-    const totalPrice = route.params['totalPrice'] | 0;
+const DetailOrderScreen = ({ navigation, route }: any) => {
+    const orderId = route.params['orderId'];
+
+    //thông tin đơn hàng
+    const [order, setOrder] = useState([]);
+
+    //danh sách sản phẩm
+    const [products, setProducts] = useState([]);
 
     //thông tin địa chỉ
-    const [addressList, setAddressList] = useState([]);
+    const [address, setAddress] = useState([]);
+
+    //thông tin địa chỉ
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
 
-    //vị trí địa chỉ trong addressList
-    const [addressIndex, setAddressIndex] = useState(0);
-
     //phương thức thanh toán
-    const [paymentMethod, setPaymentMethod] = useState(1);
-
-    //Chỉnh hiệu ứng nút thanh toán khi ấn
-    const [button1Pressed, setButton1Pressed] = useState(false);
-    const [button2Pressed, setButton2Pressed] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
             const getData = async () => {
-                //gọi api lấy địa chỉ và thông tin người dùng
                 const jwt = require("jwt-decode");
                 const token = await getAccessToken();
                 const decode = jwt(token);
@@ -41,31 +38,40 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                 const userId = decode.sub;
                 console.log("User ID:", userId);
 
-                const responseAddress = await getAllAddress(userId);
-                setAddressList(responseAddress?.data.item);
-
+                //gọi api lấy địa chỉ và thông tin người dùng
                 const responseUser = await getUserById(userId);
                 setName(responseUser?.data['firstName'] + ' ' + responseUser?.data['lastName']);
                 setPhone(responseUser?.data['phoneNumber']);
+
+                //gọi api lấy thông tin đơn hàng
+                const responseOrder = await getOrderById(orderId);
+                setOrder(responseOrder?.data)
+                setProducts(responseOrder?.data['products']);
+                setAddress(responseOrder?.data['userAddress']);
+                setPaymentMethod(responseOrder?.data['PaymentMethod']);
             };
 
             getData();
         }, [])
     );
 
-    const handleOrder = async () => {
-        const result = await createCartOrder(cartId, paymentMethod, addressIndex);
-        console.log(result);
+    const PaymentDetail = () => {
+        if (paymentMethod == 0) {
+            return <Text>Đơn hàng chưa được thanh toán</Text>
+        }
+        else if (paymentMethod == 1) {
+            return <Text>Đơn hàng sẽ được thanh toán khi nhận hàng</Text>
+        } else {
+            return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
+        }
     }
-
-    const [isModalVisible, setModalVisible] = useState(false);
-
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerDetail}>Chi tiết đơn hàng</Text>
+            </View>
+
             <View style={styles.scroll}>
                 <ScrollView>
                     <View style={styles.address}>
@@ -77,63 +83,19 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Địa chỉ nhận hàng
                         </Text>
-                        {
-                            addressList.length > 0 && (
-                                <AddressComponent
-                                    addressType={addressList[addressIndex]['addressType']}
-                                    province={addressList[addressIndex]['province']}
-                                    district={addressList[addressIndex]['district']}
-                                    ward={addressList[addressIndex]['ward']}
-                                    street={addressList[addressIndex]['streetAddress']}
-                                    detail={addressList[addressIndex]['detailAddress']}
-                                    name={name}
-                                    phoneNumber={phone}
-                                    onNavigate={() => { toggleModal() }}
-                                />
-                            )
-                        }
+
+                        <AddressComponent
+                            addressType={(address as any)?.addressType}
+                            province={(address as any)?.province}
+                            district={(address as any)?.district}
+                            ward={(address as any)?.ward}
+                            street={(address as any)?.streetAddress}
+                            detail={(address as any)?.detailAddress}
+                            name={name}
+                            phoneNumber={phone}
+                            onNavigate={() => { }}
+                        />
                     </View>
-
-                    <Modal
-                        isVisible={isModalVisible}
-                        style={styles.bottomSheet}
-                        onBackdropPress={toggleModal} // Đóng modal khi chạm vào ngoài vùng hiển thị
-                        onSwipeComplete={toggleModal} // Đóng modal khi vuốt xuống
-                        swipeDirection="down" // Cho phép vuốt xuống để đóng modal
-                    >
-                        <View style={styles.bottomSheetContainer}>
-                            <View style={styles.headerBottomSheet}>
-
-                                <Text style={{ fontSize: 18, fontWeight: '600' }}>Lựa chọn địa chỉ nhận hàng</Text>
-
-                                <TouchableOpacity style={{ justifyContent: 'flex-start' }} onPress={() => { toggleModal() }}>
-                                    <Text style={{
-                                        fontSize: 20
-                                    }}>X</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            {/* {danh sách các địa chỉ để lựa chọn} */}
-                            <View style={styles.bottomSheetContent}>
-                                {
-                                    addressList.map((value, index) => (
-                                        <AddressComponent
-                                            key={index}
-                                            addressType={value['addressType']}
-                                            province={value['province']}
-                                            district={value['district']}
-                                            ward={value['ward']}
-                                            street={value['streetAddress']}
-                                            detail={value['detailAddress']}
-                                            name={name}
-                                            phoneNumber={phone}
-                                            onNavigate={() => { toggleModal(); setAddressIndex(index) }}
-                                        />
-                                    ))
-                                }
-                            </View>
-                        </View>
-                    </Modal>
 
                     <View style={styles.listProduct}>
                         <Text style={{
@@ -152,7 +114,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                                 </View>
 
                                 <View style={styles.productDetail}>
-                                    <Text style={styles.productCartName}>{value['productName']}</Text>
+                                    <Text style={styles.productCartName}>{value['name']}</Text>
                                     <Text style={styles.productCartActualPrice}>{value['price'].toLocaleString()}đ</Text>
                                     <Text style={styles.productCartPrice}>{value['actualPrice'].toLocaleString()}đ</Text>
                                     <Text>X{value['quantity']}</Text>
@@ -172,40 +134,9 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                         </Text>
 
                         <View style={styles.paymentMethods}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setButton1Pressed(true);
-                                    setButton2Pressed(false);
-                                    setPaymentMethod(1)
-                                }}
-                                style={[
-                                    styles.paymentButton,
-                                    button1Pressed && { borderColor: '#EE4D2D', opacity: 1 }
-                                ]}>
-                                <Text
-                                    style={[{ fontWeight: '500' },
-                                    button1Pressed && { color: '#EE4D2D' }
-                                    ]}
-                                >Cash</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setButton1Pressed(false);
-                                    setButton2Pressed(true);
-                                    setPaymentMethod(2)
-                                }}
-
-                                style={[
-                                    styles.paymentButton,
-                                    button2Pressed && { borderColor: '#EE4D2D', opacity: 1 }
-                                ]}>
-                                <Text
-                                    style={[{ fontWeight: '500' },
-                                    button2Pressed && { color: '#EE4D2D' }
-                                    ]}
-                                >VnPay</Text>
-                            </TouchableOpacity>
+                            {
+                                PaymentDetail()
+                            }
                         </View>
                     </View>
 
@@ -225,7 +156,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền hàng</Text>
-                            <Text>{totalPrice.toLocaleString()}đ</Text>
+                            <Text>{(order.totalAmount | 0).toLocaleString()}đ</Text>
                         </View>
 
                         <View style={{
@@ -252,29 +183,19 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                             <Text style={{
                                 color: '#EE4D2D',
                                 fontSize: 18
-                            }}>{totalPrice}đ</Text>
+                            }}>{(order.totalAmount | 0).toLocaleString()}đ</Text>
                         </View>
                     </View>
                 </ScrollView>
             </View>
 
             <View style={styles.footer}>
-                <View style={{
-                    width: '65%',
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                    paddingRight: 10,
-                }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>{totalPrice.toLocaleString()}đ</Text>
-                </View>
-
                 <TouchableOpacity
                     style={styles.orderButton}
                     onPress={() => {
-                        handleOrder();
                         navigation.goBack();
                     }}>
-                    <Text style={{ color: '#fff' }}>Đặt hàng</Text>
+                    <Text style={{ color: '#fff' }}>Hoàn tất</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -288,9 +209,24 @@ const styles = StyleSheet.create({
         backgroundColor: "#F1EFEF"
     },
 
+    header: {
+        width: '100%',
+        height: '7%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderBottomWidth: 1
+    },
+
+    headerDetail: {
+        fontSize: 17,
+        fontWeight: '500',
+        color: '#EE4D2D'
+    },
+
     scroll: {
         width: '100%',
-        height: '93%',
+        height: '86%',
     },
 
     address: {
@@ -406,7 +342,7 @@ const styles = StyleSheet.create({
     },
 
     orderButton: {
-        width: '35%',
+        width: '100%',
         alignItems: 'center',
         backgroundColor: '#EE4D2D',
         justifyContent: 'center',
@@ -414,4 +350,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CreateCartOrderScreen;
+export default DetailOrderScreen;

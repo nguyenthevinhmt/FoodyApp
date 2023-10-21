@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -14,7 +14,8 @@ interface ProductComponentProps {
 const ProductComponent: React.FC<ProductComponentProps> = ({ imageUrl, name, actualPrice, price, onNavigation }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onNavigation}>
-            <Image source={{uri: imageUrl}} style={styles.image} />
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+
             <View style={styles.productDetail}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.actualPrice}>{price.toLocaleString()}đ</Text>
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: windowWidth*0.45,
+        height: windowWidth * 0.45,
     },
     productDetail: {
         flexDirection: 'column',

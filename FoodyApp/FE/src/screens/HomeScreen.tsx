@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import Swiper from "react-native-swiper";
@@ -8,7 +8,6 @@ import { baseURL_img } from "../utils/baseUrl";
 import ScreenNames from "../utils/ScreenNames";
 
 export default function HomeScreen({ navigation }: any) {
-
   const images = [
     require('../assets/images/food1.png'),
     require('../assets/images/food2.png'),
@@ -84,11 +83,7 @@ export default function HomeScreen({ navigation }: any) {
 
       <View style={styles.container1}>
         <View style={styles.view1}>
-          <Image
-            source={require("../assets/IconNavigation/HomeIcon.png")}
-            style={styles.img}
-          />
-
+          <Image source={require("../assets/IconNavigation/HomeIcon.png")} style={styles.img} />
           <Text style={styles.text1}>Danh mục món ăn </Text>
         </View>
 
@@ -122,24 +117,24 @@ export default function HomeScreen({ navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          <FlatList
-            data={listProduct}
-            keyExtractor={(item: any) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.view4} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item.id })}>
-                <Image
-                  source={{ uri: `${baseURL_img}${item.productImageUrl}` }}
-                  style={styles.img2}
-                />
+          <ScrollView>
+            {
+              listProduct.map((item) => (
+                <TouchableOpacity key={item['id']} style={styles.view4} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}>
+                  <Image
+                    source={{ uri: `${baseURL_img}${item['productImageUrl']}` }}
+                    style={styles.img2}
+                  />
 
-                <View style={{ flexDirection: "row", paddingTop: 5, paddingLeft: 5 }}>
-                  <Text style={styles.text4}>{item.name}</Text>
-            
-                  <Text style={styles.text4_1}>  -   {item.description}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+                  <View style={{ flexDirection: "row", paddingTop: 5, paddingLeft: 5 }}>
+                    <Text style={styles.text4}>{item['name']}</Text>
+
+                    <Text style={styles.text4_1}>  -   {item['description']}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            }
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -148,7 +143,7 @@ export default function HomeScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'space-around',
   },
 
   headerArea: {

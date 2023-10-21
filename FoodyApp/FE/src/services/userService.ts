@@ -1,18 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { TokenResponse } from "../models/AuthModel";
-import {baseURL} from "../utils/baseUrl";
+import { baseURL } from "../utils/baseUrl";
 
 axios.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
-      return config;
+        // Do something before request is sent
+        return config;
     },
     function (error) {
-      // Do something with request error
-      return Promise.reject(error);
+        // Do something with request error
+        return Promise.reject(error);
     }
-  );
+);
 
 axios.interceptors.response.use(
     function (response) {
@@ -79,7 +77,7 @@ export const getAllAddress = async (UserId: number) => {
 }
 
 //cập nhật thông tin địa chỉ người dùng
-export const updateAddress = async (id: number, UserId: number, Province: string, District: string, Ward: string, StreetAddress: string, DetailAddress: string, Notes: string, AddressType: string ) => {
+export const updateAddress = async (id: number, UserId: number, Province: string, District: string, Ward: string, StreetAddress: string, DetailAddress: string, Notes: string, AddressType: string) => {
     try {
         const response = await axios.put(`${baseURL}/User/update-address`, {
             id: id,
@@ -103,7 +101,7 @@ export const updateAddress = async (id: number, UserId: number, Province: string
 };
 
 //thêm địa chỉ mới
-export const createAddress = async (UserId: number, Province: string, District: string, Ward: string, StreetAddress: string, DetailAddress: string, Notes: string, AddressType: string ) => {
+export const createAddress = async (UserId: number, Province: string, District: string, Ward: string, StreetAddress: string, DetailAddress: string, Notes: string, AddressType: string) => {
     try {
         const response = await axios.post(`${baseURL}/User/create-new-address`, {
             userId: UserId,

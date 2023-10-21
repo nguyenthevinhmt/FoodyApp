@@ -60,14 +60,12 @@ const ProductScreen = ({ navigation, route }: any) => {
       setShowAlert(true);
     }
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <PagerView style={styles.viewPager} initialPage={0}>
-
           <Image source={{ uri: imgUrl }} style={styles.image} />
-
-
         </PagerView>
       </View>
 
@@ -79,9 +77,11 @@ const ProductScreen = ({ navigation, route }: any) => {
             : ''
           }
         </View>
+
         <View style={styles.price}>
           <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>{actualPrice.toLocaleString()}đ</Text>
         </View>
+
         <View style={styles.actualPrice}>
           <Text style={{
             fontSize: 12,
@@ -98,6 +98,7 @@ const ProductScreen = ({ navigation, route }: any) => {
           paddingVertical: 5,
           fontWeight: '600'
         }}>Mô tả món ăn</Text>
+
         <ScrollView>
           <Text style={{
             width: '100%',

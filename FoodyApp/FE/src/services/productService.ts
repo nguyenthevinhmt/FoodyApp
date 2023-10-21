@@ -1,18 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { TokenResponse } from "../models/AuthModel";
-import {baseURL} from "../utils/baseUrl";
+import { baseURL } from "../utils/baseUrl";
 
 axios.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
-      return config;
+        // Do something before request is sent
+        return config;
     },
     function (error) {
-      // Do something with request error
-      return Promise.reject(error);
+        // Do something with request error
+        return Promise.reject(error);
     }
-  );
+);
 
 axios.interceptors.response.use(
     function (response) {
@@ -44,7 +42,7 @@ export const getProductDiscount = async () => {
             PageSize: 100,
             PageIndex: 1
         }
-        const response = await axios.get(`${baseURL}/Product/get-product-discount-paging`, {params});
+        const response = await axios.get(`${baseURL}/Product/get-product-discount-paging`, { params });
         if (response.status == 200) {
             return response;
         }

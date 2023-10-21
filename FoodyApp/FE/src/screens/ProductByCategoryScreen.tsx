@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, FlatList, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { getListProduct } from '../services/productService';
 import { baseURL_img } from '../utils/baseUrl';
 import ScreenNames from '../utils/ScreenNames';
 import ProductComponent from '../components/ProductComponent';
 
-const ProductByCategoryScreen = ({ navigation,route }: any) => {
+const ProductByCategoryScreen = ({ navigation, route }: any) => {
     const categoryId = route.params['categoryId'];
     const categoryName = route.params['categoryName'];
     const categoryDescription = route.params['categoryDescription'];
@@ -14,7 +14,6 @@ const ProductByCategoryScreen = ({ navigation,route }: any) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6; // Số sản phẩm hiển thị trên mỗi trang
     const [listProduct, setListProduct] = useState([]);
-
 
     useEffect(() => {
         const getData = async () => {
@@ -25,7 +24,6 @@ const ProductByCategoryScreen = ({ navigation,route }: any) => {
 
         getData();
     }, []);
-
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -46,24 +44,24 @@ const ProductByCategoryScreen = ({ navigation,route }: any) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.header_text}>{categoryName} có ở đây</Text>
-                <Text style={{fontSize: 11}}>{categoryDescription}.</Text>
+                <Text style={{ fontSize: 11 }}>{categoryDescription}.</Text>
             </View>
 
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     data={currentProducts}
                     keyExtractor={(item) => item['id']}
                     renderItem={({ item }) => (
                         // Hiển thị thông tin sản phẩm
                         <View style={styles.product}>
-                        <ProductComponent
-                            key={item['id']}
-                            imageUrl={`${baseURL_img}${item['productImageUrl']}`}
-                            name={item['name']}
-                            actualPrice={item['actualPrice']}
-                            price={item['price']}
-                            onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}
-                        />
+                            <ProductComponent
+                                key={item['id']}
+                                imageUrl={`${baseURL_img}${item['productImageUrl']}`}
+                                name={item['name']}
+                                actualPrice={item['actualPrice']}
+                                price={item['price']}
+                                onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}
+                            />
                         </View>
                     )}
                     numColumns={2}
@@ -73,7 +71,9 @@ const ProductByCategoryScreen = ({ navigation,route }: any) => {
                     <TouchableOpacity onPress={handlePreviousPage} disabled={currentPage === 1}>
                         <Text style={{ marginHorizontal: 5, color: '#EE4D2D' }}>{"<<<"}</Text>
                     </TouchableOpacity>
+
                     <Text style={{ marginHorizontal: 10, borderWidth: 0.5, borderColor: '#EE4D2D', width: 20, textAlign: 'center', color: '#EE4D2D' }}>{currentPage}</Text>
+
                     <TouchableOpacity onPress={handleNextPage} disabled={endIndex >= listProduct.length}>
                         <Text style={{ marginHorizontal: 5, color: '#EE4D2D' }}>{">>>"}</Text>
                     </TouchableOpacity>
@@ -86,7 +86,7 @@ const ProductByCategoryScreen = ({ navigation,route }: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F9F3CC"
+        backgroundColor: "#ffe"
     },
 
     header: {
@@ -94,6 +94,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         height: 100,
         paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderColor: '#EE4D2D'
     },
 
     header_text: {
@@ -107,21 +109,24 @@ const styles = StyleSheet.create({
         MarginHorizontal: 10,
         justifyContent: 'space-between',
         marginBottom: 10,
-        backgroundColor: "#F9F3CC",
+        backgroundColor: "#ffe",
     },
 
     product: {
-        flex: 1/2,
+        flex: 1 / 2,
         maxWidth: '45%',
         marginHorizontal: 10,
         marginBottom: 5,
     },
 
-    navigation: { 
+    navigation: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center', 
-        paddingVertical: 10 
+        justifyContent: 'center',
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderColor: '#EE4D2D'
     }
 });
+
 export default ProductByCategoryScreen;

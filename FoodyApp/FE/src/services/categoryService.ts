@@ -1,5 +1,5 @@
 import axios from "axios";
-import {baseURL} from "../utils/baseUrl";
+import { baseURL } from "../utils/baseUrl";
 
 export const getAllCategory = async (Name: string | null, PageSize: number, PageIndex: number) => {
     try {

@@ -1,19 +1,17 @@
-import { TokenResponse } from './../models/AuthModel';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAccessToken } from './authService';
 import axios from "axios";
-import {baseURL} from "../utils/baseUrl";
+import { baseURL } from "../utils/baseUrl";
 
 axios.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
-      return config;
+        // Do something before request is sent
+        return config;
     },
     function (error) {
-      // Do something with request error
-      return Promise.reject(error);
+        // Do something with request error
+        return Promise.reject(error);
     }
-  );
+);
 
 axios.interceptors.response.use(
     function (response) {
@@ -67,7 +65,6 @@ export const addProductToCart = async (id: number) => {
 export const updateProductQuantity = async (id: number, quantity: number) => {
     try {
         const token = await getAccessToken();
-
         const params = {
             productId: id,
             quantity: quantity
@@ -79,7 +76,7 @@ export const updateProductQuantity = async (id: number, quantity: number) => {
                 Accept: 'application/json'
             }
         });
-        
+
         if (response.status == 200) {
             return response;
         }

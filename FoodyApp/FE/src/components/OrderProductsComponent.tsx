@@ -1,37 +1,37 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, ImageSourcePropType, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import { baseURL_img } from '../utils/baseUrl';
 
 interface OrderProductsComponentProps {
     products: any[],
     totalPrice: number,
+    onNavigation: () => void
 }
 
-const OrderProductsComponent: React.FC<OrderProductsComponentProps> = ({ products, totalPrice }) => {
+const OrderProductsComponent: React.FC<OrderProductsComponentProps> = ({ products, totalPrice, onNavigation }) => {
     return (
         <View style={styles.container}>
-            {products ? 
-            products.map((value) => (
-                <View style={styles.product} key={value['id']}>
-                    <Image source={{ uri: `${baseURL_img}${value['productImageUrl']}` }} style={styles.image} />
-                    <View style={styles.productDetail}>
-                        <Text style={styles.name}>{value['name']}</Text>
-                        <Text style={styles.actualPrice}>{(value['price'] | 0).toLocaleString()}đ</Text>
-                        <Text style={styles.price}>{(value['actualPrice'] | 0).toLocaleString()}đ</Text>
-                        <Text style={styles.quantity}>x{value['quantity']}</Text>
+            {
+                products ? products.map((value) => (
+                    <View style={styles.product} key={value['id']}>
+                        <Image source={{ uri: `${baseURL_img}${value['productImageUrl']}` }} style={styles.image} />
+
+                        <View style={styles.productDetail}>
+                            <Text style={styles.name}>{value['name']}</Text>
+                            <Text style={styles.actualPrice}>{(value['price'] | 0).toLocaleString()}đ</Text>
+                            <Text style={styles.price}>{(value['actualPrice'] | 0).toLocaleString()}đ</Text>
+                            <Text style={styles.quantity}>x{value['quantity']}</Text>
+                        </View>
                     </View>
-                </View>
-            ))
-            : ''
+                )) : ''
             }
-            
 
             <View style={styles.totalPrice}>
-                <Text>Thành tiền:   <Text style={{color: '#EE4D2D', fontWeight: '600'}}>{totalPrice.toLocaleString()}đ</Text></Text>
+                <Text>Thành tiền:   <Text style={{ color: '#EE4D2D', fontWeight: '600' }}>{totalPrice.toLocaleString()}đ</Text></Text>
             </View>
 
             <View style={styles.buttonArea}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={onNavigation}>
                     <Text style={{
                         alignSelf: 'center',
                         color: '#fff'
@@ -90,10 +90,10 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
 
-    quantity: { 
+    quantity: {
         alignSelf: 'flex-end',
-        color: '#B4B4B3', 
-        alignItems: 'flex-end' 
+        color: '#B4B4B3',
+        alignItems: 'flex-end'
     },
 
     totalPrice: {

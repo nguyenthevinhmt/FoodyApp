@@ -1,19 +1,17 @@
-import { TokenResponse } from './../models/AuthModel';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAccessToken } from './authService';
 import axios from "axios";
-import {baseURL} from "../utils/baseUrl";
+import { baseURL } from "../utils/baseUrl";
 
 axios.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
-      return config;
+        // Do something before request is sent
+        return config;
     },
     function (error) {
-      // Do something with request error
-      return Promise.reject(error);
+        // Do something with request error
+        return Promise.reject(error);
     }
-  );
+);
 
 axios.interceptors.response.use(
     function (response) {
@@ -97,6 +95,26 @@ export const getAllOrderCancel = async () => {
     }
 }
 
+//lấy thông tin order theo id
+export const getOrderById = async (id: number) => {
+    try {
+        const token = await getAccessToken();
+        const response = await axios.get(`${baseURL}/Order/get-by-id/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status == 200) {
+            return response;
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 //tạo order mới trực tiếp từ sản phẩm
 export const createOrder = async (productId: number, paymentMethod: number, quantity: number, addressType: number) => {
     try {
@@ -121,10 +139,10 @@ export const createOrder = async (productId: number, paymentMethod: number, quan
 }
 
 //tạo order mới từ cart
-export const createCartOrder = async (cartId : number, paymentMethod: number, addressType: number) => {
+export const createCartOrder = async (cartId: number, paymentMethod: number, addressType: number) => {
     try {
         const token = await getAccessToken();
-        
+
         const params = {
             cartId: cartId,
             paymentMethod: paymentMethod,

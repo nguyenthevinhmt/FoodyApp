@@ -1,9 +1,6 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useCallback, useRef } from 'react';
-import PagerView from 'react-native-pager-view';
-import { getProductById } from "../services/productService";
-import { useEffect, useState } from "react";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import React, { useCallback } from 'react';
+import { useState } from "react";
 import Modal from 'react-native-modal';
 import AddressComponent from "../components/AddressComponent";
 import { useFocusEffect } from "@react-navigation/native";
@@ -76,21 +73,19 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Địa chỉ nhận hàng
                         </Text>
-                        {
-                            addressList.length > 0 && (
-                                <AddressComponent
-                                    addressType={addressList[addressIndex]['addressType']}
-                                    province={addressList[addressIndex]['province']}
-                                    district={addressList[addressIndex]['district']}
-                                    ward={addressList[addressIndex]['ward']}
-                                    street={addressList[addressIndex]['streetAddress']}
-                                    detail={addressList[addressIndex]['detailAddress']}
-                                    name={name}
-                                    phoneNumber={phone}
-                                    onNavigate={() => { toggleModal() }}
-                                />
-                            )
-                        }
+                        {addressList.length > 0 && (
+                            <AddressComponent
+                                addressType={addressList[addressIndex]['addressType']}
+                                province={addressList[addressIndex]['province']}
+                                district={addressList[addressIndex]['district']}
+                                ward={addressList[addressIndex]['ward']}
+                                street={addressList[addressIndex]['streetAddress']}
+                                detail={addressList[addressIndex]['detailAddress']}
+                                name={name}
+                                phoneNumber={phone}
+                                onNavigate={() => { toggleModal() }}
+                            />
+                        )}
                     </View>
 
                     <Modal
@@ -102,7 +97,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     >
                         <View style={styles.bottomSheetContainer}>
                             <View style={styles.headerBottomSheet}>
-
                                 <Text style={{ fontSize: 18, fontWeight: '600' }}>Lựa chọn địa chỉ nhận hàng</Text>
 
                                 <TouchableOpacity style={{ justifyContent: 'flex-start' }} onPress={() => { toggleModal() }}>
@@ -144,6 +138,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Thông tin sản phẩm
                         </Text>
+
                         <View style={styles.productCart}>
                             <View style={{ width: '30%' }}>
                                 <Image source={{ uri: route.params['imgUrl'] }} style={styles.bottomSheetImage} />
@@ -167,6 +162,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Phương thức thanh toán
                         </Text>
+
                         <View style={styles.paymentMethods}>
                             <TouchableOpacity
                                 onPress={() => {
@@ -177,20 +173,11 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
 
                                 style={[
                                     styles.paymentButton,
-                                    button1Pressed && {
-                                        borderColor: '#EE4D2D',
-                                        opacity: 1
-                                    }
-                                ]}
-                            >
+                                    button1Pressed && { borderColor: '#EE4D2D', opacity: 1 }
+                                ]}>
                                 <Text
-                                    style={[
-                                        {
-                                            fontWeight: '500'
-                                        },
-                                        button1Pressed && {
-                                            color: '#EE4D2D',
-                                        }
+                                    style={[{ fontWeight: '500' },
+                                    button1Pressed && { color: '#EE4D2D' }
                                     ]}
                                 >Cash</Text>
                             </TouchableOpacity>
@@ -201,23 +188,14 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                                     setButton2Pressed(true);
                                     setPaymentMethod(2)
                                 }}
-
                                 style={[
                                     styles.paymentButton,
-                                    button2Pressed && {
-                                        borderColor: '#EE4D2D',
-                                        opacity: 1
-                                    }
+                                    button2Pressed && { borderColor: '#EE4D2D', opacity: 1 }
                                 ]}
                             >
                                 <Text
-                                    style={[
-                                        {
-                                            fontWeight: '500'
-                                        },
-                                        button2Pressed && {
-                                            color: '#EE4D2D',
-                                        }
+                                    style={[{ fontWeight: '500' },
+                                    button2Pressed && { color: '#EE4D2D' }
                                     ]}
                                 >VnPay</Text>
                             </TouchableOpacity>
@@ -232,6 +210,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         }}>
                             Chi tiết thanh toán
                         </Text>
+
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
@@ -269,9 +248,9 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             }}>{route.params['actualPrice']}đ</Text>
                         </View>
                     </View>
-
                 </ScrollView>
             </View>
+
             <View style={styles.footer}>
                 <View style={{
                     width: '65%',
@@ -281,15 +260,16 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                 }}>
                     <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice']}</Text>
                 </View>
-                <TouchableOpacity 
-                    style={styles.orderButton} 
-                    onPress={ () => {
+
+                <TouchableOpacity
+                    style={styles.orderButton}
+                    onPress={() => {
                         handleOrder();
-                        navigation.goBack();}}>
+                        navigation.goBack();
+                    }}>
                     <Text style={{ color: '#fff' }}>Đặt hàng</Text>
                 </TouchableOpacity>
             </View>
-
         </View>
     );
 }
