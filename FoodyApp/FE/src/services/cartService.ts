@@ -2,27 +2,6 @@ import { getAccessToken } from './authService';
 import axios from "axios";
 import { baseURL } from "../utils/baseUrl";
 
-axios.interceptors.request.use(
-    function (config) {
-        // Do something before request is sent
-        return config;
-    },
-    function (error) {
-        // Do something with request error
-        return Promise.reject(error);
-    }
-);
-
-axios.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
-        console.error(error);
-        return Promise.reject(error);
-    }
-);
-
 //lấy tất cả sản phẩm tồn tại trong cửa hàng, tổng giá
 export const getCartByUser = async () => {
     try {

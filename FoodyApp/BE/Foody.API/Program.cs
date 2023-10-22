@@ -4,6 +4,8 @@ using Foody.Application.Services.CartServices.Implements;
 using Foody.Application.Services.CartServices.Interfaces;
 using Foody.Application.Services.CategoryServices.Implements;
 using Foody.Application.Services.CategoryServices.Interfaces;
+using Foody.Application.Services.DashboardServices.Implements;
+using Foody.Application.Services.DashboardServices.Interfaces;
 using Foody.Application.Services.FileStoreService.Implements;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.OrderServices.Implements;
@@ -113,6 +115,7 @@ namespace Foody.API
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
