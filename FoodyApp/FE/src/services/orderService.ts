@@ -163,3 +163,27 @@ export const createCartOrder = async (cartId: number, paymentMethod: number, add
         return null;
     }
 }
+
+//thay đổi trạng thái đơn hàng
+export const updateOrderStatus = async (orderId: number, newStatus: number) => {
+    try {
+        const token = await getAccessToken();
+        const params = {
+            orderId: orderId,
+            newStatus: newStatus
+        };
+
+        const response = await axios.put(`${baseURL}/Order/update-order-status`, params, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
