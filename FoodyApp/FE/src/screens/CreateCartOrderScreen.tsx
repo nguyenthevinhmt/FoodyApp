@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } fr
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback, useEffect } from 'react';
 import { useState } from "react";
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 import AddressComponent from "../components/AddressComponent";
 import { getAccessToken } from "../services/authService";
 import { getAllAddress, getUserById } from "../services/userService";
@@ -21,24 +21,24 @@ function showAlert(navigation: () => void) {
 };
 
 const CreateCartOrderScreen = ({ navigation, route }: any) => {
-    const cartId = route.params['cartId'];
-    const products = route.params['products'];
-    const totalPrice = route.params['totalPrice'] | 0;
+  const cartId = route.params["cartId"];
+  const products = route.params["products"];
+  const totalPrice = route.params["totalPrice"] | 0;
 
-    //thông tin địa chỉ
-    const [addressList, setAddressList] = useState([]);
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
+  //thông tin địa chỉ
+  const [addressList, setAddressList] = useState([]);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
     //vị trí địa chỉ trong addressList
     const [addressIndex, setAddressIndex] = useState(1);
 
-    //phương thức thanh toán
-    const [paymentMethod, setPaymentMethod] = useState(1);
+  //phương thức thanh toán
+  const [paymentMethod, setPaymentMethod] = useState(1);
 
-    //Chỉnh hiệu ứng nút thanh toán khi ấn
-    const [button1Pressed, setButton1Pressed] = useState(false);
-    const [button2Pressed, setButton2Pressed] = useState(false);
+  //Chỉnh hiệu ứng nút thanh toán khi ấn
+  const [button1Pressed, setButton1Pressed] = useState(false);
+  const [button2Pressed, setButton2Pressed] = useState(false);
 
     useEffect(() => {
         const getData = async () => {
@@ -71,60 +71,72 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
         }
     }
 
-    const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.scroll}>
-                <ScrollView>
-                    <View style={styles.address}>
-                        <Text style={{
-                            marginTop: 10,
-                            marginLeft: 5,
-                            fontSize: 16,
-                            fontWeight: '600'
-                        }}>
-                            Địa chỉ nhận hàng
-                        </Text>
-                        {
-                            addressList.length > 0 && (
-                                <AddressComponent
-                                    addressType={addressList[addressIndex]['addressType']}
-                                    province={addressList[addressIndex]['province']}
-                                    district={addressList[addressIndex]['district']}
-                                    ward={addressList[addressIndex]['ward']}
-                                    street={addressList[addressIndex]['streetAddress']}
-                                    detail={addressList[addressIndex]['detailAddress']}
-                                    name={name}
-                                    phoneNumber={phone}
-                                    onNavigate={() => { toggleModal() }}
-                                />
-                            )
-                        }
-                    </View>
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.scroll}>
+        <ScrollView>
+          <View style={styles.address}>
+            <Text
+              style={{
+                marginTop: 10,
+                marginLeft: 5,
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Địa chỉ nhận hàng
+            </Text>
+            {addressList.length > 0 && (
+              <AddressComponent
+                addressType={addressList[addressIndex]["addressType"]}
+                province={addressList[addressIndex]["province"]}
+                district={addressList[addressIndex]["district"]}
+                ward={addressList[addressIndex]["ward"]}
+                street={addressList[addressIndex]["streetAddress"]}
+                detail={addressList[addressIndex]["detailAddress"]}
+                name={name}
+                phoneNumber={phone}
+                onNavigate={() => {
+                  toggleModal();
+                }}
+              />
+            )}
+          </View>
 
-                    <Modal
-                        isVisible={isModalVisible}
-                        style={styles.bottomSheet}
-                        onBackdropPress={toggleModal} // Đóng modal khi chạm vào ngoài vùng hiển thị
-                        onSwipeComplete={toggleModal} // Đóng modal khi vuốt xuống
-                        swipeDirection="down" // Cho phép vuốt xuống để đóng modal
-                    >
-                        <View style={styles.bottomSheetContainer}>
-                            <View style={styles.headerBottomSheet}>
+          <Modal
+            isVisible={isModalVisible}
+            style={styles.bottomSheet}
+            onBackdropPress={toggleModal} // Đóng modal khi chạm vào ngoài vùng hiển thị
+            onSwipeComplete={toggleModal} // Đóng modal khi vuốt xuống
+            swipeDirection="down" // Cho phép vuốt xuống để đóng modal
+          >
+            <View style={styles.bottomSheetContainer}>
+              <View style={styles.headerBottomSheet}>
+                <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                  Lựa chọn địa chỉ nhận hàng
+                </Text>
 
-                                <Text style={{ fontSize: 18, fontWeight: '600' }}>Lựa chọn địa chỉ nhận hàng</Text>
-
-                                <TouchableOpacity style={{ justifyContent: 'flex-start' }} onPress={() => { toggleModal() }}>
-                                    <Text style={{
-                                        fontSize: 20
-                                    }}>X</Text>
-                                </TouchableOpacity>
-                            </View>
+                <TouchableOpacity
+                  style={{ justifyContent: "flex-start" }}
+                  onPress={() => {
+                    toggleModal();
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                    }}
+                  >
+                    X
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
                             {/* {danh sách các địa chỉ để lựa chọn} */}
                             <View style={styles.bottomSheetContent}>
@@ -148,283 +160,325 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                         </View>
                     </Modal>
 
-                    <View style={styles.listProduct}>
-                        <Text style={{
-                            marginTop: 10,
-                            marginLeft: 5,
-                            fontSize: 16,
-                            fontWeight: '600'
-                        }}>
-                            Thông tin sản phẩm
-                        </Text>
+          <View style={styles.listProduct}>
+            <Text
+              style={{
+                marginTop: 10,
+                marginLeft: 5,
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Thông tin sản phẩm
+            </Text>
 
-                        {products.map((value: any) => (
-                            <View style={styles.productCart} key={value.id}>
-                                <View style={{ width: '30%' }}>
-                                    <Image source={{ uri: `${baseURL_img}${value['productImageUrl']}` }} style={styles.bottomSheetImage} />
-                                </View>
-
-                                <View style={styles.productDetail}>
-                                    <Text style={styles.productCartName}>{value['productName']}</Text>
-                                    <Text style={styles.productCartActualPrice}>{value['price'].toLocaleString()}đ</Text>
-                                    <Text style={styles.productCartPrice}>{value['actualPrice'].toLocaleString()}đ</Text>
-                                    <Text>X{value['quantity']}</Text>
-                                </View>
-                            </View>
-                        ))}
-                    </View>
-
-                    <View style={{ marginTop: 5, backgroundColor: '#fff' }}>
-                        <Text style={{
-                            marginTop: 10,
-                            marginLeft: 5,
-                            fontSize: 16,
-                            fontWeight: '600'
-                        }}>
-                            Phương thức thanh toán
-                        </Text>
-
-                        <View style={styles.paymentMethods}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setButton1Pressed(true);
-                                    setButton2Pressed(false);
-                                    setPaymentMethod(1)
-                                }}
-                                style={[
-                                    styles.paymentButton,
-                                    button1Pressed && { borderColor: '#EE4D2D', opacity: 1 }
-                                ]}>
-                                <Text
-                                    style={[{ fontWeight: '500' },
-                                    button1Pressed && { color: '#EE4D2D' }
-                                    ]}
-                                >Cash</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setButton1Pressed(false);
-                                    setButton2Pressed(true);
-                                    setPaymentMethod(2)
-                                }}
-
-                                style={[
-                                    styles.paymentButton,
-                                    button2Pressed && { borderColor: '#EE4D2D', opacity: 1 }
-                                ]}>
-                                <Text
-                                    style={[{ fontWeight: '500' },
-                                    button2Pressed && { color: '#EE4D2D' }
-                                    ]}
-                                >VnPay</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <View style={styles.paymentDetails}>
-                        <Text style={{
-                            marginTop: 10,
-                            fontSize: 16,
-                            fontWeight: '600'
-                        }}>
-                            Chi tiết thanh toán
-                        </Text>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginVertical: 3
-                        }}>
-                            <Text>Tổng tiền hàng</Text>
-                            <Text>{totalPrice.toLocaleString()}đ</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginVertical: 3
-                        }}>
-                            <Text>Tổng tiền phí vận chuyển</Text>
-                            <Text>0đ</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginVertical: 3
-                        }}>
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: '400',
-                            }}>Tổng thanh toán</Text>
-
-                            <Text style={{
-                                color: '#EE4D2D',
-                                fontSize: 18
-                            }}>{totalPrice}đ</Text>
-                        </View>
-                    </View>
-                </ScrollView>
-            </View>
-
-            <View style={styles.footer}>
-                <View style={{
-                    width: '65%',
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                    paddingRight: 10,
-                }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>{totalPrice.toLocaleString()}đ</Text>
+            {products.map((value: any) => (
+              <View style={styles.productCart} key={value.id}>
+                <View style={{ width: "30%" }}>
+                  <Image
+                    source={{
+                      uri: `${baseURL_img}${value["productImageUrl"]}`,
+                    }}
+                    style={styles.bottomSheetImage}
+                  />
                 </View>
 
-                <TouchableOpacity
-                    style={styles.orderButton}
-                    onPress={() => {
-                        handleOrder();
-                        navigation.goBack();
-                    }}>
-                    <Text style={{ color: '#fff' }}>Đặt hàng</Text>
-                </TouchableOpacity>
+                <View style={styles.productDetail}>
+                  <Text style={styles.productCartName}>
+                    {value["productName"]}
+                  </Text>
+                  <Text style={styles.productCartActualPrice}>
+                    {value["price"].toLocaleString()}đ
+                  </Text>
+                  <Text style={styles.productCartPrice}>
+                    {value["actualPrice"].toLocaleString()}đ
+                  </Text>
+                  <Text>X{value["quantity"]}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <View style={{ marginTop: 5, backgroundColor: "#fff" }}>
+            <Text
+              style={{
+                marginTop: 10,
+                marginLeft: 5,
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Phương thức thanh toán
+            </Text>
+
+            <View style={styles.paymentMethods}>
+              <TouchableOpacity
+                onPress={() => {
+                  setButton1Pressed(true);
+                  setButton2Pressed(false);
+                  setPaymentMethod(1);
+                }}
+                style={[
+                  styles.paymentButton,
+                  button1Pressed && { borderColor: "#EE4D2D", opacity: 1 },
+                ]}
+              >
+                <Text
+                  style={[
+                    { fontWeight: "500" },
+                    button1Pressed && { color: "#EE4D2D" },
+                  ]}
+                >
+                  Cash
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setButton1Pressed(false);
+                  setButton2Pressed(true);
+                  setPaymentMethod(2);
+                }}
+                style={[
+                  styles.paymentButton,
+                  button2Pressed && { borderColor: "#EE4D2D", opacity: 1 },
+                ]}
+              >
+                <Text
+                  style={[
+                    { fontWeight: "500" },
+                    button2Pressed && { color: "#EE4D2D" },
+                  ]}
+                >
+                  VnPay
+                </Text>
+              </TouchableOpacity>
             </View>
-        </SafeAreaView>
-    );
-}
+          </View>
+
+          <View style={styles.paymentDetails}>
+            <Text
+              style={{
+                marginTop: 10,
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Chi tiết thanh toán
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginVertical: 3,
+              }}
+            >
+              <Text>Tổng tiền hàng</Text>
+              <Text>{totalPrice.toLocaleString()}đ</Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginVertical: 3,
+              }}
+            >
+              <Text>Tổng tiền phí vận chuyển</Text>
+              <Text>0đ</Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginVertical: 3,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "400",
+                }}
+              >
+                Tổng thanh toán
+              </Text>
+
+              <Text
+                style={{
+                  color: "#EE4D2D",
+                  fontSize: 18,
+                }}
+              >
+                {totalPrice}đ
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+
+      <View style={styles.footer}>
+        <View
+          style={{
+            width: "65%",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            paddingRight: 10,
+          }}
+        >
+          <Text style={{ color: "#EE4D2D", fontWeight: "600", fontSize: 20 }}>
+            {totalPrice.toLocaleString()}đ
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.orderButton}
+          onPress={() => {
+            handleOrder();
+            navigation.goBack();
+          }}
+        >
+          <Text style={{ color: "#fff" }}>Đặt hàng</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: "#F1EFEF"
-    },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#F1EFEF",
+  },
 
-    scroll: {
-        width: '100%',
-        height: '93%',
-    },
+  scroll: {
+    width: "100%",
+    height: "93%",
+  },
 
-    address: {
-        width: '100%',
-        height: 180,
-        backgroundColor: '#fff'
-    },
+  address: {
+    width: "100%",
+    height: 180,
+    backgroundColor: "#fff",
+  },
 
-    bottomSheet: {
-        justifyContent: 'flex-end',
-        margin: 0,
-    },
+  bottomSheet: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
 
-    bottomSheetContainer: {
-        backgroundColor: 'white',
-        height: '70%',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10
-    },
+  bottomSheetContainer: {
+    backgroundColor: "white",
+    height: "70%",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
 
-    headerBottomSheet: {
-        height: 30,
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 15,
-        paddingHorizontal: 20,
-    },
+  headerBottomSheet: {
+    height: 30,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 15,
+    paddingHorizontal: 20,
+  },
 
-    bottomSheetContent: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#F1EFEF'
-    },
+  bottomSheetContent: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#F1EFEF",
+  },
 
-    listProduct: {
-        width: '100%',
-        marginTop: 5,
-        backgroundColor: '#fff'
-    },
+  listProduct: {
+    width: "100%",
+    marginTop: 5,
+    backgroundColor: "#fff",
+  },
 
-    productCart: {
-        width: '100%',
-        flexDirection: 'row',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        backgroundColor: '#fff',
-        borderBottomWidth: 0.7,
-        borderColor: '#B4B4B3'
-    },
+  productCart: {
+    width: "100%",
+    flexDirection: "row",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#fff",
+    borderBottomWidth: 0.7,
+    borderColor: "#B4B4B3",
+  },
 
-    bottomSheetImage: {
-        width: 100,
-        height: 100,
-    },
+  bottomSheetImage: {
+    width: 100,
+    height: 100,
+  },
 
-    productDetail: {
-        width: '70%',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-    },
+  productDetail: {
+    width: "70%",
+    flexDirection: "column",
+    alignItems: "flex-end",
+  },
 
-    productCartName: {
-        paddingBottom: 3,
-        fontSize: 16,
-    },
+  productCartName: {
+    paddingBottom: 3,
+    fontSize: 16,
+  },
 
-    productCartActualPrice: {
-        paddingBottom: 3,
-        color: '#B4B4B3',
-        textDecorationLine: 'line-through'
-    },
+  productCartActualPrice: {
+    paddingBottom: 3,
+    color: "#B4B4B3",
+    textDecorationLine: "line-through",
+  },
 
-    productCartPrice: {
-        paddingBottom: 3,
-        color: '#EE4D2D',
-        fontWeight: '600'
-    },
+  productCartPrice: {
+    paddingBottom: 3,
+    color: "#EE4D2D",
+    fontWeight: "600",
+  },
 
+  paymentMethods: {
+    width: "100%",
+    flexDirection: "row",
+    padding: 5,
+  },
 
-    paymentMethods: {
-        width: '100%',
-        flexDirection: 'row',
-        padding: 5,
-    },
+  paymentButton: {
+    width: "50%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#B4B4B3",
+    opacity: 0.5,
+  },
 
-    paymentButton: {
-        width: '50%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#B4B4B3',
-        opacity: 0.5
-    },
+  paymentDetails: {
+    height: 300,
+    paddingHorizontal: 5,
+    marginTop: 5,
+    backgroundColor: "#fff",
+  },
 
-    paymentDetails: {
-        height: 300,
-        paddingHorizontal: 5,
-        marginTop: 5,
-        backgroundColor: '#fff'
-    },
+  footer: {
+    width: "100%",
+    height: "7%",
+    flexDirection: "row",
+    marginTop: 5,
+    backgroundColor: "#fff",
+  },
 
-    footer: {
-        width: '100%',
-        height: '7%',
-        flexDirection: 'row',
-        marginTop: 5,
-        backgroundColor: '#fff'
-    },
-
-    orderButton: {
-        width: '35%',
-        alignItems: 'center',
-        backgroundColor: '#EE4D2D',
-        justifyContent: 'center',
-        margin: 0,
-    }
+  orderButton: {
+    width: "35%",
+    alignItems: "center",
+    backgroundColor: "#EE4D2D",
+    justifyContent: "center",
+    margin: 0,
+  },
 });
 
 export default CreateCartOrderScreen;

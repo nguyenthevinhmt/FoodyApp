@@ -29,5 +29,10 @@ namespace Foody.Share.Shared
             string email = claim.Value;
             return email;
         }
+        public static string GetIpAddress(HttpContext context)
+        {
+            string ip = context.Connection.RemoteIpAddress.ToString();
+            return ip;
+        }
     }
 }
