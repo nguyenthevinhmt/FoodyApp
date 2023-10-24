@@ -1,10 +1,7 @@
 ﻿using Foody.Application.Services.VnpayService.Dtos;
 using Foody.Domain.Constants;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -47,7 +44,7 @@ public class VnPayLibrary
         {
             Success = true,
             PaymentMethod = PaymentMethod.VNPAY,
-            OrderDescription = orderInfo,
+            OrderInfo = orderInfo,
             OrderId = orderId.ToString(),
             PaymentId = vnPayTranId.ToString(),
             TransactionId = vnPayTranId.ToString(),
@@ -61,7 +58,7 @@ public class VnPayLibrary
         try
         {
             var remoteIpAddress = context.Connection.RemoteIpAddress;
-        
+
             if (remoteIpAddress != null)
             {
                 if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
@@ -69,9 +66,9 @@ public class VnPayLibrary
                     remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
                         .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
                 }
-        
+
                 if (remoteIpAddress != null) ipAddress = remoteIpAddress.ToString();
-        
+
                 return ipAddress;
             }
         }

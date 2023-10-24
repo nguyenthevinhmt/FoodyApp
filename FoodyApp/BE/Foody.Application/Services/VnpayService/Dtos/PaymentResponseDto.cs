@@ -2,7 +2,7 @@
 {
     public class PaymentResponseDto
     {
-        public string OrderDescription { get; set; }
+        public string OrderInfo { get; set; }
         public string TransactionId { get; set; }
         public string OrderId { get; set; }
         public int PaymentMethod { get; set; }

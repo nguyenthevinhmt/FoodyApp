@@ -5,7 +5,7 @@ namespace Foody.Application.Services.VnpayService.Interfaces
 {
     public interface IVnpayService
     {
-        string CreatePaymentUrl(PaymentInformationDto input, HttpContext context);
+        public string CreatePaymentUrl(PaymentInformationDto model, HttpContext context);
         PaymentResponseDto PaymentExecute(IQueryCollection collections);
     }
 }
