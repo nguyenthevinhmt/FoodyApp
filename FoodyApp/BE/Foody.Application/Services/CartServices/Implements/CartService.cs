@@ -1,18 +1,12 @@
 ﻿using Foody.Application.Services.CartServices.Dtos;
 using Foody.Application.Services.CartServices.Interfaces;
 using Foody.Application.Services.OrderServices.Dtos;
-using Foody.Domain.Constants;
 using Foody.Domain.Entities;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 using Foody.Share.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Foody.Application.Services.CartServices.Implements
 {
@@ -21,7 +15,8 @@ namespace Foody.Application.Services.CartServices.Implements
         private readonly FoodyAppContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartService(FoodyAppContext context, IHttpContextAccessor httpContextAccessor) {
+        public CartService(FoodyAppContext context, IHttpContextAccessor httpContextAccessor)
+        {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }

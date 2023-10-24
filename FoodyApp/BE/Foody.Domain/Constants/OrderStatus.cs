@@ -7,5 +7,6 @@
         public const int SHIPPING = 3;
         public const int SUCCESS = 4;
         public const int CANCELED = 5;
+        public const int PAID = 6;
     }
 }

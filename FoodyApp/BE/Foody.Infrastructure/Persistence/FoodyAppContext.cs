@@ -18,6 +18,7 @@ namespace Foody.Infrastructure.Persistence
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new PromotionConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
+
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -29,6 +30,6 @@ namespace Foody.Infrastructure.Persistence
         public DbSet<ProductPromotion> ProductPromotions { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<ProductCart> ProductsCarts { get; set;}
+        public DbSet<ProductCart> ProductsCarts { get; set; }
     }
 }

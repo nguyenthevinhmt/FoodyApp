@@ -30,7 +30,7 @@ namespace Foody.API.Controllers.OrderController
             {
                 return Ok(ex.Message);
             }
-        } 
+        }
         /// <summary>
         /// Lấy tất cả đơn hàng đang chờ xử lý
         /// </summary>
@@ -150,14 +150,19 @@ namespace Foody.API.Controllers.OrderController
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("admin/all-pending-order")]
-        public async Task<IActionResult> GetListOrderPendingAdmin([FromQuery]OrderFilterDto input)
+        /// <summary>
+        /// Lấy tất cả đơn hàng role admin
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("admin/get-all-order")]
+        public async Task<IActionResult> GetListOrderAdmin([FromQuery] OrderFilterDto input)
         {
             try
             {
                 return Ok(await _service.GetAllOrders(input));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
