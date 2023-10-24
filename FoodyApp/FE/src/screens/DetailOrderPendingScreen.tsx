@@ -28,10 +28,6 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
     //phương thức thanh toán
     const [paymentMethod, setPaymentMethod] = useState(0);
 
-    //Hiển thị thông báo
-    const [alert, setAlert] = useState(false);
-    const [message, setMessage] = useState('');
-
     useFocusEffect(
         useCallback(() => {
             const getData = async () => {
@@ -52,7 +48,7 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                 setOrder(responseOrder?.data)
                 setProducts(responseOrder?.data['products']);
                 setAddress(responseOrder?.data['userAddress']);
-                setPaymentMethod(responseOrder?.data['PaymentMethod']);
+                setPaymentMethod(responseOrder?.data['paymentMethod']);
             };
 
             getData();
@@ -215,12 +211,12 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.footer}>
-                <TouchableOpacity
+            <TouchableOpacity
                     style={styles.orderButton}
                     onPress={() => {
                         navigation.goBack();
                     }}>
-                    <Text style={{ color: '#fff' }}>Hoàn tất</Text>
+                    <Text style={{ color: '#fff' }}>Trở lại</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -230,6 +226,7 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                     }}>
                     <Text style={{ color: '#EE4D2D' }}>Hủy đặt hàng</Text>
                 </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     );

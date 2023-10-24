@@ -57,7 +57,7 @@ const ShippingOrderScreen = ({ navigation }: any) => {
                     key={value['id']}
                     products={value['products']}
                     totalPrice={value['totalAmount']}
-                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER, { orderId: value['id'] }) }}
+                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER_SHIPPING, { orderId: value['id'] }) }}
                 />
             ))}
 

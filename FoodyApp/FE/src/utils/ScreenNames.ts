@@ -16,7 +16,8 @@ const ScreenNames = {
     PRODUCT_SEARCH: "Product Search Result",
     ORDER: "Order Screen",
     DETAIL_ORDER: "Detail Order Screen",
-    DETAIL_ORDER_PENDING: "Detail Order Pending"
+    DETAIL_ORDER_PENDING: "Detail Order Pending",
+    DETAIL_ORDER_SHIPPING: "Detail Order Shipping"
 };
 
 export default ScreenNames;
