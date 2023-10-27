@@ -21,12 +21,6 @@ namespace Foody.API.Controllers.VnpayController
         {
             return Ok(_service.CreatePaymentUrl(input, HttpContext));
         }
-        [Route("PaymentCallback")]
-        public IActionResult PaymentCallback()
-        {
-            var response = _service.PaymentExecute(Request.Query);
-
-            return Ok(response);
-        }
+        
     }
 }

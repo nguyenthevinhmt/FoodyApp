@@ -292,7 +292,7 @@ namespace Foody.Application.Services.OrderServices.Implements
             return order;
         }
 
-        public async Task CreateOrder(CreateOrderDto input)
+        public async Task<int> CreateOrder(CreateOrderDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -329,6 +329,9 @@ namespace Foody.Application.Services.OrderServices.Implements
                 await _context.OrderDetails.AddAsync(newOrderdetail);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                //trả về id order vừa được tạo
+                int newOrderId = newOrder.Id;
+                return newOrderId;
             }
             catch (Exception ex)
             {
@@ -338,7 +341,7 @@ namespace Foody.Application.Services.OrderServices.Implements
 
         }
 
-        public async Task CreateOrderFromCart(CreateOrderFromCartDto input)
+        public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
@@ -383,6 +386,9 @@ namespace Foody.Application.Services.OrderServices.Implements
                 _context.Carts.Remove(cart);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                //trả về id order vừa được tạo
+                int newOrderId = order.Id;
+                return newOrderId;
             }
             catch (Exception ex)
             {
