@@ -1,11 +1,12 @@
+using Foody.Application;
 using Foody.Application.Services.AuthServices.Implements;
 using Foody.Application.Services.AuthServices.Interfaces;
 using Foody.Application.Services.CartServices.Implements;
 using Foody.Application.Services.CartServices.Interfaces;
 using Foody.Application.Services.CategoryServices.Implements;
 using Foody.Application.Services.CategoryServices.Interfaces;
-using Foody.Application.Services.DashboardServices.Implements;
-using Foody.Application.Services.DashboardServices.Interfaces;
+using Foody.Application.Services.EmailServices;
+using Foody.Application.Services.EmailServices.Dtos;
 using Foody.Application.Services.FileStoreService.Implements;
 using Foody.Application.Services.FileStoreService.Interfaces;
 using Foody.Application.Services.OrderServices.Implements;
@@ -59,8 +60,15 @@ namespace Foody.API
                     ClockSkew = TimeSpan.Zero
                 };
 
-            }
-            );
+            });
+
+            builder.Services.AddOptions();
+            builder.Services.Configure<AppSettings>(
+                builder.Configuration.GetSection("Vnpay"));
+            builder.Services.AddOptions();
+            builder.Services.Configure<MailSettings>(
+                builder.Configuration.GetSection("MailSettings"));
+
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -118,6 +126,7 @@ namespace Foody.API
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IVnpayService, VnpayService>();
+            builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
