@@ -5,21 +5,23 @@ using Foody.Infrastructure.Persistence;
 using Foody.Share.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.Extensions.Options;
 
 namespace Foody.Application.Services.VnpayService.Implements
 {
     public class VnpayService : IVnpayService
     {
+        private readonly AppSettings _appSettings;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly FoodyAppContext _context;
 
-        public VnpayService(IConfiguration configuration, FoodyAppContext context, IHttpContextAccessor httpContextAccessor)
+        public VnpayService(IOptions<AppSettings> options, IConfiguration configuration, FoodyAppContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _configuration = configuration;
+            _appSettings = options.Value;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _configuration = configuration;
         }
         public string CreatePaymentUrl(PaymentInformationDto model, HttpContext context)
         {
@@ -42,36 +44,23 @@ namespace Foody.Application.Services.VnpayService.Implements
                              OrderDescription = "Thanh toán đơn hàng tại Foody App"
                          }).FirstOrDefault();
 
-            pay.AddRequestData("vnp_Version", "2.1.0");
-            pay.AddRequestData("vnp_Command", "pay");
-            pay.AddRequestData("vnp_TmnCode", "4ZDNL1XX");
+            pay.AddRequestData("vnp_Version", _appSettings.Version);
+            pay.AddRequestData("vnp_Command", _appSettings.Command);
+            pay.AddRequestData("vnp_TmnCode", _appSettings.TmnCode);
             pay.AddRequestData("vnp_Amount", (order.TotalAmount * 100).ToString());
             pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
-            pay.AddRequestData("vnp_CurrCode", "VND");
+            pay.AddRequestData("vnp_CurrCode", _appSettings.CurrCode);
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
-            pay.AddRequestData("vnp_Locale", "vn");
+            pay.AddRequestData("vnp_Locale", _appSettings.Locale);
             pay.AddRequestData("vnp_OrderInfo", order.Id.ToString());
             pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:5010/api/Vnpay/PaymentCallback");
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:5010/api/VnpayCallback/PaymentCallback");
             pay.AddRequestData("vnp_TxnRef", tick);
 
             var paymentUrl =
-                pay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", "ZOKMXYHQSRKISYPUGEHDRBGXQKEYPEMZ");
+                pay.CreateRequestUrl(_appSettings.BaseUrl, _appSettings.HashSecret);
 
             return paymentUrl;
-        }
-
-        public PaymentResponseDto PaymentExecute(IQueryCollection collections)
-        {
-            var pay = new VnPayLibrary();
-            var response = pay.GetFullResponseData(collections, "ZOKMXYHQSRKISYPUGEHDRBGXQKEYPEMZ");
-            if (response.Success == true && response.VnPayResponseCode == "00")
-            {
-                var order = _context.Orders.FirstOrDefault(c => c.Id == int.Parse(response.OrderInfo));
-                order.Status = OrderStatus.PAID;
-                _context.SaveChanges();
-            }
-            return response;
         }
     }
 }
