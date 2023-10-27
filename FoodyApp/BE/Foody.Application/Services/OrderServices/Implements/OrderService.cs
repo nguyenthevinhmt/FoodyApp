@@ -1,14 +1,17 @@
-﻿using Foody.Application.Services.OrderServices.Dtos;
+﻿using Foody.Application.Services.EmailServices;
+using Foody.Application.Services.EmailServices.Dtos;
+using Foody.Application.Services.OrderServices.Dtos;
 using Foody.Application.Services.OrderServices.Interfaces;
 using Foody.Domain.Constants;
 using Foody.Domain.Entities;
+using Foody.Infrastructure.Migrations;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 using Foody.Share.Shared;
 using Foody.Share.Shared.FilterDto;
+using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace Foody.Application.Services.OrderServices.Implements
 {
@@ -16,10 +19,13 @@ namespace Foody.Application.Services.OrderServices.Implements
     {
         private readonly FoodyAppContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public OrderService(FoodyAppContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IEmailSenderService _mail;
+
+        public OrderService(FoodyAppContext context, IHttpContextAccessor httpContextAccessor, IEmailSenderService mail)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _mail = mail;
         }
 
 
@@ -27,12 +33,141 @@ namespace Foody.Application.Services.OrderServices.Implements
         //Đổi trạng thái đơn hàng
         public async Task UpdateOrderStatus(UpdateOrderStatusDto input)
         {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == input.OrderId);
             if (order == null)
             {
                 throw new UserFriendlyException("Không tìm thấy đơn hàng");
             }
             order.Status = input.newStatus;
+            if (input.newStatus == OrderStatus.INPROGRESS && order.Status == OrderStatus.INPROGRESS)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    " 
+                      
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
+            else if (input.newStatus == OrderStatus.ACCEPTED && order.Status == OrderStatus.ACCEPTED)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐÃ ĐƯỢC XÁC NHẬN]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $"<p>Đơn hàng đang được vận chuyển và sẽ sớm được giao đến cho bạn.</p> \r\n" +
+                        $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
+            else if (input.newStatus == OrderStatus.SHIPPING && order.Status == OrderStatus.SHIPPING)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC GIAO ĐẾN BẠN]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $"<p>Đơn hàng đang được vận chuyển và sẽ sớm được giao đến cho bạn.</p> \r\n" +
+                        $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
+            else if (input.newStatus == OrderStatus.SUCCESS && order.Status == OrderStatus.SUCCESS)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐÃ ĐƯỢC GIAO THÀNH CÔNG]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $"<p>Đơn hàng đã được vận chuyển thành công, cảm ơn bạn đã mua hàng </p> \r\n"
+
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
+            else if (input.newStatus == OrderStatus.CANCELED && order.Status == OrderStatus.CANCELED)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐÃ ĐƯỢC HỦY]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $"<p>Đơn hàng đã bị hủy </p> \r\n"
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
+
+            else if (input.newStatus == OrderStatus.PAID && order.Status == OrderStatus.PAID)
+            {
+                try
+                {
+                    // Lấy dịch vụ sendmailservice
+                    MailContent content = new MailContent
+                    {
+                        To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                        Subject = $"[ĐƠN HÀNG {order.Id} ĐÃ ĐƯỢC THANH TOÁN]",
+                        Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                        $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                        $"<p>Thanh toán đơn hàng thành công\r\n"
+
+                    };
+                    await _mail.SendMail(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to send email: " + ex.Message);
+                }
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -46,6 +181,28 @@ namespace Foody.Application.Services.OrderServices.Implements
             else
             {
                 order.Status = OrderStatus.CANCELED;
+                if (order.Status == OrderStatus.CANCELED)
+                {
+                    try
+                    {
+                        // Lấy dịch vụ sendmailservice
+                        MailContent content = new MailContent
+                        {
+                            To = order.User.Email,
+                            Subject = $"[ĐƠN HÀNG {order.Id} ĐÃ ĐƯỢC HỦY]",
+                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                            $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                            $"<p>Đơn hàng đã được hủy</p>" +
+                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                        };
+                        await _mail.SendMail(content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to send email: " + ex.Message);
+                    }
+                }
                 await _context.SaveChangesAsync();
             }
         }
@@ -329,6 +486,27 @@ namespace Foody.Application.Services.OrderServices.Implements
                 await _context.OrderDetails.AddAsync(newOrderdetail);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                if (newOrder.Status == OrderStatus.INPROGRESS)
+                {
+                    try
+                    {
+                        // Lấy dịch vụ sendmailservice
+                        MailContent content = new MailContent
+                        {
+                            To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                            Subject = $"[ĐƠN HÀNG {newOrder.Id} ĐANG ĐƯỢC XỬ LÝ]",
+                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                            $"    <h2>ĐƠN HÀNG #{newOrder.Id}</h2>\r\n    " +
+                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                        };
+                        await _mail.SendMail(content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to send email: " + ex.Message);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -383,6 +561,27 @@ namespace Foody.Application.Services.OrderServices.Implements
                 _context.Carts.Remove(cart);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                if (order.Status == OrderStatus.INPROGRESS)
+                {
+                    try
+                    {
+                        // Lấy dịch vụ sendmailservice
+                        MailContent content = new MailContent
+                        {
+                            To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                            Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
+                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                            $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                        };
+                        await _mail.SendMail(content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to send email: " + ex.Message);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -482,7 +681,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                }).Where(c => (!input.orderStatus.HasValue || c.OrderStatus == input.orderStatus)
                                && (input.Keyword == null || c.Id.ToString() == input.Keyword)
                                && (input.CreateDate == null || c.CreatedDate.Value.Date == input.CreateDate.Value.Date)).ToListAsync();
-         
+
             var result = new PageResultDto<AdminOrderDto>();
             result.TotalItem = query.Count();
             query = query.Skip((input.PageIndex - 1) * input.PageSize).Take(input.PageSize).ToList();
