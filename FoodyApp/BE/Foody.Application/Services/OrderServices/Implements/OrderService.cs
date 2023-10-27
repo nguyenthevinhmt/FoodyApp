@@ -507,6 +507,9 @@ namespace Foody.Application.Services.OrderServices.Implements
                         Console.WriteLine("Failed to send email: " + ex.Message);
                     }
                 }
+                //trả về order vừa được tạo
+                int newOrderId = newOrder.Id;
+                return newOrderId;
             }
             catch (Exception ex)
             {
@@ -582,6 +585,9 @@ namespace Foody.Application.Services.OrderServices.Implements
                         Console.WriteLine("Failed to send email: " + ex.Message);
                     }
                 }
+                //trả về order vừa được tạo
+                int newOrderId = order.Id;
+                return newOrderId;
             }
             catch (Exception ex)
             {

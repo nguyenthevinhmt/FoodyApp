@@ -28,8 +28,10 @@ const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, 
             <View style={styles.productDetail}>
                 <View>
                     <Text style={styles.name}>{name}</Text>
+                    <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
                     <Text style={styles.price}>{price.toLocaleString()}đ</Text>
                     <Text style={styles.actualPrice}>{actualPrice.toLocaleString()}đ</Text>
+                    </View>
                 </View>
 
                 <View style={styles.updateQuantity}>
@@ -60,33 +62,34 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 110,
-        height: 110,
+        width: 90,
+        height: 90,
         marginHorizontal: 10,
     },
 
     productDetail: {
         height: 110,
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         flexDirection: 'column',
         alignItems: 'flex-start'
     },
 
     name: {
         fontSize: 16,
-        fontWeight: '500'
+        fontWeight: '400'
     },
 
     price: {
         fontSize: 12,
         color: '#B4B4B3',
+        marginRight: 6,
         textDecorationLine: 'line-through'
     },
 
     actualPrice: {
         fontSize: 12,
         color: '#EE4D2D',
-        fontWeight: '600'
+        fontWeight: '700'
     },
 
     updateQuantity: {

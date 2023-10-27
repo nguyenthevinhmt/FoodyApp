@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from "react";
 import Modal from "react-native-modal";
 import AddressComponent from "../components/AddressComponent";
@@ -8,6 +8,8 @@ import { getAccessToken } from "../services/authService";
 import { getAllAddress, getUserById } from "../services/userService";
 import { createCartOrder } from "../services/orderService";
 import { baseURL_img } from "../utils/baseUrl";
+import { createPayment } from "../services/vnpayService";
+import ScreenNames from "../utils/ScreenNames";
 
 function showAlert(navigation: () => void) {
     return (
@@ -62,13 +64,25 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
     }, []);
 
     const handleOrder = async () => {
-        if (Array.isArray(addressList) && addressList.length === 0) {
-            showAlert(navigation.goBack());
+      if (Array.isArray(addressList) && addressList.length === 0) {
+        showAlert(navigation.goBack());
+      }
+      else {
+        const result = await createCartOrder(cartId, paymentMethod, addressList[addressIndex]['addressType']);
+        console.log(result);
+        if (paymentMethod == 1) {
+          navigation.goBack();
         }
-        else {
-            const result = await createCartOrder(cartId, paymentMethod, addressList[addressIndex]['addressType']);
-            console.log(result);
+        else if (paymentMethod == 2) {
+          //gọi api thanh toán điện tử
+          const payment = await createPayment(result?.data);
+          console.log(payment?.data);
+          
+          setTimeout(() => {
+            navigation.navigate(ScreenNames.VNPAY, { url: payment?.data });
+          }, 3000); // Đợi 3 giây trước khi thực hiện navigation
         }
+      }
     }
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -339,7 +353,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
           style={styles.orderButton}
           onPress={() => {
             handleOrder();
-            navigation.goBack();
+            //navigation.goBack();
           }}
         >
           <Text style={{ color: "#fff" }}>Đặt hàng</Text>

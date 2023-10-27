@@ -47,7 +47,7 @@ export default function App() {
         <Stack.Screen name={ScreenNames.ALL_PRODUCT} component={AllProductScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_BY_CATEGORY} component={ProductByCategoryScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_SEARCH} component={ProductSearchScreen} />
-        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} />
+        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
         <Stack.Screen name={ScreenNames.ORDER} component={OrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER} component={DetailOrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER_PENDING} component={DetailOrderPendingScreen} />

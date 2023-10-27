@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         marginVertical: 10,
+        paddingBottom: 20,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -42,20 +43,25 @@ const styles = StyleSheet.create({
     productDetail: {
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'left',
+        width: '100%',
+        paddingLeft: 15
     },
     name: {
-        fontSize: 13,
+        paddingTop: 7,
+        fontSize: 16,
+        fontWeight: '700',
+
     },
     actualPrice: {
-        fontSize: 12,
+        fontSize: 10,
         color: '#B4B4B3',
         textDecorationLine: 'line-through'
     },
     price: {
-        fontSize: 12,
+        fontSize: 16,
         color: '#EE4D2D',
-        fontWeight: '600'
+        fontWeight: '700'
     }
 });
 

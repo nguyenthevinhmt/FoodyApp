@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Logout } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
@@ -41,55 +41,55 @@ export default function UserScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profile}>
-        <Image
-          style={{
-            height: 100,
-            width: 100,
-          }}
-          source={require("../assets/Icons/icons8-male-user-96.png")}
-        />
+      <View style={{ width: '100%', flex: 13 }}>
+        <View style={styles.profile}>
+          <Image
+            style={{
+              height: 100,
+              width: 100,
+            }}
+            source={require("../assets/Icons/icons8-male-user-96.png")}
+          />
 
-        <Text style={{ fontSize: 20, color: "#fff" }}>
-          {check() ? `${lastName} ${firstName}` : "Không tên"}
-        </Text>
+          <Text style={{ fontSize: 20, color: "#fff" }}>
+            {check() ? `${lastName} ${firstName}` : "Không tên"}
+          </Text>
+        </View>
+
+        <View style={styles.listButton}>
+          <View style={styles.Button}>
+            <UserEditButton
+              imageUrl={require("../assets/Icons/icons8-user-shield-75.png")}
+              text="Tài khoản và bảo mật"
+              onNavigate={() => navigation.navigate(ScreenNames.ACCOUNT)}
+            />
+          </View>
+
+          <View style={styles.Button}>
+            <UserEditButton
+              imageUrl={require("../assets/Icons/icons8-map-marker-100.png")}
+              text="Địa chỉ"
+              onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
+            />
+          </View>
+
+          <View style={styles.Button}>
+            <UserEditButton
+              imageUrl={require("../assets/Icons/icons8-bill-100.png")}
+              text="Lịch sử"
+              onNavigate={() => navigation.navigate(ScreenNames.ORDER, { screen: 'Đã vận chuyển' })}
+            />
+          </View>
+        </View>
       </View>
 
-      <View style={styles.listButton}>
-        <View style={styles.Button}>
-          <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-user-shield-75.png")}
-            text="Tài khoản và bảo mật"
-            onNavigate={() => navigation.navigate(ScreenNames.ACCOUNT)}
-          />
-        </View>
-
-        <View style={styles.Button}>
-          <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-map-marker-100.png")}
-            text="Địa chỉ"
-            onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
-          />
-        </View>
-
-        <View style={styles.Button}>
-          <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-bill-100.png")}
-            text="Lịch sử"
-            onNavigate={() => navigation.navigate(ScreenNames.ORDER, { screen: 'Đã vận chuyển' })}
-          />
-        </View>
-
-        <View style={styles.Button}>
-          <UserEditButton
-            imageUrl={require("../assets/Icons/icons8-logout-rounded-100.png")}
-            text="Đăng xuất"
-            onNavigate={async () => {
-              await Logout();
-              navigation.navigate(ScreenNames.LOGIN);
-            }}
-          />
-        </View>
+      <View style={{ width: '100%', flex: 1, alignItems: 'center' }}>
+        <TouchableOpacity style={styles.exit} onPress={async () => {
+          await Logout();
+          navigation.navigate(ScreenNames.LOGIN);
+        }}>
+          <Text style={{ color: '#FFF' }}>Đăng xuất</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -98,9 +98,9 @@ export default function UserScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#F1EFEF"
+    backgroundColor: "#fafafa"
   },
 
   profile: {
@@ -122,5 +122,14 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: "center",
     borderBottomWidth: 1,
+    borderColor: "#ccc"
   },
+
+  exit: {
+    width: '90%',
+    alignItems: 'center',
+    backgroundColor: '#EE4D2D',
+    paddingVertical: 10,
+    borderRadius: 5
+  }
 });

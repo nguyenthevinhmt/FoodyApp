@@ -1,28 +1,14 @@
-import React, { Component, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View, BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import queryString from 'query-string';
-import { parseUrl } from 'query-string/base';
 import ScreenNames from '../utils/ScreenNames';
 
 const WebVnPay = ({ navigation, route }: any) => {
     const url = route.params.url;
 
     const webViewRef = useRef(null);
-
-    const handleMessage = (event: any) => {
-        const data = JSON.parse(event.nativeEvent.data);
-        console.log('data:', data);
-        // Xử lý object trả về ở đây
-        // ...
-        if (data.url) {
-            const parsedUrl = queryString.parseUrl(data.url);
-            const vnp_ResponseCode = parsedUrl.query.vnp_ResponseCode;
-            console.log('parsedUrl: ', parsedUrl);
-            console.log('vnp_ResponseCode: ', vnp_ResponseCode);
-        }
-        };
 
     const handleBackButtonPress = () => {
         const webView = webViewRef.current as WebView | null;
@@ -42,8 +28,16 @@ const WebVnPay = ({ navigation, route }: any) => {
         console.log('vnp_ResponseCode:', vnp_ResponseCode);
 
         if (vnp_ResponseCode === '00') {
-            navigation.navigate(ScreenNames.MAIN); // Thay 'MainScreen' bằng tên màn hình chính của bạn
-            Alert.alert('Payment Successful', 'Your payment has been processed successfully.');
+            navigation.navigate(ScreenNames.MAIN); 
+            Alert.alert('Thông báo', 'Giao dịch thành công.');
+        }
+        else if (vnp_ResponseCode === '24') {
+            navigation.navigate(ScreenNames.MAIN);
+            Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
+        }
+        else {
+            navigation.navigate(ScreenNames.MAIN);
+            Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };
 
@@ -60,7 +54,6 @@ const WebVnPay = ({ navigation, route }: any) => {
             <WebView 
                 ref={webViewRef} 
                 source={{ uri: url }} 
-                onMessage={handleMessage} 
                 onError={handleWebViewError} // Bắt lỗi và lấy thông tin chi tiết
                 style={{ flex: 1 }} 
             />

@@ -6,7 +6,6 @@ import AddressComponent from "../components/AddressComponent";
 import { getAccessToken } from "../services/authService";
 import { getAllAddress, getUserById } from "../services/userService";
 import { createOrder } from "../services/orderService";
-import { WebView } from 'react-native-webview';
 import { createPayment } from "../services/vnpayService";
 import ScreenNames from "../utils/ScreenNames";
 
@@ -39,9 +38,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
     const [button1Pressed, setButton1Pressed] = useState(false);
     const [button2Pressed, setButton2Pressed] = useState(false);
 
-    //web thanh toán điện tử
-    const [webUrl, setWebUrl] = useState('');
-
     useEffect(() => {
         const getData = async () => {
             //gọi api lấy địa chỉ và thông tin người dùng
@@ -71,15 +67,18 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
         else {
             const result = await createOrder(productId, paymentMethod, route.params['quantity'], addressList[addressIndex]['addressType']);
             console.log(result);
-            if (paymentMethod == 2) {
+            if (paymentMethod == 1) {
+                navigation.goBack();
+            }
+            else if (paymentMethod == 2) {
                 //gọi api thanh toán điện tử
                 const payment = await createPayment(result?.data);
                 console.log(payment?.data);
-                //setWebUrl(payment?.data);
+                
                 setTimeout(() => {
                     navigation.navigate(ScreenNames.VNPAY, {url: payment?.data});
                 }, 3000); // Đợi 3 giây trước khi thực hiện navigation
-            }        
+            }   
         }
     }
 

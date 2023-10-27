@@ -67,8 +67,9 @@ const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id,
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        marginVertical: 10,
+        marginVertical: 5,
         paddingVertical: 15,
+        paddingBottom: 30,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -92,18 +93,18 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '700',
         marginBottom: 5
     },
     price: {
-        fontSize: 12,
+        fontSize: 9,
         color: '#B4B4B3',
         textDecorationLine: 'line-through'
     },
     actualPrice: {
-        fontSize: 12,
+        fontSize: 16,
         color: '#EE4D2D',
-        fontWeight: '600'
+        fontWeight: '700'
     },
 
     discountArea: {
