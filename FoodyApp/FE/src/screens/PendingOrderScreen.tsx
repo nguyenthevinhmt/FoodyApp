@@ -12,7 +12,7 @@ import { baseURL_img } from "../utils/baseUrl";
 function emtyOrder() {
     return (
         <EmptyOrderComponent
-            imageUrl={require('../assets/Icons/cart-xmark-svgrepo-com.png')}
+            imageUrl={require('../assets/Icons/add_shopping_cart.png')}
             title="Quên chưa đặt món rồi nè bạn ơi?"
             detail="Bạn sẽ nhìn thấy các món đang được chuẩn bị tại đây để kiểm tra đơn hàng nhanh hơn!"
         />
@@ -56,7 +56,7 @@ const PendingOrderScreen = ({ navigation }: any) => {
                     key={value['id']}
                     products={value['products']}
                     totalPrice={value['totalAmount']}
-                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER, { orderId: value['id'] }) }}
+                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER_PENDING, { orderId: value['id'] }) }}
                 />
             ))}
 

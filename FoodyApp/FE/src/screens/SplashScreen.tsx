@@ -5,58 +5,57 @@ import {
   getAccessToken,
   getRefreshToken,
   refreshAccessToken,
+  saveToken,
 } from "../services/authService";
 import ScreenNames from "../utils/ScreenNames";
-import { baseURL } from "../utils/baseUrl";
 
 export default function SplashScreen({ navigation }: any) {
   const logoImage = require("../assets/images/Logo_app.png");
   const jwt_decode = require("jwt-decode");
 
-  const setRefreshToken = async (accessToken: string, refreshToken: string) => {
+  const setRefreshToken = async (objRefreshToken: any) => {
     try {
-      const response = await refreshAccessToken(accessToken, refreshToken);
-      // const newAccessToken = response?.newAccessToken;
-      // const newRefreshToken = response?.newRefreshToken;
-      console.log("fresh here", response);
+      const response = await refreshAccessToken(objRefreshToken);
+      const newAccessToken = response?.accessToken;
+      const newRefreshToken = response?.refreshToken;
+      
+      await saveToken({ newAccessToken, newRefreshToken });
       navigation.navigate(ScreenNames.MAIN);
     } catch (error) {
-      console.log("Có lỗi khi refresh token", `${baseURL}/Auth/refresh`);
-      navigation.navigate(ScreenNames.LOGIN);
+      console.log("Có lỗi khi refresh token");
       await Logout();
+      navigation.navigate(ScreenNames.LOGIN);
     }
   };
-  useEffect(() => {
-    const timer = setTimeout(() => {}, 2000);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
   useEffect(() => {
     const checkTokenValidity = async () => {
       const accessToken = await getAccessToken();
       const refreshToken = await getRefreshToken();
+      const objRefreshToken: any = { accessToken, refreshToken };
       console.log("accessToken: ", accessToken, "refreshToken: ", refreshToken);
 
       if (accessToken !== null) {
         const decodedToken = jwt_decode(accessToken);
         const currentTime = Math.floor(Date.now() / 1000);
-        console.log("chạy 1");
 
         if (decodedToken.exp < currentTime) {
-          await setRefreshToken(accessToken, refreshToken as string);
-          console.log("Token hết hạn, đang thử lấy lại");
+          await setRefreshToken(objRefreshToken);
         } else {
-          console.log("Token còn hạn");
           navigation.replace(ScreenNames.MAIN);
         }
       } else {
-        console.log("Token hết hạn, mời đăng nhập lại");
         navigation.replace(ScreenNames.LOGIN);
       }
     };
-    checkTokenValidity();
+
+    const timer = setTimeout(() => {
+      checkTokenValidity();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

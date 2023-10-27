@@ -2,27 +2,6 @@ import { getAccessToken } from "./authService";
 import axios from "axios";
 import { baseURL } from "../utils/baseUrl";
 
-axios.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    return config;
-  },
-  function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  }
-);
-
-axios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-);
-
 //lấy thông tin tất cả order pending
 export const getAllOrderPending = async () => {
   try {
@@ -174,11 +153,35 @@ export const createCartOrder = async (
       }
     );
 
-    if (response.status == 200) {
-      return response;
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
     }
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
+}
+
+//thay đổi trạng thái đơn hàng
+export const updateOrderStatus = async (orderId: number, newStatus: number) => {
+    try {
+        const token = await getAccessToken();
+        const params = {
+            orderId: orderId,
+            newStatus: newStatus
+        };
+
+        const response = await axios.put(`${baseURL}/Order/update-order-status`, params, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

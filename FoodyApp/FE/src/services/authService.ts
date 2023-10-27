@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "../common/interceptorConfig";
+import axios from "axios";
+import { TokenResponse } from "../models/AuthModel";
 import { baseURL } from "../utils/baseUrl";
-import { useNavigation } from "@react-navigation/native";
-import ScreenNames from "../utils/ScreenNames";
+
 export const login = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${baseURL}/Auth/login`, {
@@ -14,6 +14,7 @@ export const login = async (email: string, password: string) => {
       const accessToken: string = response.data.accessToken;
       const refreshToken: string = response.data.refreshToken;
       await saveToken({ accessToken, refreshToken });
+      await intercepterToken();
       return response;
     }
   } catch (error) {
@@ -64,32 +65,58 @@ export const Logout = async () => {
   }
 };
 
-export const refreshAccessToken = async (
-  accessToken: string,
-  refreshToken: string
-) => {
-  const navigation = useNavigation<any>();
-  const navigate = (name: string, params?: any) => {
-    navigation.navigate(name, params);
-  };
-  try {
-    const newToken = await axios.post(`${baseURL}/Auth/refresh`, {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    });
-    if (newToken.status === 200) {
-      const newAccessToken: string = newToken.data.accessToken;
-      const newRefreshToken: string = newToken.data.refreshToken;
+axios.interceptors.request.use(
+  function (config) {
+    // Do something before request is sent
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
 
-      await saveToken({ newAccessToken, newRefreshToken });
-      return { newAccessToken, newRefreshToken };
+export const intercepterToken = async () =>
+  axios.interceptors.response.use(
+    function (config) {
+      const token = AsyncStorage.getItem("accessToken");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+
+    function (error) {
+      return Promise.reject(error);
+    }
+  );
+
+export const refreshAccessToken = async ({
+  accessToken,
+  refreshToken,
+}: TokenResponse) => {
+  try {
+    const newToken = await axios.post(`${baseURL}/refresh`, {
+      accessToken,
+      refreshToken,
+    });
+
+    if (newToken) {
+      const accessToken: string = newToken.data.accessToken;
+      const refreshToken: string = newToken.data.refreshToken;
+
+      await saveToken({ accessToken, refreshToken });
+      console.log("Đã refresh");
+
+      return { accessToken, refreshToken };
     } else {
       console.log("Token đã hết hạn");
-      navigate(ScreenNames.LOGIN);
       return null;
     }
   } catch (error) {
-    navigate(ScreenNames.LOGIN);
+    return null;
+    console.log("Lỗi ở service");
+    console.log(error);
   }
 };
 
@@ -99,11 +126,11 @@ export const register = async (email: string, password: string) => {
     const response = await axios.post(`${baseURL}/Auth/register`, {
       email,
       password,
-      userType,
+      userType
     });
 
     if (response.status === 200) {
-      console.log("Đăng ký thành công");
+      console.log('Đăng ký thành công');
       return response;
     }
   } catch (error) {

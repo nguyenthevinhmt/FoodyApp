@@ -15,7 +15,10 @@ const ScreenNames = {
     PRODUCT_BY_CATEGORY: "Product by category",
     PRODUCT_SEARCH: "Product Search Result",
     ORDER: "Order Screen",
-    DETAIL_ORDER:   "Detail Order Screen"
+    DETAIL_ORDER: "Detail Order Screen",
+    DETAIL_ORDER_PENDING: "Detail Order Pending",
+    DETAIL_ORDER_SHIPPING: "Detail Order Shipping",
+    VNPAY: 'VnPay',
 };
 
 export default ScreenNames;

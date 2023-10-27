@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }: any) {
       setListCategory(categories?.data.item);
 
       //danh sách món ăn 
-      const products = await getListProduct(null, null, 20, 1);
+      const products = await getListProduct(null, null, 5, 1);
       setListProduct(products?.data.item);
     }
 
@@ -83,7 +83,6 @@ export default function HomeScreen({ navigation }: any) {
 
       <View style={styles.container1}>
         <View style={styles.view1}>
-          <Image source={require("../assets/IconNavigation/HomeIcon.png")} style={styles.img} />
           <Text style={styles.text1}>Danh mục món ăn </Text>
         </View>
 
@@ -113,7 +112,7 @@ export default function HomeScreen({ navigation }: any) {
           <View style={styles.view3_1}>
             <Text style={styles.text1}>Món ăn đề xuất</Text>
             <TouchableOpacity style={{ flex: 1 }} onPress={() => navigation.navigate(ScreenNames.ALL_PRODUCT)}>
-              <Text style={styles.text3}>Xem tất cả {">"} </Text>
+              <Text style={styles.text3}>Xem tất cả </Text>
             </TouchableOpacity>
           </View>
 
@@ -144,6 +143,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
+    paddingBottom: 70
   },
 
   headerArea: {
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderWidth: 1,
     borderRadius: 3,
+    borderColor: '#EE4D2D',
     flexDirection: 'row',
   },
 
@@ -248,7 +249,8 @@ const styles = StyleSheet.create({
   text1: {
     padding: 5,
     fontSize: 16,
-    color: 'orange',
+    color: 'black',
+    fontWeight: '500'
   },
 
   text2: {
@@ -262,8 +264,9 @@ const styles = StyleSheet.create({
     padding: 7,
     flex: 1,
     fontSize: 13,
-    color: 'black',
+    color: '#362FD9',
     textAlign: 'right',
+
   },
 
   text4: {

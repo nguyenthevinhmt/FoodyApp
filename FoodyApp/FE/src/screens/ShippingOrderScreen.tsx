@@ -12,7 +12,7 @@ import OrderProductsComponent from "../components/OrderProductsComponent";
 function emtyOrder() {
     return (
         <EmptyOrderComponent
-            imageUrl={require('../assets/Icons/cart-xmark-svgrepo-com.png')}
+            imageUrl={require('../assets/Icons/deliver_food.png')}
             title="Quên chưa đặt món rồi nè bạn ơi?"
             detail="Hãy đặt món để kiểm tra quá trình vận chuyển đơn hàng tại đây nhé!"
         />
@@ -57,7 +57,7 @@ const ShippingOrderScreen = ({ navigation }: any) => {
                     key={value['id']}
                     products={value['products']}
                     totalPrice={value['totalAmount']}
-                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER, { orderId: value['id'] }) }}
+                    onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER_SHIPPING, { orderId: value['id'] }) }}
                 />
             ))}
 

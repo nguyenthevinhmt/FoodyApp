@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback } from 'react';
 import { useState } from "react";
@@ -7,9 +7,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getAccessToken } from "../services/authService";
 import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
-import { getOrderById } from "../services/orderService";
+import { getOrderById, updateOrderStatus } from "../services/orderService";
 
-const DetailOrderScreen = ({ navigation, route }: any) => {
+const DetailOrderPendingScreen = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
 
     //thông tin đơn hàng
@@ -65,6 +65,27 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
             return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
         }
     }
+
+    const handleCancel = async () => {
+        const result = await updateOrderStatus(orderId, 5); //đơn hàng đã hủy
+    }
+
+    const showAlert = () => {
+        Alert.alert(
+            'Thông báo',
+            'Bạn chắc chắn muốn hủy đơn hàng',
+            [
+                { text: 'Trở lại', style: 'cancel' },
+                {
+                    text: 'Xóa', onPress: () => {
+                        handleCancel();
+                        navigation.goBack()
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -190,13 +211,22 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.footer}>
-                <TouchableOpacity
+            <TouchableOpacity
                     style={styles.orderButton}
                     onPress={() => {
                         navigation.goBack();
                     }}>
                     <Text style={{ color: '#fff' }}>Trở lại</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => {
+                        showAlert();
+                    }}>
+                    <Text style={{ color: '#EE4D2D' }}>Hủy đặt hàng</Text>
+                </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     );
@@ -342,12 +372,20 @@ const styles = StyleSheet.create({
     },
 
     orderButton: {
-        width: '100%',
+        width: '50%',
         alignItems: 'center',
         backgroundColor: '#EE4D2D',
+        justifyContent: 'center',
+        margin: 0,
+    },
+
+    cancelButton: {
+        width: '50%',
+        alignItems: 'center',
+        backgroundColor: '#fff',
         justifyContent: 'center',
         margin: 0,
     }
 });
 
-export default DetailOrderScreen;
+export default DetailOrderPendingScreen;

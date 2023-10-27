@@ -124,26 +124,34 @@ namespace Foody.API.Controllers.OrderController
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// tạo đơn hàng trực tiếp từ sản phẩm, trả về id đơn hàng vừa dc tạo
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost("create-order")]
         public async Task<IActionResult> Create([FromBody] CreateOrderDto input)
         {
             try
             {
-                await _service.CreateOrder(input);
-                return Ok("Thêm thành công");
+                return Ok(await _service.CreateOrder(input));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// tạo đơn hàng từ giỏ hàng, trả về id đơn hàng vừa tạo
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost("create-order-from-cart")]
         public async Task<IActionResult> CreateFromCart([FromBody] CreateOrderFromCartDto input)
         {
-            try
+            try 
             {
-                await _service.CreateOrderFromCart(input);
-                return Ok("Thêm thành công");
+                return Ok(await _service.CreateOrderFromCart(input));
             }
             catch (Exception ex)
             {

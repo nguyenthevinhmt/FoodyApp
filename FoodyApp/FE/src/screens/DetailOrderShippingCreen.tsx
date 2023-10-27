@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback } from 'react';
 import { useState } from "react";
@@ -7,9 +7,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getAccessToken } from "../services/authService";
 import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
-import { getOrderById } from "../services/orderService";
+import { getOrderById, updateOrderStatus } from "../services/orderService";
 
-const DetailOrderScreen = ({ navigation, route }: any) => {
+const DetailOrderShippingScreen = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
 
     //thông tin đơn hàng
@@ -27,6 +27,10 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
 
     //phương thức thanh toán
     const [paymentMethod, setPaymentMethod] = useState(0);
+
+    //Hiển thị thông báo
+    const [alert, setAlert] = useState(false);
+    const [message, setMessage] = useState('');
 
     useFocusEffect(
         useCallback(() => {
@@ -65,6 +69,30 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
             return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
         }
     }
+
+    const handleCancel = async () => {
+        const result = await updateOrderStatus(orderId, 5); //đơn hàng đã hủy
+    }
+
+    const handleSuccess = async () => {
+        const result = await updateOrderStatus(orderId, 4); //đơn hàng đã giao thành công
+    }
+
+    const showAlert = (message: string, onNavigate: () => void) => {
+        Alert.alert(
+            'Thông báo',
+            message,
+            [
+                { text: 'Hủy bỏ', style: 'cancel' },
+                {
+                    text: 'Đồng ý', onPress: () => {
+                        onNavigate()
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -193,9 +221,23 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
                 <TouchableOpacity
                     style={styles.orderButton}
                     onPress={() => {
-                        navigation.goBack();
+                        showAlert('Bạn sẽ không thể hủy đơn hàng nếu đồng ý nhận hàng. Bạn chắc chắn chứ?', () => {
+                            handleSuccess();
+                            navigation.goBack();
+                        });
                     }}>
-                    <Text style={{ color: '#fff' }}>Trở lại</Text>
+                    <Text style={{ color: '#fff' }}>Nhận hàng</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => {
+                        showAlert('Bạn chắc chắn muốn hủy đơn hàng?', () => {
+                            handleCancel();
+                            navigation.goBack();
+                        });
+                    }}>
+                    <Text style={{ color: '#EE4D2D' }}>Hủy đặt hàng</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -342,12 +384,20 @@ const styles = StyleSheet.create({
     },
 
     orderButton: {
-        width: '100%',
+        width: '50%',
         alignItems: 'center',
         backgroundColor: '#EE4D2D',
+        justifyContent: 'center',
+        margin: 0,
+    },
+
+    cancelButton: {
+        width: '50%',
+        alignItems: 'center',
+        backgroundColor: '#fff',
         justifyContent: 'center',
         margin: 0,
     }
 });
 
-export default DetailOrderScreen;
+export default DetailOrderShippingScreen;

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from 'react';
 import PagerView from 'react-native-pager-view';
@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import ScreenNames from "../utils/ScreenNames";
 import { baseURL_img } from "../utils/baseUrl";
 import { addProductToCart } from "../services/cartService";
-import Alert from "../components/CustomAlert";
 
 const ProductScreen = ({ navigation, route }: any) => {
   const Id = route.params['productId'];
@@ -21,10 +20,6 @@ const ProductScreen = ({ navigation, route }: any) => {
   const [actualPrice, setActualPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [imgUrl, setImgUrl] = useState(baseURL_img);
-
-  //hiển thị alert
-  const [showAlert, setShowAlert] = useState(false);
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const getData = async () => {
@@ -52,14 +47,19 @@ const ProductScreen = ({ navigation, route }: any) => {
     const result = await addProductToCart(Id);
     if (result != null) {
       console.log(result);
-      setMessage('Thêm sản phẩm vào giỏ hàng thành công.');
-      setShowAlert(true);
-    }
-    else {
-      setMessage('Không thể thêm sản phẩm vào giỏ hàng.');
-      setShowAlert(true);
     }
   }
+
+  const showAlert = () => {
+    Alert.alert(
+      'Thông báo',
+      'Sản phẩm đã được thêm vào giỏ hàng!',
+      [
+        { text: 'Mua sắm tiếp', onPress: () => { handleAddCart(); } }
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -110,16 +110,10 @@ const ProductScreen = ({ navigation, route }: any) => {
       </View>
 
       <View style={styles.buttArea}>
-        <TouchableOpacity style={styles.buttLeft} onPress={() => handleAddCart()}>
+        <TouchableOpacity style={styles.buttLeft} onPress={() => showAlert()}>
           <Image source={require('../assets/Icons/add-cart.png')} style={styles.addCartIcon} />
           <Text style={{ color: '#EE4D2D' }}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
-
-        <Alert
-          visible={showAlert}
-          message={message}
-          onClose={() => setShowAlert(false)}
-        />
 
         <TouchableOpacity style={styles.buttRight}
           onPress={() => navigation.navigate(ScreenNames.CREATE_ORDER, {

@@ -1,3 +1,6 @@
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Remote debugger']);
+
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -18,6 +21,9 @@ import ProductSearchScreen from "./src/screens/ProductSearchScreen";
 import CreateCartOrderScreen from "./src/screens/CreateCartOrderScreen";
 import OrderScreen from "./src/screens/OrderScreen";
 import DetailOrderScreen from "./src/screens/DetailOrderScreen";
+import DetailOrderPendingScreen from "./src/screens/DetailOrderPendingScreen";
+import DetailOrderShippingScreen from "./src/screens/DetailOrderShippingCreen";
+import WebVnPay from "./src/screens/WebViewVnPayScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -41,9 +47,12 @@ export default function App() {
         <Stack.Screen name={ScreenNames.ALL_PRODUCT} component={AllProductScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_BY_CATEGORY} component={ProductByCategoryScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_SEARCH} component={ProductSearchScreen} />
-        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} />
+        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
         <Stack.Screen name={ScreenNames.ORDER} component={OrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER} component={DetailOrderScreen} />
+        <Stack.Screen name={ScreenNames.DETAIL_ORDER_PENDING} component={DetailOrderPendingScreen} />
+        <Stack.Screen name={ScreenNames.DETAIL_ORDER_SHIPPING} component={DetailOrderShippingScreen} />
+        <Stack.Screen name={ScreenNames.VNPAY} component={WebVnPay} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

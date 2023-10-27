@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View, Alert } from 'react-native';
 import { addProductToCart } from '../services/cartService';
-import Alert from './CustomAlert';
 
+function showAlert(message: string) {
+    return (
+        Alert.alert(
+            'Thông báo',
+            message,
+            [{ text: 'Ok', onPress: () => { } }],
+            { cancelable: false }
+        )
+    )
+};
 
 interface ProductDiscountComponentProps {
     id: number;
@@ -16,19 +25,14 @@ interface ProductDiscountComponentProps {
 
 const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id, imageUrl, name, actualPrice, price, discount, onNavigation }) => {
     //hiển thị alert
-    const [showAlert, setShowAlert] = useState(false);
-    const [message, setMessage] = useState('');
 
     const handleAddCart = async () => {
         const result = await addProductToCart(id);
         if (result != null) {
-            console.log(result);
-            setMessage('Thêm sản phẩm vào giỏ hàng thành công.');
-            setShowAlert(true);
+            showAlert("Thêm sản phẩm vào giỏ hàng thành công");
         }
         else {
-            setMessage('Không thể thêm sản phẩm vào giỏ hàng.');
-            setShowAlert(true);
+            showAlert("Có lỗi khi thêm sản phẩm vào giỏ hàng");
         }
     }
 
@@ -56,13 +60,6 @@ const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id,
                     </TouchableOpacity>
                 </View>
             </View>
-
-            <Alert
-                visible={showAlert}
-                message={message}
-                onClose={() => setShowAlert(false)}
-            />
-
         </TouchableOpacity>
     );
 };
@@ -70,8 +67,9 @@ const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id,
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        marginVertical: 10,
+        marginVertical: 5,
         paddingVertical: 15,
+        paddingBottom: 30,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -95,18 +93,18 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '700',
         marginBottom: 5
     },
     price: {
-        fontSize: 12,
+        fontSize: 9,
         color: '#B4B4B3',
         textDecorationLine: 'line-through'
     },
     actualPrice: {
-        fontSize: 12,
+        fontSize: 16,
         color: '#EE4D2D',
-        fontWeight: '600'
+        fontWeight: '700'
     },
 
     discountArea: {

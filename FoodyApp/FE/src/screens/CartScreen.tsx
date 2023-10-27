@@ -6,11 +6,24 @@ import { baseURL_img } from "../utils/baseUrl";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { getCartByUser } from "../services/cartService";
+import EmptyOrderComponent from "../components/EmptyOrderComponent";
+
+function emtyOrder() {
+  return (
+      <EmptyOrderComponent
+          imageUrl={require('../assets/Icons/cart-xmark-svgrepo-com.png')}
+          title="Quên chưa chọn món rồi nè bạn ơi?"
+          detail="Thông tin giỏ hàng của bạn sẽ hiển thị ở đây!"
+      />
+  );
+}
 
 export default function CartScreen({ navigation }: any) {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartId, setCartId] = useState(0);
+
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -27,7 +40,30 @@ export default function CartScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <View style={{width: '100%', flex: 1}}>
+
+
+        <ScrollView style={styles.cartDetail}>
+          {
+            products ? products.map((value) => (
+              <View key={value['id']}>
+                <ProductCartComponent
+                  productId={value['id']}
+                  imageUrl={`${baseURL_img}${value['productImageUrl']}`}
+                  name={value['name']}
+                  actualPrice={value['actualPrice']}
+                  price={value['price']}
+                  Quantity={value['quantity']}
+                  onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
+                />
+              </View>
+            )) : 
+            <View style={{marginTop: 200}}>{emtyOrder()}</View>
+          }
+        </ScrollView>
+      </View>
+
+      <View style={styles.footter}>
         <View style={styles.price}>
           <Text style={{ fontSize: 12 }}>Tổng thanh toán: </Text>
           <Text style={{ fontSize: 16, color: '#EE4D2D' }}>{(totalPrice | 0).toLocaleString()}đ</Text>
@@ -48,34 +84,17 @@ export default function CartScreen({ navigation }: any) {
           <Text style={{ color: '#fff' }}>Đặt hàng</Text>
         </TouchableOpacity>
       </View>
-
-      <ScrollView style={styles.cartDetail}>
-        {
-          products ? products.map((value) => (
-            <ProductCartComponent
-              key={value['id']}
-              productId={value['id']}
-              imageUrl={`${baseURL_img}${value['productImageUrl']}`}
-              name={value['name']}
-              actualPrice={value['actualPrice']}
-              price={value['price']}
-              Quantity={value['quantity']}
-              onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
-            />
-          )) : ''
-        }
-      </ScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
 
-  header: {
+  footter: {
     width: '100%',
     height: 50,
     paddingLeft: 10,
@@ -83,7 +102,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0.7,
-    borderColor: '#B4B4B3'
+    borderColor: '#B4B4B3',
+    backgroundColor: '#fff'
 
   },
 

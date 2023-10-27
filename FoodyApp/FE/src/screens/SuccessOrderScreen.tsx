@@ -12,7 +12,7 @@ import OrderProductsComponent from "../components/OrderProductsComponent";
 function emtyOrder() {
     return (
         <EmptyOrderComponent
-            imageUrl={require('../assets/Icons/cart-xmark-svgrepo-com.png')}
+            imageUrl={require('../assets/Icons/food_bar.png')}
             title="Quên chưa đặt món rồi nè bạn ơi?"
             detail="Thông tin đơn hàng đã được vận chuyển của bạn sẽ được hiển thị tại đây!"
         />

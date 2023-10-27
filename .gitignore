@@ -367,3 +367,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/FoodyApp/FE/%ProgramData%/Microsoft/Windows/UUS/State/_active.uusver

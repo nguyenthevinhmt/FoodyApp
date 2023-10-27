@@ -42,13 +42,13 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Task CreateOrder(CreateOrderDto input);
+        public Task<int> CreateOrder(CreateOrderDto input);
         /// <summary>
         /// Tạo đơn hàng từ giỏ hàng
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Task CreateOrderFromCart(CreateOrderFromCartDto input);
+        public Task<int> CreateOrderFromCart(CreateOrderFromCartDto input);
         /// <summary>
         /// Cập nhật trạng thái đơn hàng
         /// </summary>
