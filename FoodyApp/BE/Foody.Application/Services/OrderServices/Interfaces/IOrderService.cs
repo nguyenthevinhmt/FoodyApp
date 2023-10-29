@@ -1,5 +1,4 @@
-﻿using Foody.Application.Services.CartServices.Dtos;
-using Foody.Application.Services.OrderServices.Dtos;
+﻿using Foody.Application.Services.OrderServices.Dtos;
 using Foody.Share.Shared.FilterDto;
 
 namespace Foody.Application.Services.OrderServices.Interfaces
@@ -48,7 +47,7 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Task<int> CreateOrderFromCart(CreateOrderFromCartDto input);
+        //public Task<int> CreateOrderFromCart(CreateOrderFromCartDto input);
         /// <summary>
         /// Cập nhật trạng thái đơn hàng
         /// </summary>
@@ -67,5 +66,18 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         public Task<PageResultDto<AdminOrderDto>> GetAllOrders(OrderFilterDto input);
+        /// <summary>
+        /// Thanh toán từ giỏ hàng bước 1: move data giỏ hàng sang bảng tạm
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public int CreateOrderTemp(CreateOrderTempDto input);
+
+        /// <summary>
+        /// Nếu thanh toán thành công thì move thông tin sản phẩm sang bảng chính
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public int MoveOrderTempToOrder(CreateOrderFromCartDto input);
     }
 }

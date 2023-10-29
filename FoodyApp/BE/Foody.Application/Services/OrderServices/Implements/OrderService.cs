@@ -4,12 +4,10 @@ using Foody.Application.Services.OrderServices.Dtos;
 using Foody.Application.Services.OrderServices.Interfaces;
 using Foody.Domain.Constants;
 using Foody.Domain.Entities;
-using Foody.Infrastructure.Migrations;
 using Foody.Infrastructure.Persistence;
 using Foody.Share.Exceptions;
 using Foody.Share.Shared;
 using Foody.Share.Shared.FilterDto;
-using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,8 +49,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                         Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
                         Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
                         $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
-                        $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    " 
-                      
+                        $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
                     };
                     await _mail.SendMail(content);
                 }
@@ -519,82 +517,82 @@ namespace Foody.Application.Services.OrderServices.Implements
 
         }
 
-        public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
-        {
-            var userId = CommonUtils.GetUserId(_httpContextAccessor);
-            var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
-            if (cart == null)
-            {
-                throw new UserFriendlyException("Giỏ hàng không tồn tại");
-            }
+        //public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
+        //{
+        //    var userId = CommonUtils.GetUserId(_httpContextAccessor);
+        //    var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
+        //    if (cart == null)
+        //    {
+        //        throw new UserFriendlyException("Giỏ hàng không tồn tại");
+        //    }
 
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
-                if (userAddress == null)
-                {
-                    throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
-                }
-                var order = new Order
-                {
-                    UserId = userId,
-                    CreatedAt = DateTime.Now,
-                    CreatedBy = userId,
-                    PaymentMethod = input.PaymentMethod != 0 ? input.PaymentMethod : PaymentMethod.COD,
-                    Status = OrderStatus.INPROGRESS,
-                    AddressType = userAddress.AddressType,
-                    DetailAddress = userAddress.DetailAddress,
-                    District = userAddress.District,
-                    Notes = userAddress.Notes,
-                    Province = userAddress.Province,
-                    StreetAddress = userAddress.StreetAddress,
-                    Ward = userAddress.Ward,
-                };
-                await _context.Orders.AddAsync(order);
-                await _context.SaveChangesAsync();
+        //    using var transaction = _context.Database.BeginTransaction();
+        //    try
+        //    {
+        //        var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
+        //        if (userAddress == null)
+        //        {
+        //            throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+        //        }
+        //        var order = new Order
+        //        {
+        //            UserId = userId,
+        //            CreatedAt = DateTime.Now,
+        //            CreatedBy = userId,
+        //            PaymentMethod = input.PaymentMethods != 0 ? input.PaymentMethods : PaymentMethod.COD,
+        //            Status = OrderStatus.INPROGRESS,
+        //            AddressType = userAddress.AddressType,
+        //            DetailAddress = userAddress.DetailAddress,
+        //            District = userAddress.District,
+        //            Notes = userAddress.Notes,
+        //            Province = userAddress.Province,
+        //            StreetAddress = userAddress.StreetAddress,
+        //            Ward = userAddress.Ward,
+        //        };
+        //        await _context.Orders.AddAsync(order);
+        //        await _context.SaveChangesAsync();
 
-                foreach (var productCart in cart.ProductCarts)
-                {
-                    var orderDetail = new OrderDetail { OrderId = order.Id, ProductId = productCart.ProductId, Quantity = productCart.Quantity };
-                    await _context.OrderDetails.AddAsync(orderDetail);
-                    await _context.SaveChangesAsync();
-                }
+        //        foreach (var productCart in cart.ProductCarts)
+        //        {
+        //            var orderDetail = new OrderDetail { OrderId = order.Id, ProductId = productCart.ProductId, Quantity = productCart.Quantity };
+        //            await _context.OrderDetails.AddAsync(orderDetail);
+        //            await _context.SaveChangesAsync();
+        //        }
 
-                _context.Carts.Remove(cart);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                if (order.Status == OrderStatus.INPROGRESS)
-                {
-                    try
-                    {
-                        // Lấy dịch vụ sendmailservice
-                        MailContent content = new MailContent
-                        {
-                            To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
-                            Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
-                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
-                            $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
-                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+        //        _context.Carts.Remove(cart);
+        //        await _context.SaveChangesAsync();
+        //        await transaction.CommitAsync();
+        //        if (order.Status == OrderStatus.INPROGRESS)
+        //        {
+        //            try
+        //            {
+        //                // Lấy dịch vụ sendmailservice
+        //                MailContent content = new MailContent
+        //                {
+        //                    To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+        //                    Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
+        //                    Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+        //                    $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
+        //                    $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
 
-                        };
-                        await _mail.SendMail(content);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Failed to send email: " + ex.Message);
-                    }
-                }
-                //trả về order vừa được tạo
-                int newOrderId = order.Id;
-                return newOrderId;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw new UserFriendlyException(ex.Message);
-            }
-        }
+        //                };
+        //                await _mail.SendMail(content);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Console.WriteLine("Failed to send email: " + ex.Message);
+        //            }
+        //        }
+        //        //trả về order vừa được tạo
+        //        int newOrderId = order.Id;
+        //        return newOrderId;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        throw new UserFriendlyException(ex.Message);
+        //    }
+        //}
         public async Task<OrderResponseDto> GetOrderById(int id)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -695,5 +693,118 @@ namespace Foody.Application.Services.OrderServices.Implements
             return result;
         }
 
+        public int MoveOrderTempToOrder(CreateOrderFromCartDto input)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            using var transaction = _context.Database.BeginTransaction();
+            var orderTemp = _context.OrderTemps.Where(c => c.UserId == userId && c.Id == input.OrderTempId).Include(c => c.OrderDetailTemps).FirstOrDefault();
+            var userAddress = _context.UserAddresses.FirstOrDefault(u => u.UserId == userId && u.AddressType == orderTemp.AddressType);
+            if (userAddress == null)
+            {
+                throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+            }
+            var TempOrderDetail = _context.OrderDetailTemps.Where(c => c.OrderTempId == input.OrderTempId);
+            var orderData = _context.Orders.Add(new Order
+            {
+                Status = OrderStatus.INPROGRESS,
+                AddressType = userAddress.AddressType,
+                DetailAddress = userAddress.DetailAddress,
+                District = userAddress.District,
+                Notes = userAddress.Notes,
+                PaymentMethod = orderTemp.PaymentMethod,
+                Province = userAddress.Province,
+                StreetAddress = userAddress.StreetAddress,
+                Ward = userAddress.Ward,
+                UserId = userId,
+                IsPaid = input.IsPaid
+            }).Entity;
+            _context.SaveChanges();
+
+            //Tạo chi tiết đơn hàng để chuyển sang bảng thật
+            var orderDetailTemp = new List<OrderDetail>();
+            var productCart = new List<ProductCart>();
+            foreach (var c in orderTemp.OrderDetailTemps)
+            {
+                foreach (var pi in TempOrderDetail)
+                {
+                    if (c.ProductId == pi.ProductId)
+                    {
+                        orderDetailTemp.Add(new OrderDetail
+                        {
+                            ProductId = pi.ProductId,
+                            Quantity = c.Quantity,
+                            OrderId = orderData.Id
+                        });
+
+                        productCart.Remove(new ProductCart
+                        {
+                            Id = c.Id,
+                            ProductId = pi.ProductId,
+                            Quantity = c.Quantity,
+                            CartId = TempOrderDetail.FirstOrDefault().Id
+                        });
+                    }
+                }
+            };
+
+            _context.OrderDetails.AddRange(orderDetailTemp);
+            _context.SaveChanges();
+
+            //Xóa chi tiết giỏ hàng
+            _context.ProductsCarts.RemoveRange(productCart);
+
+            _context.SaveChanges();
+            transaction.Commit();
+            return orderData.Id;
+        }
+
+        public int CreateOrderTemp(CreateOrderTempDto input)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            var userAddress = _context.UserAddresses.FirstOrDefault(u => u.UserId == userId && u.AddressType == input.AddressType);
+            if (userAddress == null)
+            {
+                throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+            }
+            using var transaction = _context.Database.BeginTransaction();
+            var cart = _context.Carts.Where(c => c.UserId == userId && c.Id == input.CartId).Include(c => c.ProductCarts).FirstOrDefault();
+
+            var orderTempData = _context.OrderTemps.Add(new OrderTemp
+            {
+                Status = OrderStatus.INPROGRESS,
+                AddressType = userAddress.AddressType,
+                DetailAddress = userAddress.DetailAddress,
+                District = userAddress.District,
+                Notes = userAddress.Notes,
+                PaymentMethod = input.PaymentMethods,
+                Province = userAddress.Province,
+                StreetAddress = userAddress.StreetAddress,
+                Ward = userAddress.Ward,
+                UserId = userId,
+                CartReferId = cart.Id
+            }).Entity;
+            _context.SaveChanges();
+            var orderDetailTemp = new List<OrderDetailTemp>();
+            foreach (var c in cart.ProductCarts)
+            {
+                foreach (var pi in input.ProductId)
+                {
+                    if (c.ProductId == pi)
+                    {
+                        orderDetailTemp.Add(new OrderDetailTemp
+                        {
+                            ProductId = pi,
+                            referId = cart.Id,
+                            Quantity = c.Quantity,
+                            OrderTempId = orderTempData.Id
+                        });
+                    }
+                }
+            };
+            _context.OrderDetailTemps.AddRange(orderDetailTemp);
+            _context.SaveChanges();
+            transaction.Commit();
+            return orderTempData.Id;
+        }
     }
 }

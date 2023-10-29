@@ -99,7 +99,9 @@ export const LoginScreen = ({ navigation }: any) => {
             <Text style={styles.textError}>{emailError}</Text>
           ) : null}
 
-          <View style={[styles.inputField, isValidPassword && styles.fieldError]}>
+          <View
+            style={[styles.inputField, isValidPassword && styles.fieldError]}
+          >
             <Image
               source={require("../assets/Icons/PasswordIcon.png")}
               width={16}

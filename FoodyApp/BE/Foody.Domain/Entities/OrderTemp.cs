@@ -1,12 +1,16 @@
-﻿using Foody.Domain.Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Foody.Domain.Entities
 {
-    public class Order : BaseEntity<int>, ICreated, IUpdated, ISoftDeleted
+    public class OrderTemp
     {
+        [Key]
+        public int Id { get; set; }
+        /// <summary>
+        /// Refer sang bảng giỏ hàng
+        /// </summary>
+        public int CartReferId { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
         public int Status { get; set; }
         public int PaymentMethod { get; set; }
         public string Province { get; set; }
@@ -37,13 +41,6 @@ namespace Foody.Domain.Entities
         /// Loại địa chỉ giao hàng (nhà riêng, công ty, khác)
         /// </summary>
         public int AddressType { get; set; }
-        public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<OrderDetail> OrderDetails { get; set; }
-        public bool IsPaid { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public int CreatedBy { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public int UpdateBy { get; set; }
+        public List<OrderDetailTemp> OrderDetailTemps { get; set; }
     }
 }

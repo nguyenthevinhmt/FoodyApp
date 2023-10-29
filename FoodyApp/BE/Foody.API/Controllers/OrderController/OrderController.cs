@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Foody.API.Controllers.OrderController
 {
-    [Route("api/[controller]")]
+    [Route("api/order")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -111,6 +111,11 @@ namespace Foody.API.Controllers.OrderController
                 return Ok(ex.Message);
             }
         }
+        /// <summary>
+        /// Cập nhật trạng thái đơn hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPut("update-order-status")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusDto input)
         {
@@ -146,18 +151,18 @@ namespace Foody.API.Controllers.OrderController
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPost("create-order-from-cart")]
-        public async Task<IActionResult> CreateFromCart([FromBody] CreateOrderFromCartDto input)
-        {
-            try 
-            {
-                return Ok(await _service.CreateOrderFromCart(input));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost("create-order-from-cart")]
+        //public async Task<IActionResult> CreateFromCart([FromBody] CreateOrderFromCartDto input)
+        //{
+        //    try
+        //    {
+        //        return Ok(await _service.CreateOrderFromCart(input));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         /// <summary>
         /// Lấy tất cả đơn hàng role admin
         /// </summary>
@@ -169,6 +174,42 @@ namespace Foody.API.Controllers.OrderController
             try
             {
                 return Ok(await _service.GetAllOrders(input));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Bước 1 thanh toán giỏ hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost("create-order-temp")]
+        public IActionResult MoveToTemp([FromBody] CreateOrderTempDto input)
+        {
+            try
+            {
+                return Ok(_service.CreateOrderTemp(input));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Bước 2 thanh toán giỏ hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost("move-order-temp-to-order")]
+        public IActionResult MoveToOrderOrigin([FromBody] CreateOrderFromCartDto input)
+        {
+            try
+            {
+                return Ok(_service.MoveOrderTempToOrder(input));
             }
             catch (Exception ex)
             {

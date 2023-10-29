@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Foody.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDb : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +46,28 @@ namespace Foody.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderTemps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DetailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    AddressType = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderTemps", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,6 +146,27 @@ namespace Foody.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderDetailTemps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    OrderTempId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetailTemps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderDetailTemps_OrderTemps_OrderTempId",
+                        column: x => x.OrderTempId,
+                        principalTable: "OrderTemps",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
@@ -139,6 +182,7 @@ namespace Foody.Infrastructure.Migrations
                     DetailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     AddressType = table.Column<int>(type: "int", nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -299,11 +343,11 @@ namespace Foody.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "UpdateBy", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 10, 15, 15, 49, 44, 21, DateTimeKind.Local).AddTicks(9954), 0, "Các món cơm", false, "Cơm", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, new DateTime(2023, 10, 15, 15, 49, 44, 21, DateTimeKind.Local).AddTicks(9967), 0, "Các món ăn nhanh", false, "Đồ ăn nhanh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, new DateTime(2023, 10, 15, 15, 49, 44, 21, DateTimeKind.Local).AddTicks(9969), 0, "Các đồ uống", false, "Đồ uống", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, new DateTime(2023, 10, 15, 15, 49, 44, 21, DateTimeKind.Local).AddTicks(9971), 0, "Các món bún", false, "Bún", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, new DateTime(2023, 10, 15, 15, 49, 44, 21, DateTimeKind.Local).AddTicks(9972), 0, "Các món mì", false, "Mì", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1537), 0, "Các món cơm", false, "Cơm", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1548), 0, "Các món ăn nhanh", false, "Đồ ăn nhanh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1549), 0, "Các đồ uống", false, "Đồ uống", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1551), 0, "Các món bún", false, "Bún", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1552), 0, "Các món mì", false, "Mì", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -324,8 +368,8 @@ namespace Foody.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "LastName", "Password", "PhoneNumber", "RefreshToken", "RefreshTokenExpiryTime", "UserType" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 10, 15, 15, 49, 44, 7, DateTimeKind.Local).AddTicks(9726), 0, "Admin@gmail.com", null, null, "WYz6ui2Pa0w8m0J37jnuCP/R6gU7rMoEQwS0FLWe5I5eGMBs", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, new DateTime(2023, 10, 15, 15, 49, 44, 13, DateTimeKind.Local).AddTicks(5571), 0, "Customer@gmail.com", null, null, "PdcQ4x3oMBdDjyTmAUF6nq15glA7S2es8loPdGho0UGt9n9H", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
+                    { 1, new DateTime(2023, 10, 28, 22, 2, 44, 293, DateTimeKind.Local).AddTicks(4405), 0, "Admin@gmail.com", null, null, "/dhhOxVbbT9eq6MTVm9UtmzUvNklI4VhhFa5kGZrq7+BnXgr", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, new DateTime(2023, 10, 28, 22, 2, 44, 298, DateTimeKind.Local).AddTicks(8317), 0, "Customer@gmail.com", null, null, "jyKMtOb7gJPDGOEhMZimYBlkO3sn/y/YaIDGWBtUH9UKzaBn", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -342,6 +386,11 @@ namespace Foody.Infrastructure.Migrations
                 name: "IX_OrderDetails_ProductId",
                 table: "OrderDetails",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetailTemps_OrderTempId",
+                table: "OrderDetailTemps",
+                column: "OrderTempId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryId",
@@ -386,6 +435,9 @@ namespace Foody.Infrastructure.Migrations
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
+                name: "OrderDetailTemps");
+
+            migrationBuilder.DropTable(
                 name: "ProductImages");
 
             migrationBuilder.DropTable(
@@ -399,6 +451,9 @@ namespace Foody.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "OrderTemps");
 
             migrationBuilder.DropTable(
                 name: "Promotion");

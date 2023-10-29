@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    [Migration("20231016083511_Init")]
+    [Migration("20231028150244_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -90,7 +90,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6414),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1537),
                             CreatedBy = 0,
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -101,7 +101,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6418),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1548),
                             CreatedBy = 0,
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -112,7 +112,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6420),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1549),
                             CreatedBy = 0,
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -123,7 +123,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6421),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1551),
                             CreatedBy = 0,
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -134,7 +134,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6422),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 306, DateTimeKind.Local).AddTicks(1552),
                             CreatedBy = 0,
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -170,6 +170,9 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
                     b.Property<string>("Notes")
@@ -231,6 +234,79 @@ namespace Foody.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.OrderDetailTemp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderTempId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderTempId");
+
+                    b.ToTable("OrderDetailTemps");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.OrderTemp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddressType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DetailAddress")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("District")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderTemps");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Product", b =>
@@ -576,20 +652,20 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 135, DateTimeKind.Local).AddTicks(4506),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 293, DateTimeKind.Local).AddTicks(4405),
                             CreatedBy = 0,
                             Email = "Admin@gmail.com",
-                            Password = "jMmj/Oc/DyyLCZJH7IcdzWEFSTvJLURSomoolexpAyPnuPyU",
+                            Password = "/dhhOxVbbT9eq6MTVm9UtmzUvNklI4VhhFa5kGZrq7+BnXgr",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 138, DateTimeKind.Local).AddTicks(7444),
+                            CreatedAt = new DateTime(2023, 10, 28, 22, 2, 44, 298, DateTimeKind.Local).AddTicks(8317),
                             CreatedBy = 0,
                             Email = "Customer@gmail.com",
-                            Password = "0DoApi8uTIsUWX4rIvTJRaeF22TNCKCprrSWREs1B7f88Dm0",
+                            Password = "jyKMtOb7gJPDGOEhMZimYBlkO3sn/y/YaIDGWBtUH9UKzaBn",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 2
                         });
@@ -679,6 +755,13 @@ namespace Foody.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Foody.Domain.Entities.OrderDetailTemp", b =>
+                {
+                    b.HasOne("Foody.Domain.Entities.OrderTemp", null)
+                        .WithMany("OrderDetailTemps")
+                        .HasForeignKey("OrderTempId");
+                });
+
             modelBuilder.Entity("Foody.Domain.Entities.Product", b =>
                 {
                     b.HasOne("Foody.Domain.Entities.Category", "Categories")
@@ -763,6 +846,11 @@ namespace Foody.Infrastructure.Migrations
             modelBuilder.Entity("Foody.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Foody.Domain.Entities.OrderTemp", b =>
+                {
+                    b.Navigation("OrderDetailTemps");
                 });
 
             modelBuilder.Entity("Foody.Domain.Entities.Product", b =>
