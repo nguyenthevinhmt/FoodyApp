@@ -81,8 +81,12 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                 console.log(payment?.data);
 
                 setTimeout(() => {
-                    navigation.navigate(ScreenNames.VNPAY, { url: payment?.data });
-                }, 2500); // Đợi 3 giây trước khi thực hiện navigation
+                    navigation.navigate(ScreenNames.VNPAY, { 
+                        url: payment?.data,
+                        orderId: result?.data, //id đơn hàng
+                        orderType: 1 //đơn hàng được tạo trực tiếp từ sản phẩm
+                    });
+                }, 0); // Đợi 3 giây trước khi thực hiện navigation
             }
         }
     }

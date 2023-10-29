@@ -28,8 +28,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             _mail = mail;
         }
 
-
-
         //Đổi trạng thái đơn hàng
         public async Task UpdateOrderStatus(UpdateOrderStatusDto input)
         {
@@ -172,7 +170,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
             await _context.SaveChangesAsync();
         }
-
         public async Task CancelOrderStatus(int orderId)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
@@ -208,7 +205,6 @@ namespace Foody.Application.Services.OrderServices.Implements
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<List<OrderResponseDto>> GetPendingOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -450,7 +446,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
             return order;
         }
-
         public async Task<int> CreateOrder(CreateOrderDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -520,7 +515,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
 
         }
-
         public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -697,5 +691,24 @@ namespace Foody.Application.Services.OrderServices.Implements
             return result;
         }
 
+        //xóa đơn hàng được tạo trực tiếp từ sản phẩm trong trạng thái chờ
+        public async Task DeleteOrder(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id ==  orderId && (o.Status == OrderStatus.INPROGRESS || o.Status == OrderStatus.ACCEPTED));
+            if (order == null)
+            {
+                throw new UserFriendlyException($"Đơn hàng có id={orderId} không tồn tại hoặc không đủ điều kiện.");
+            } 
+            else
+            {
+                var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == orderId); 
+
+                _context.Orders.Remove(order);
+                _context.OrderDetails.Remove(orderDetail);
+
+                await _context.SaveChangesAsync();
+            }
+
+        }
     }
 }

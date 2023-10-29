@@ -57,13 +57,14 @@ namespace Foody.Application.Services.CartServices.Implements
                     await _context.ProductsCarts.AddAsync(productCart);
                     await _context.SaveChangesAsync();
                 }
+                /*
                 else
                 {
                     // Nếu sản phẩm đã có, cập nhật số lượng
                     productCart.Quantity += 1;
                     await _context.SaveChangesAsync();
                 }
-
+                */
                 await transaction.CommitAsync();
                 return "Thêm sản phẩm vào giỏ hàng thành công";
             }

@@ -175,5 +175,23 @@ namespace Foody.API.Controllers.OrderController
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// xóa đơn hàng được tạo trực tiếp từ sản phẩm đang ở trạng thái chờ
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-order")]
+        public async Task<IActionResult> DeleteOrder(int orderId)
+        {
+            try
+            {
+                await _service.DeleteOrder(orderId);
+                return Ok("Xóa thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

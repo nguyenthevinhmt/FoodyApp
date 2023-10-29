@@ -67,5 +67,11 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         public Task<PageResultDto<AdminOrderDto>> GetAllOrders(OrderFilterDto input);
+        /// <summary>
+        /// xóa đơn hàng tạo trực tiếp từ sản phẩm ở trạng thái khởi tạo theo id
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Task DeleteOrder(int orderId);
     }
 }

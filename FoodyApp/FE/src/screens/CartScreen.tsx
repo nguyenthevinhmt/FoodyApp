@@ -35,6 +35,10 @@ export default function CartScreen({ navigation }: any) {
         const result = await getCartByUser();
         setCartId(result?.data.cartId);
         setProducts(result?.data.products);
+
+        if (!products) {
+          setTotalPrice(0);
+        }
       };
 
       getData();
@@ -45,15 +49,17 @@ export default function CartScreen({ navigation }: any) {
   useEffect(() => {
     setTotalPrice(() => {
       let sum = 0.0;
-      selectedProducts.forEach(productId => {
-        const product = products.find((value) => value['id'] === productId);
-        if (product) {
-          sum += product.actualPrice;
-        }
-      });
+      if (selectedProducts && products) {
+        selectedProducts.forEach(productId => {
+          const product = products.find((value) => value['id'] === productId);
+          if (product) {
+            sum += product.actualPrice*product.quantity;
+          }
+        });
+      }
       return sum;
     });
-  }, [selectedProducts]);
+  }, [selectedProducts, products]);
 
   //xử lý chọn từng sản phẩm
   const handleProductSelection = (productId: number) => {
@@ -162,7 +168,7 @@ export default function CartScreen({ navigation }: any) {
                   'products': products,
                   'totalPrice': totalPrice,
                 })
-            }
+            };
           }}>
           <Text style={{ color: '#fff' }}>Đặt hàng</Text>
         </TouchableOpacity>
