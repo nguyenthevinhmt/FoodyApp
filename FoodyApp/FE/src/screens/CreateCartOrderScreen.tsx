@@ -1,5 +1,4 @@
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect } from 'react';
 import { useState } from "react";
 import Modal from "react-native-modal";
@@ -12,14 +11,14 @@ import { createPayment } from "../services/vnpayService";
 import ScreenNames from "../utils/ScreenNames";
 
 function showAlert(navigation: () => void) {
-    return (
-        Alert.alert(
-            'Thông báo',
-            'Vui lòng thêm địa chỉ nhận hàng trước khi đặt hàng.',
-            [{ text: 'Ok', onPress: () => { navigation } }],
-            { cancelable: false }
-        )
+  return (
+    Alert.alert(
+      'Thông báo',
+      'Vui lòng thêm địa chỉ nhận hàng trước khi đặt hàng.',
+      [{ text: 'Ok', onPress: () => { navigation } }],
+      { cancelable: false }
     )
+  )
 };
 
 const CreateCartOrderScreen = ({ navigation, route }: any) => {
@@ -32,8 +31,8 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-    //vị trí địa chỉ trong addressList
-    const [addressIndex, setAddressIndex] = useState(1);
+  //vị trí địa chỉ trong addressList
+  const [addressIndex, setAddressIndex] = useState(1);
 
   //phương thức thanh toán
   const [paymentMethod, setPaymentMethod] = useState(1);
@@ -42,48 +41,52 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
   const [button1Pressed, setButton1Pressed] = useState(false);
   const [button2Pressed, setButton2Pressed] = useState(false);
 
-    useEffect(() => {
-        const getData = async () => {
-            //gọi api lấy địa chỉ và thông tin người dùng
-            const jwt = require("jwt-decode");
-            const token = await getAccessToken();
-            const decode = jwt(token);
+  //vòng tròn loading
+  const [loadingOn, setLoadingOn] = useState(false);
 
-            const userId = decode.sub;
-            console.log("User ID:", userId);
+  useEffect(() => {
+    const getData = async () => {
+      //gọi api lấy địa chỉ và thông tin người dùng
+      const jwt = require("jwt-decode");
+      const token = await getAccessToken();
+      const decode = jwt(token);
 
-            const responseAddress = await getAllAddress(userId);
-            setAddressList(responseAddress?.data.item);
+      const userId = decode.sub;
+      console.log("User ID:", userId);
 
-            const responseUser = await getUserById(userId);
-            setName(responseUser?.data['firstName'] + ' ' + responseUser?.data['lastName']);
-            setPhone(responseUser?.data['phoneNumber']);
-        };
+      const responseAddress = await getAllAddress(userId);
+      setAddressList(responseAddress?.data.item);
 
-        getData();
-    }, []);
+      const responseUser = await getUserById(userId);
+      setName(responseUser?.data['firstName'] + ' ' + responseUser?.data['lastName']);
+      setPhone(responseUser?.data['phoneNumber']);
+    };
 
-    const handleOrder = async () => {
-      if (Array.isArray(addressList) && addressList.length === 0) {
-        showAlert(navigation.goBack());
+    getData();
+  }, []);
+
+  const handleOrder = async () => {
+    if (Array.isArray(addressList) && addressList.length === 0) {
+      showAlert(navigation.goBack());
+    }
+    else {
+      setLoadingOn(true);
+      const result = await createCartOrder(cartId, paymentMethod, addressList[addressIndex]['addressType']);
+      console.log(result);
+      if (paymentMethod == 1) {
+        navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
       }
-      else {
-        const result = await createCartOrder(cartId, paymentMethod, addressList[addressIndex]['addressType']);
-        console.log(result);
-        if (paymentMethod == 1) {
-          navigation.goBack();
-        }
-        else if (paymentMethod == 2) {
-          //gọi api thanh toán điện tử
-          const payment = await createPayment(result?.data);
-          console.log(payment?.data);
-          
-          setTimeout(() => {
-            navigation.navigate(ScreenNames.VNPAY, { url: payment?.data });
-          }, 3000); // Đợi 3 giây trước khi thực hiện navigation
-        }
+      else if (paymentMethod == 2) {
+        //gọi api thanh toán điện tử
+        const payment = await createPayment(result?.data);
+        console.log(payment?.data);
+
+        setTimeout(() => {
+          navigation.navigate(ScreenNames.VNPAY, { url: payment?.data });
+        }, 2500); // Đợi 3 giây trước khi thực hiện navigation
       }
     }
+  }
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -92,7 +95,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.scroll}>
         <ScrollView>
           <View style={styles.address}>
@@ -152,27 +155,27 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                 </TouchableOpacity>
               </View>
 
-                            {/* {danh sách các địa chỉ để lựa chọn} */}
-                            <View style={styles.bottomSheetContent}>
-                                {
-                                    addressList.map((value, index) => (
-                                        <AddressComponent
-                                            key={value['id']}
-                                            addressType={value['addressType']}
-                                            province={value['province']}
-                                            district={value['district']}
-                                            ward={value['ward']}
-                                            street={value['streetAddress']}
-                                            detail={value['detailAddress']}
-                                            name={name}
-                                            phoneNumber={phone}
-                                            onNavigate={() => { toggleModal(); setAddressIndex(index) }}
-                                        />
-                                    ))
-                                }
-                            </View>
-                        </View>
-                    </Modal>
+              {/* {danh sách các địa chỉ để lựa chọn} */}
+              <View style={styles.bottomSheetContent}>
+                {
+                  addressList.map((value, index) => (
+                    <AddressComponent
+                      key={value['id']}
+                      addressType={value['addressType']}
+                      province={value['province']}
+                      district={value['district']}
+                      ward={value['ward']}
+                      street={value['streetAddress']}
+                      detail={value['detailAddress']}
+                      name={name}
+                      phoneNumber={phone}
+                      onNavigate={() => { toggleModal(); setAddressIndex(index) }}
+                    />
+                  ))
+                }
+              </View>
+            </View>
+          </Modal>
 
           <View style={styles.listProduct}>
             <Text
@@ -359,7 +362,19 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
           <Text style={{ color: "#fff" }}>Đặt hàng</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+
+      <Modal
+        isVisible={loadingOn}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropOpacity={0.5}
+        style={{ justifyContent: 'center', alignItems: 'center' }}
+      >
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Image source={require('../assets/Icons/loading.gif')} style={{ width: 50, height: 50 }} />
+        </View>
+      </Modal>
+    </View>
   );
 };
 

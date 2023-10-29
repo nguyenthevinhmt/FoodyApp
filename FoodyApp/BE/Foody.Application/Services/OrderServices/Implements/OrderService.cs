@@ -40,6 +40,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                 throw new UserFriendlyException("Không tìm thấy đơn hàng");
             }
             order.Status = input.newStatus;
+            order.UpdatedAt = DateTime.Now;
+            order.UpdateBy = userId;
             if (input.newStatus == OrderStatus.INPROGRESS && order.Status == OrderStatus.INPROGRESS)
             {
                 try

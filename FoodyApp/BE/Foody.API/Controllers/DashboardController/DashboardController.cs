@@ -21,7 +21,7 @@ namespace Foody.API.Controllers.DashboardController
         }
 
         /// <summary>
-        /// Thống kê doanh thu, số đơn bán được theo thời gian
+        /// Thống kê doanh thu, số đơn bán được theo khoảng thời gian
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -33,6 +33,46 @@ namespace Foody.API.Controllers.DashboardController
             var result = await _service.GetOrderStatistics(input);
             return Ok(result);
         }
+        /// <summary>
+        /// thống kê doanh thu, số đơn bán được theo ngày, tháng, năm
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
+        [HttpGet("get-all-by-day-paging")]
+        public async Task<IActionResult> getAllByDayPaging([FromQuery] DashboardFilterByDayDto input)
+        {
+            var result = await _service.GetOrderStatisticsByDay(input);
+            return Ok(result);
+        }
+        /// <summary>
+        /// thống kê doanh thu, số đơn bán được theo tháng, năm
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
+        [HttpGet("get-all-by-month-paging")]
+        public async Task<IActionResult> getAllByMonthPaging([FromQuery] DashboardFilterByMonthDto input)
+        {
+            var result = await _service.GetOrderStatisticsByMonth(input);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Thống kê số lượng những sản phẩm được mua nhiều nhất
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [AuthorizationFilter(UserTypes.Admin)]
+        [HttpGet("get-top-products")]
+        public async Task<IActionResult> getTopProductsPaging([FromQuery] DashboardProductsFilterDto input)
+        {
+            var result = await _service.GetTopProducts(input);
+            return Ok(result);
+        }
+
 
 
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import queryString from 'query-string';
 import ScreenNames from '../utils/ScreenNames';
@@ -28,15 +28,15 @@ const WebVnPay = ({ navigation, route }: any) => {
         console.log('vnp_ResponseCode:', vnp_ResponseCode);
 
         if (vnp_ResponseCode === '00') {
-            navigation.navigate(ScreenNames.MAIN); 
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order' }) 
             Alert.alert('Thông báo', 'Giao dịch thành công.');
         }
         else if (vnp_ResponseCode === '24') {
-            navigation.navigate(ScreenNames.MAIN);
+            navigation.navigate(ScreenNames.MAIN)
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
-            navigation.navigate(ScreenNames.MAIN);
+            navigation.navigate(ScreenNames.MAIN)
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };
@@ -50,14 +50,14 @@ const WebVnPay = ({ navigation, route }: any) => {
     }, []);
     
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <WebView 
                 ref={webViewRef} 
                 source={{ uri: url }} 
                 onError={handleWebViewError} // Bắt lỗi và lấy thông tin chi tiết
                 style={{ flex: 1 }} 
             />
-        </SafeAreaView>
+        </View>
     );
 }
 
