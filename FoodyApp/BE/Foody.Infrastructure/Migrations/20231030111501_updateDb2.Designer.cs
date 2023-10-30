@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foody.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodyAppContext))]
-    [Migration("20231016083511_Init")]
-    partial class Init
+    [Migration("20231030111501_updateDb2")]
+    partial class updateDb2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6414),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 299, DateTimeKind.Local).AddTicks(6837),
                             CreatedBy = 0,
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -101,7 +101,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6418),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 299, DateTimeKind.Local).AddTicks(6869),
                             CreatedBy = 0,
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -112,7 +112,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6420),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 299, DateTimeKind.Local).AddTicks(6871),
                             CreatedBy = 0,
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -123,7 +123,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6421),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 299, DateTimeKind.Local).AddTicks(6872),
                             CreatedBy = 0,
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -134,7 +134,7 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 143, DateTimeKind.Local).AddTicks(6422),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 299, DateTimeKind.Local).AddTicks(6874),
                             CreatedBy = 0,
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -170,6 +170,9 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
                     b.Property<string>("Notes")
@@ -214,6 +217,9 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -295,6 +301,9 @@ namespace Foody.Infrastructure.Migrations
 
                     b.Property<int>("CartId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -576,20 +585,20 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 135, DateTimeKind.Local).AddTicks(4506),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 286, DateTimeKind.Local).AddTicks(2923),
                             CreatedBy = 0,
                             Email = "Admin@gmail.com",
-                            Password = "jMmj/Oc/DyyLCZJH7IcdzWEFSTvJLURSomoolexpAyPnuPyU",
+                            Password = "xJ8PqjzoSgoiTDPWlwHa48DDhzkTAe7NruQu9Bll5RCRINPX",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 10, 16, 15, 35, 11, 138, DateTimeKind.Local).AddTicks(7444),
+                            CreatedAt = new DateTime(2023, 10, 30, 18, 15, 1, 289, DateTimeKind.Local).AddTicks(7270),
                             CreatedBy = 0,
                             Email = "Customer@gmail.com",
-                            Password = "0DoApi8uTIsUWX4rIvTJRaeF22TNCKCprrSWREs1B7f88Dm0",
+                            Password = "nkjLrl8q9gwGZw/bUx0LzotVp5Fs2BJStG3VuqTXNLE6clTA",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 2
                         });

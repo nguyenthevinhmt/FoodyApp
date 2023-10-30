@@ -44,7 +44,7 @@ namespace Foody.Application.Services.CartServices.Implements
                     await _context.SaveChangesAsync();
                 }
 
-                var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == productId);
+                var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == productId && pc.IsDeleted == false);
                 if (productCart == null)
                 {
                     // Nếu sản phẩm chưa có, thêm mới
@@ -53,18 +53,12 @@ namespace Foody.Application.Services.CartServices.Implements
                         ProductId = productId,
                         Quantity = 1,
                         CartId = cart.Id,
+                        IsDeleted = false,
                     };
                     await _context.ProductsCarts.AddAsync(productCart);
                     await _context.SaveChangesAsync();
                 }
-                /*
-                else
-                {
-                    // Nếu sản phẩm đã có, cập nhật số lượng
-                    productCart.Quantity += 1;
-                    await _context.SaveChangesAsync();
-                }
-                */
+
                 await transaction.CommitAsync();
                 return "Thêm sản phẩm vào giỏ hàng thành công";
             }
@@ -78,14 +72,14 @@ namespace Foody.Application.Services.CartServices.Implements
         //Xóa sản phẩm khỏi giỏ hàng
         public async Task RemoveProductFromCart(int productId)
         {
-            var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(od => od.ProductId == productId);
+            var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(od => od.ProductId == productId && od.IsDeleted == false);
 
             if (productCart == null)
             {
                 throw new UserFriendlyException("Không tìm thấy sản phẩm trong giỏ hàng");
             }
 
-            _context.ProductsCarts.Remove(productCart);
+            productCart.IsDeleted = true;
             await _context.SaveChangesAsync();
         }
         //Lấy danh sách sản phẩm trong giỏ hàng
@@ -99,14 +93,15 @@ namespace Foody.Application.Services.CartServices.Implements
                                       join promotion in _context.Promotions on pp.PromotionId equals promotion.Id
                                       where cart.UserId == userId
                                       && product.IsActived == true && product.IsDeleted == false
-                                      && pp.IsActive == true
+                                      && pp.IsActive == true && productCart.IsDeleted == false
                                       group new { cart, productCart, product, promotion } by cart.Id into grouped
                                       select new CartResponseDto
                                       {
                                           CartId = grouped.Key,
                                           TotalPrice = grouped.Sum(g => g.productCart.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.promotion.DiscountPercent / 100)),
-                                          Products = grouped.Select(p => new InfoProductCartDto
+                                          Products = grouped.Select(p => new InfoProductCart1Dto
                                           {
+                                              ProductCartId = p.productCart.Id,
                                               Id = p.product.Id,
                                               Name = p.product.Name,
                                               ActualPrice = p.product.ActualPrice - (p.product.ActualPrice * p.promotion.DiscountPercent / 100),
@@ -139,7 +134,7 @@ namespace Foody.Application.Services.CartServices.Implements
                 }
                 else
                 {
-                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == input.productId);
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.CartId == cart.Id && pc.ProductId == input.productId && pc.IsDeleted == false);
                     if (productCart == null)
                     {
                         throw new UserFriendlyException("Không tìm thấy sản phẩm có trong giỏ hàng!");
@@ -149,7 +144,7 @@ namespace Foody.Application.Services.CartServices.Implements
                         int value = productCart.Quantity + input.quantity;
                         if (value <= 0)
                         {
-                            _context.ProductsCarts.Remove(productCart);
+                            productCart.IsDeleted = true;
                             await _context.SaveChangesAsync();
                             return "sản phẩm đã được xóa khỏi giỏ hàng";
                         }

@@ -39,6 +39,7 @@ namespace Foody.Domain.Entities
         public int AddressType { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<OrderDetail> OrderDetails { get; set; }
+        public bool IsPaid { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }

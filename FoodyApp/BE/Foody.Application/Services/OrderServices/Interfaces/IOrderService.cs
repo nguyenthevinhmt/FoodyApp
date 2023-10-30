@@ -50,6 +50,18 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <returns></returns>
         public Task<int> CreateOrderFromCart(CreateOrderFromCartDto input);
         /// <summary>
+        /// xử lý khi đơn hàng thanh toán thành công
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Task OrderPaidSuccessResponse(int orderId);
+        /// <summary>
+        /// xử lý khi đơn hàng thanh toán thất bại
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Task OrderFromCartFailResponse(OrderCartFailFilterDto input);
+        /// <summary>
         /// Cập nhật trạng thái đơn hàng
         /// </summary>
         /// <param name="input"></param>

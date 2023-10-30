@@ -214,8 +214,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.INPROGRESS
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
@@ -263,8 +263,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.ACCEPTED
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
@@ -311,8 +311,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.SHIPPING
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
@@ -359,8 +359,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.SUCCESS
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
@@ -407,8 +407,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.CANCELED
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
@@ -471,6 +471,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                     StreetAddress = userAddress.StreetAddress,
                     Ward = userAddress.Ward,
                     CreatedBy = userId,
+                    IsPaid = false
                 };
                 await _context.Orders.AddAsync(newOrder);
                 await _context.SaveChangesAsync();
@@ -515,7 +516,9 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
 
         }
-        public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
+
+
+        /*public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
@@ -591,6 +594,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                 throw new UserFriendlyException(ex.Message);
             }
         }
+        */
         public async Task<OrderResponseDto> GetOrderById(int id)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -600,7 +604,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Id == id
-                               && product.IsActived == true && product.IsDeleted == false
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
@@ -694,21 +698,147 @@ namespace Foody.Application.Services.OrderServices.Implements
         //xóa đơn hàng được tạo trực tiếp từ sản phẩm trong trạng thái chờ
         public async Task DeleteOrder(int orderId)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id ==  orderId && (o.Status == OrderStatus.INPROGRESS || o.Status == OrderStatus.ACCEPTED));
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && (o.Status == OrderStatus.INPROGRESS || o.Status == OrderStatus.ACCEPTED) && o.IsDeleted == false);
             if (order == null)
             {
                 throw new UserFriendlyException($"Đơn hàng có id={orderId} không tồn tại hoặc không đủ điều kiện.");
             } 
             else
             {
-                var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == orderId); 
-
-                _context.Orders.Remove(order);
-                _context.OrderDetails.Remove(orderDetail);
+                var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(o => o.OrderId == orderId);
+                order.IsDeleted = true;
+                orderDetail.IsDeleted = true;
 
                 await _context.SaveChangesAsync();
             }
 
+        }
+
+        public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
+        {
+            var userId = CommonUtils.GetUserId(_httpContextAccessor);
+            var userAddress = _context.UserAddresses.FirstOrDefault(u => u.UserId == userId && u.AddressType == input.AddressType);
+            if (userAddress == null)
+            {
+                throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+            }
+            using var transaction = _context.Database.BeginTransaction();
+            
+            try
+            {
+                var cart = _context.Carts.Where(c => c.UserId == userId && c.Id == input.CartId).Include(c => c.ProductCarts).FirstOrDefault();
+
+                var newOrder = new Order
+                {
+                    Status = OrderStatus.INPROGRESS,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    PaymentMethod = input.PaymentMethods,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                    UserId = userId,
+                    IsPaid = false,
+                };
+
+                await _context.Orders.AddAsync(newOrder);
+                await _context.SaveChangesAsync();
+
+                var orderDetail = new List<OrderDetail>();
+                foreach (var c in cart.ProductCarts)
+                {
+                    foreach (var pi in input.ProductId)
+                    {
+                        if (c.ProductId == pi && c.IsDeleted == false)
+                        {
+                            orderDetail.Add(new OrderDetail
+                            {
+                                ProductId = pi,
+                                Quantity = c.Quantity,
+                                OrderId = newOrder.Id
+                            });
+                            c.IsDeleted = true;
+                        }
+                    }
+                }
+                await _context.OrderDetails.AddRangeAsync(orderDetail);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                /*
+                if (newOrder.Status == OrderStatus.INPROGRESS)
+                {
+                    try
+                    {
+                        // Lấy dịch vụ sendmailservice
+                        MailContent content = new MailContent
+                        {
+                            To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                            Subject = $"[ĐƠN HÀNG {newOrder.Id} ĐANG ĐƯỢC XỬ LÝ]",
+                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                            $"    <h2>ĐƠN HÀNG #{newOrder.Id}</h2>\r\n    " +
+                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                        };
+                        await _mail.SendMail(content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to send email: " + ex.Message);
+                    }
+                }
+                */
+                //trả về order vừa được tạo
+                int newOrderId = newOrder.Id;
+                return newOrderId;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new UserFriendlyException(ex.Message);
+            }
+        }
+
+        public async Task OrderPaidSuccessResponse(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.IsDeleted == false);
+            if (order == null)
+            {
+                throw new UserFriendlyException($"Không tìm thấy đơn hàng với id={orderId}.");
+            }
+            order.IsPaid = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task OrderFromCartFailResponse(OrderCartFailFilterDto input)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id ==  input.OrderId && o.IsDeleted == false);
+            if (order == null)
+            {
+                throw new UserFriendlyException($"Không tìm thấy đơn hàng với id={input.OrderId}");
+            }
+            else
+            {
+                order.IsPaid = false;
+                order.IsDeleted = true;
+                await _context.SaveChangesAsync();
+
+                foreach (var p in input.ProductCartId)
+                {
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.Id == p && pc.IsDeleted == true);
+                    productCart.IsDeleted = false;
+                }
+                await _context.SaveChangesAsync();
+
+                var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == input.OrderId).ToListAsync();
+                foreach (var detail in orderDetails)
+                {
+                    detail.IsDeleted = true;
+                }
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

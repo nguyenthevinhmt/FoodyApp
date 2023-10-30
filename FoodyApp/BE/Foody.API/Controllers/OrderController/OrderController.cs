@@ -193,5 +193,41 @@ namespace Foody.API.Controllers.OrderController
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// xử lý khi đơn hàng thanh toán thành công
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPut("order-paid-success")]
+        public async Task<IActionResult> OrderPaidSuccess(int orderId)
+        {
+            try
+            {
+                await _service.OrderPaidSuccessResponse(orderId); 
+                return Ok("Thanh toán thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// xử lý khi đơn hàng từ giỏ hàng thanh toán thất bại
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("order-from-card-fail")]
+        public async Task<IActionResult> OrderFromCartFail(OrderCartFailFilterDto input)
+        {
+            try
+            {
+                await _service.OrderFromCartFailResponse(input);
+                return Ok("rollback giỏ hàng thành công");
+            }
+            catch (Exception ex) 
+            { 
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
