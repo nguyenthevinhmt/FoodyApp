@@ -5,6 +5,8 @@ using Foody.Application.Services.CartServices.Implements;
 using Foody.Application.Services.CartServices.Interfaces;
 using Foody.Application.Services.CategoryServices.Implements;
 using Foody.Application.Services.CategoryServices.Interfaces;
+using Foody.Application.Services.DashboardServices.Implements;
+using Foody.Application.Services.DashboardServices.Interfaces;
 using Foody.Application.Services.EmailServices;
 using Foody.Application.Services.EmailServices.Dtos;
 using Foody.Application.Services.FileStoreService.Implements;
@@ -126,6 +128,7 @@ namespace Foody.API
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IVnpayService, VnpayService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
             var app = builder.Build();
 

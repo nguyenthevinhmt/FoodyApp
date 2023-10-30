@@ -38,6 +38,9 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
     const [button1Pressed, setButton1Pressed] = useState(false);
     const [button2Pressed, setButton2Pressed] = useState(false);
 
+    //vòng tròn loading
+    const [loadingOn, setLoadingOn] = useState(false);
+
     useEffect(() => {
         const getData = async () => {
             //gọi api lấy địa chỉ và thông tin người dùng
@@ -65,20 +68,26 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
             showAlert(navigation.goBack());
         }
         else {
+            setLoadingOn(true);
+
             const result = await createOrder(productId, paymentMethod, route.params['quantity'], addressList[addressIndex]['addressType']);
             console.log(result);
             if (paymentMethod == 1) {
-                navigation.goBack();
+                navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
             }
             else if (paymentMethod == 2) {
                 //gọi api thanh toán điện tử
                 const payment = await createPayment(result?.data);
                 console.log(payment?.data);
-                
+
                 setTimeout(() => {
-                    navigation.navigate(ScreenNames.VNPAY, {url: payment?.data});
-                }, 3000); // Đợi 3 giây trước khi thực hiện navigation
-            }   
+                    navigation.navigate(ScreenNames.VNPAY, { 
+                        url: payment?.data,
+                        orderId: result?.data, //id đơn hàng
+                        orderType: 1 //đơn hàng được tạo trực tiếp từ sản phẩm
+                    });
+                }, 0); // Đợi 3 giây trước khi thực hiện navigation
+            }
         }
     }
 
@@ -298,6 +307,18 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     <Text style={{ color: '#fff' }}>Đặt hàng</Text>
                 </TouchableOpacity>
             </View>
+
+            <Modal
+                isVisible={loadingOn}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                backdropOpacity={0.5}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../assets/Icons/loading.gif')} style={{ width: 50, height: 50 }} />
+                </View>
+            </Modal>
         </View>
     );
 }

@@ -64,3 +64,22 @@ export const updateProductQuantity = async (id: number, quantity: number) => {
         return null;
     }
 }
+
+//xóa sản phẩm khỏi cart
+export const deleteProductFromCart = async (productId: number) => {
+    try {
+        const token = await getAccessToken();
+        const response = await axios.delete(`${baseURL}/Cart/delete-product-from-cart?productId=${productId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status == 200) {
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

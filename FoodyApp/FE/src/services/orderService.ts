@@ -185,3 +185,17 @@ export const updateOrderStatus = async (orderId: number, newStatus: number) => {
         return null;
     }
 }
+
+//xóa đơn hàng được tạo trực tiếp từ sản phẩm
+export const deleteOrder = async (orderId: number) => {
+  try {
+    const response = await axios.delete(`${baseURL}/Order/delete-order?orderId=${orderId}`);
+
+    if (response.status == 200) {
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

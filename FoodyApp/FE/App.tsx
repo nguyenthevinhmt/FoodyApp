@@ -1,5 +1,5 @@
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Remote debugger']);
+//import { YellowBox } from 'react-native';
+//YellowBox.ignoreWarnings(['Remote debugger']);
 
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
