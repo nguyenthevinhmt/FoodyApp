@@ -35,6 +35,7 @@ export default function CartScreen({ navigation }: any) {
         const result = await getCartByUser();
         setCartId(result?.data.cartId);
         setProducts(result?.data.products);
+        setSelectedProducts([]);
 
         if (!products) {
           setTotalPrice(0);
@@ -42,16 +43,17 @@ export default function CartScreen({ navigation }: any) {
       };
 
       getData();
-    }, [products])
+    }, [])
   );
 
   //cập nhật tổng số tiền các sản phẩm được chọn
   useEffect(() => {
     setTotalPrice(() => {
+      console.log(selectedProducts);
       let sum = 0.0;
       if (selectedProducts && products) {
         selectedProducts.forEach(productId => {
-          const product = products.find((value) => value['id'] === productId);
+          const product = products.find((value) => value['productCartId'] === productId);
           if (product) {
             sum += product.actualPrice*product.quantity;
           }
@@ -62,11 +64,11 @@ export default function CartScreen({ navigation }: any) {
   }, [selectedProducts, products]);
 
   //xử lý chọn từng sản phẩm
-  const handleProductSelection = (productId: number) => {
-    if (selectedProducts.includes(productId)) {
-      setSelectedProducts(selectedProducts.filter(id => id !== productId));
+  const handleProductSelection = (productCartId: number) => {
+    if (selectedProducts.includes(productCartId)) {
+      setSelectedProducts(selectedProducts.filter(id => id !== productCartId));
     } else {
-      setSelectedProducts([...selectedProducts, productId]);
+      setSelectedProducts([...selectedProducts, productCartId]);
     }
   };
 
@@ -75,14 +77,14 @@ export default function CartScreen({ navigation }: any) {
     if (selectedProducts.length === products.length) {
       setSelectedProducts([]);
     } else {
-      const allProductIds = products.map(product => product['id']);
+      const allProductIds = products.map(product => product['productCartId']);
       setSelectedProducts(allProductIds);
     }
   };
 
   //xử lý việc xóa sản phẩm
-  const handleDelete = async (productId: number) => {
-    setSelectedProducts(selectedProducts.filter(id => id !== productId));
+  const handleDelete = async (productId: number, productCartId: number) => {
+    setSelectedProducts(selectedProducts.filter(id => id !== productCartId));
     const result = await deleteProductFromCart(productId);
     console.log(result);
   }
@@ -94,18 +96,22 @@ export default function CartScreen({ navigation }: any) {
         {
           products ?
             <View style={styles.header}>
-              <View style={styles.selectAllContainer}>
-                <TouchableOpacity onPress={handleSelectAll}>
-                  <Text style={styles.selectAllText}>
+              <TouchableOpacity onPress={handleSelectAll} style={styles.selectAllContainer}>
+                <View style={[styles.choiceButtonText, {borderColor: '#fff'}]}>
+                  {selectedProducts.length === products.length ? <Text style={[styles.selectedIndicator, {color: '#fff'}]}>✓</Text> : ''}
+                </View>
+
+                <View style={{marginLeft: 5}}>
+                  <Text style={{color: '#fff'}}>
                     {selectedProducts.length === products.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'
                     }
                   </Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
 
-              <View style={styles.deleteOption}>
+              <View>
                 <TouchableOpacity onPress={() => setRemove(!remove)}>
-                  <Text>Sửa</Text>
+                  <Text style={{color: '#fff'}}>Sửa</Text>
                 </TouchableOpacity>
               </View>
             </View> 
@@ -115,11 +121,11 @@ export default function CartScreen({ navigation }: any) {
         <ScrollView style={styles.cartDetail}>
           {
             products ? products.map((value) => (
-              <View key={value['id']} style={{ flexDirection: 'row' }}>
+              <View key={value['productCartId']} style={{ flexDirection: 'row' }}>
                 <View style={styles.productChoice}>
-                  <TouchableOpacity onPress={() => handleProductSelection(value['id'])} style={styles.choiceButton}>
+                  <TouchableOpacity onPress={() => handleProductSelection(value['productCartId'])} style={styles.choiceButton}>
                     <View style={styles.choiceButtonText}>
-                      {selectedProducts.includes(value['id']) && <Text style={styles.selectedIndicator}>✓</Text>}
+                      {selectedProducts.includes(value['productCartId']) && <Text style={styles.selectedIndicator}>✓</Text>}
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -138,11 +144,11 @@ export default function CartScreen({ navigation }: any) {
 
                 {
                   remove ?
-                    <TouchableOpacity style={styles.deleteProduct} onPress={() => handleDelete(value['id'])}>
+                    <TouchableOpacity style={styles.deleteProduct} onPress={() => handleDelete(value['id'], value['productCartId'])}>
                       <Image source={require('../assets/Icons/delete.png')} style={{ width: 30, height: 30 }} />
                     </TouchableOpacity>
                     :
-                    <View style={{ width: '15%', marginVertical: 10, backgroundColor: '#fff' }}></View>
+                    <View style={{ width: '15%', marginBottom: 10, backgroundColor: '#fff' }}></View>
                 }
               </View>
             )) 
@@ -161,11 +167,12 @@ export default function CartScreen({ navigation }: any) {
         <TouchableOpacity
           style={styles.orderButton}
           onPress={() => {
-            if (products) {
+            if (selectedProducts.length > 0) {
               navigation.navigate(ScreenNames.CREATE_CART_ORDER,
                 {
                   'cartId': cartId,
-                  'products': products,
+                  'selectedProducts': selectedProducts, //id sản phẩm trong giỏ hàng
+                  'products': products.filter(product => selectedProducts.includes(product['productCartId'])),
                   'totalPrice': totalPrice,
                 })
             };
@@ -184,29 +191,23 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 40,
+    height: 60,
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
+    paddingBottom: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
+    backgroundColor: '#EE4D2D',
   },
 
   selectAllContainer: {
-
-  },
-
-  selectAllText: {
-
-  },
-
-  deleteOption: {
-
+    flexDirection: 'row'
   },
 
   productChoice: {
     width: '10%',
-    marginVertical: 10,
+    marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff'
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
 
   choiceButton: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   choiceButtonText: {
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 0.7,
+    borderRadius: 3
 
   },
 
@@ -232,23 +234,10 @@ const styles = StyleSheet.create({
 
   deleteProduct: {
     width: '15%',
-    marginVertical: 10,
+    marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EE4D2D',
-  },
-
-  footter: {
-    width: '100%',
-    height: 50,
-    paddingLeft: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0.7,
-    borderColor: '#B4B4B3',
-    backgroundColor: '#fff'
-
   },
 
   price: {
@@ -267,5 +256,18 @@ const styles = StyleSheet.create({
   cartDetail: {
     width: '100%',
     height: '50%'
+  },
+
+  footter: {
+    width: '100%',
+    height: 50,
+    paddingLeft: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.7,
+    borderColor: '#B4B4B3',
+    backgroundColor: '#fff'
+
   }
 });

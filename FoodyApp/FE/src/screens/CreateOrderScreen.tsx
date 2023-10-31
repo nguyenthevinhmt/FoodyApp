@@ -84,7 +84,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     navigation.navigate(ScreenNames.VNPAY, { 
                         url: payment?.data,
                         orderId: result?.data, //id đơn hàng
-                        orderType: 1 //đơn hàng được tạo trực tiếp từ sản phẩm
                     });
                 }, 0); // Đợi 3 giây trước khi thực hiện navigation
             }
@@ -183,8 +182,8 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
 
                             <View style={styles.productDetail}>
                                 <Text style={styles.productCartName}>{route.params['productName']}</Text>
-                                <Text style={styles.productCartActualPrice}>đ{route.params['price']}</Text>
-                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice']}</Text>
+                                <Text style={styles.productCartActualPrice}>đ{route.params['price'].toLocaleString()}</Text>
+                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice'].toLocaleString()}</Text>
                                 <Text>X{route.params['quantity']}</Text>
                             </View>
                         </View>
@@ -255,17 +254,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền hàng</Text>
-                            <Text>{route.params['actualPrice']}đ</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginVertical: 3
-                        }}>
-                            <Text>Tổng tiền phí vận chuyển</Text>
-                            <Text>0đ</Text>
+                            <Text>{route.params['actualPrice'].toLocaleString()}đ</Text>
                         </View>
 
                         <View style={{
@@ -282,7 +271,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             <Text style={{
                                 color: '#EE4D2D',
                                 fontSize: 18
-                            }}>{route.params['actualPrice']}đ</Text>
+                            }}>{route.params['actualPrice'].toLocaleString()}đ</Text>
                         </View>
                     </View>
                 </ScrollView>

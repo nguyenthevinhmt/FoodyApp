@@ -45,15 +45,13 @@ const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id,
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.price}>{price.toLocaleString()}đ</Text>
                     <Text style={styles.actualPrice}>{actualPrice.toLocaleString()}đ</Text>
+                    <View style={styles.discount}>
+                        <Text style={{ color: '#EE4D2D', fontSize: 10 }}>Giảm {discount}%</Text>
+                    </View>
                 </View>
             </View>
 
             <View style={styles.discountArea}>
-                <View style={styles.discount}>
-                    <Text style={{ color: '#EE4D2D' }}>Giảm </Text>
-                    <Text style={{ color: '#EE4D2D' }}>{discount}%</Text>
-                </View>
-
                 <View style={styles.buttonArea}>
                     <TouchableOpacity style={styles.button} onPress={() => handleAddCart()}>
                         <Text style={{ color: '#fff' }}>Thêm vào giỏ</Text>
@@ -107,20 +105,20 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
 
-    discountArea: {
-        height: 110,
-        justifyContent: 'space-between'
+    discount: {
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#EE4D2D',
+        paddingVertical: 2,
+        paddingHorizontal: 4
     },
 
-    discount: {
-        marginRight: 5,
-        flexDirection: 'row',
-        height: '20%',
-        alignSelf: 'flex-end'
+    discountArea: {
+        height: 110,
+        justifyContent: 'center'
     },
 
     buttonArea: {
-        height: '60%',
         marginRight: 5,
     },
 

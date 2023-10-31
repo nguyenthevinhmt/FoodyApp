@@ -83,7 +83,7 @@ const AllProductScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffe'
+        backgroundColor: '#D2E3C8'
     },
 
     header: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         MarginHorizontal: 10,
         justifyContent: 'space-between',
         marginBottom: 10,
-        backgroundColor: "#ffe",
+        backgroundColor: "#EBF3E8",
     },
 
     product: {

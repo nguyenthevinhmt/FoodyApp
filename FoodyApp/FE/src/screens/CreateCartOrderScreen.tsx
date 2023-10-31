@@ -25,6 +25,11 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
   const cartId = route.params["cartId"];
   const products = route.params["products"];
   const totalPrice = route.params["totalPrice"] | 0;
+  const selectedProducts = route.params["selectedProducts"];
+
+  const productIds = products.map((p: any) => p['id']);
+
+  console.log('selectedProducts: ', selectedProducts);
 
   //thông tin địa chỉ
   const [addressList, setAddressList] = useState([]);
@@ -71,7 +76,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
     }
     else {
       setLoadingOn(true);
-      const result = await createCartOrder(cartId, paymentMethod, addressList[addressIndex]['addressType']);
+      const result = await createCartOrder(cartId, productIds, paymentMethod, addressList[addressIndex]['addressType']);
       console.log(result);
       if (paymentMethod == 1) {
         navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
@@ -82,10 +87,10 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
         console.log(payment?.data);
 
         setTimeout(() => {
-          navigation.navigate(ScreenNames.VNPAY, { 
+          navigation.navigate(ScreenNames.VNPAY_CART, { 
             url: payment?.data,
             orderId: result?.data,
-            orderType: 2 //đơn hàng được tạo từ giỏ hàng
+            selectedProducts: selectedProducts
           });
         }, 0); // Đợi 3 giây trước khi thực hiện navigation
       }
@@ -308,18 +313,6 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                 marginVertical: 3,
               }}
             >
-              <Text>Tổng tiền phí vận chuyển</Text>
-              <Text>0đ</Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginVertical: 3,
-              }}
-            >
               <Text
                 style={{
                   fontSize: 18,
@@ -335,7 +328,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
                   fontSize: 18,
                 }}
               >
-                {totalPrice}đ
+                {totalPrice.toLocaleString()}đ
               </Text>
             </View>
           </View>

@@ -216,7 +216,7 @@ namespace Foody.API.Controllers.OrderController
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut("order-from-card-fail")]
+        [HttpPut("order-from-cart-fail")]
         public async Task<IActionResult> OrderFromCartFail(OrderCartFailFilterDto input)
         {
             try
