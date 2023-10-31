@@ -30,6 +30,7 @@ const PendingOrderScreen = ({ navigation }: any) => {
             const getData = async () => {
                 const orderResponse = await getAllOrderPending();
                 setOrder(orderResponse?.data);
+                console.log(orderResponse?.data);
 
                 const productDiscountResponse = await getProductDiscount();
                 setProduct(productDiscountResponse?.data.item);

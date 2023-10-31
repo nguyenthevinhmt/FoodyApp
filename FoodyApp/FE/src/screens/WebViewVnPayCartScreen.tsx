@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackHandler, Alert, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import queryString from 'query-string';
 import ScreenNames from '../utils/ScreenNames';
-import { deleteOrder, orderPaidSuccess } from '../services/orderService';
+import { orderFromCartFail, orderPaidSuccess } from '../services/orderService';
 
-const WebVnPay = ({ navigation, route }: any) => {
+const WebVnPayCart = ({ navigation, route }: any) => {
     const url = route.params.url;
     const orderId = route.params.orderId;
+    const selectedProducts = route.params.selectedProducts;
+    console.log(selectedProducts);
 
     const webViewRef = useRef(null);
 
@@ -31,19 +32,19 @@ const WebVnPay = ({ navigation, route }: any) => {
 
         if (vnp_ResponseCode === '00') {
             await orderPaidSuccess(orderId);
-            
+
             navigation.navigate(ScreenNames.MAIN, { screen: 'Order' }) 
             Alert.alert('Thông báo', 'Giao dịch thành công.');
         }
         else if (vnp_ResponseCode === '24') {
-            await deleteOrder(orderId);
-            
+            await orderFromCartFail(orderId, selectedProducts);
+
             navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
-            await deleteOrder(orderId);
-            
+            await orderFromCartFail(orderId, selectedProducts);
+
             navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
@@ -69,4 +70,4 @@ const WebVnPay = ({ navigation, route }: any) => {
     );
 }
 
-export default WebVnPay;
+export default WebVnPayCart;

@@ -64,7 +64,7 @@ const ProductSearchScreen = ({ navigation, route }: any) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.header_text}>Kết quả tìm kiếm cho {productName}</Text>
-                <Text style={{ fontSize: 11 }}>Chúng tôi có tất cả những món ăn để làm hài lòng vị giác của những khách hàng khó tính nhất.</Text>
+                <Text style={{ fontSize: 11 }}>Chúng tôi có những món ăn đủ để làm hài lòng vị giác của những khách hàng khó tính nhất.</Text>
             </View>
 
             {shown ? emtyProduct() : ''}

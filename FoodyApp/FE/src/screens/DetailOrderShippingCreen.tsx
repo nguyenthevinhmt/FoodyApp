@@ -7,7 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getAccessToken } from "../services/authService";
 import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
-import { getOrderById, updateOrderStatus } from "../services/orderService";
+import { getOrderById, orderPaidSuccess, updateOrderStatus } from "../services/orderService";
 
 const DetailOrderShippingScreen = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
@@ -75,6 +75,7 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
     }
 
     const handleSuccess = async () => {
+        await orderPaidSuccess(orderId);
         const result = await updateOrderStatus(orderId, 4); //đơn hàng đã giao thành công
     }
 
