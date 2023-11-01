@@ -37,7 +37,7 @@ const CreateCartOrderScreen = ({ navigation, route }: any) => {
   const [phone, setPhone] = useState("");
 
   //vị trí địa chỉ trong addressList
-  const [addressIndex, setAddressIndex] = useState(1);
+  const [addressIndex, setAddressIndex] = useState(0);
 
   //phương thức thanh toán
   const [paymentMethod, setPaymentMethod] = useState(1);

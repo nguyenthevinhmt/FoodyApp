@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackHandler, Alert, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import queryString from 'query-string';
@@ -59,14 +60,14 @@ const WebVnPayCart = ({ navigation, route }: any) => {
     }, []);
     
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <WebView 
                 ref={webViewRef} 
                 source={{ uri: url }} 
                 onError={handleWebViewError} // Bắt lỗi và lấy thông tin chi tiết
                 style={{ flex: 1 }} 
             />
-        </View>
+        </SafeAreaView>
     );
 }
 

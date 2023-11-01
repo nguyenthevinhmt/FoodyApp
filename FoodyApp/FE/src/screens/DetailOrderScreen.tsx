@@ -26,7 +26,10 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
     const [phone, setPhone] = useState('');
 
     //phương thức thanh toán
-    const [paymentMethod, setPaymentMethod] = useState(0);
+    const [paymentMethod, setPaymentMethod] = useState(1);
+    
+    //đã thanh toán
+    const [paid, setPaid] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -49,6 +52,7 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
                 setProducts(responseOrder?.data['products']);
                 setAddress(responseOrder?.data['userAddress']);
                 setPaymentMethod(responseOrder?.data['paymentMethod']);
+                setPaid(responseOrder?.data['isPaid']);
             };
 
             getData();
@@ -56,11 +60,14 @@ const DetailOrderScreen = ({ navigation, route }: any) => {
     );
 
     const PaymentDetail = () => {
-        if (paymentMethod == 0) {
+        if (paymentMethod == 1 && paid == false) {
             return <Text>Đơn hàng chưa được thanh toán</Text>
         }
-        else if (paymentMethod == 1) {
-            return <Text>Đơn hàng sẽ được thanh toán khi nhận hàng</Text>
+        else if(paymentMethod == 1 && paid == true) {
+            return <Text>Đơn hàng đã được thanh toán trực tiếp</Text>
+        }
+        else if (paymentMethod == 2 && paid == false) {
+            return <Text>Đơn hàng chưa được thanh toán trực tuyến</Text>
         } else {
             return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
         }

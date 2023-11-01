@@ -10,7 +10,11 @@ const Tab = createBottomTabNavigator();
 
 export default function MainScreen() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarHideOnKeyboard: true,
+      }}
+    >
       <Tab.Screen
         options={{
           headerShown: false,

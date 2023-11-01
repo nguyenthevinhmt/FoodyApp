@@ -8,6 +8,7 @@ import { getAccessToken } from "../services/authService";
 import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
 import { getOrderById, updateOrderStatus } from "../services/orderService";
+import ScreenNames from "../utils/ScreenNames";
 
 const DetailOrderPendingScreen = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
@@ -26,7 +27,10 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
     const [phone, setPhone] = useState('');
 
     //phương thức thanh toán
-    const [paymentMethod, setPaymentMethod] = useState(0);
+    const [paymentMethod, setPaymentMethod] = useState(1);
+
+    //đã thanh toán
+    const [paid, setPaid] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -36,7 +40,6 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                 const decode = jwt(token);
 
                 const userId = decode.sub;
-                console.log("User ID:", userId);
 
                 //gọi api lấy địa chỉ và thông tin người dùng
                 const responseUser = await getUserById(userId);
@@ -49,6 +52,7 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                 setProducts(responseOrder?.data['products']);
                 setAddress(responseOrder?.data['userAddress']);
                 setPaymentMethod(responseOrder?.data['paymentMethod']);
+                setPaid(responseOrder?.data['isPaid']);
             };
 
             getData();
@@ -56,11 +60,14 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
     );
 
     const PaymentDetail = () => {
-        if (paymentMethod == 0) {
+        if (paymentMethod == 1 && paid == false) {
             return <Text>Đơn hàng chưa được thanh toán</Text>
         }
-        else if (paymentMethod == 1) {
-            return <Text>Đơn hàng sẽ được thanh toán khi nhận hàng</Text>
+        else if(paymentMethod == 1 && paid == true) {
+            return <Text>Đơn hàng đã được thanh toán trực tiếp</Text>
+        }
+        else if (paymentMethod == 2 && paid == false) {
+            return <Text>Đơn hàng chưa được thanh toán trực tuyến</Text>
         } else {
             return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
         }
@@ -79,7 +86,7 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                 {
                     text: 'Xóa', onPress: () => {
                         handleCancel();
-                        navigation.goBack()
+                        navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
                     }
                 }
             ],
