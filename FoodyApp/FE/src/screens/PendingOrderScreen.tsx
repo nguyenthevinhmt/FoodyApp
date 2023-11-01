@@ -30,12 +30,12 @@ const PendingOrderScreen = ({ navigation }: any) => {
             const getData = async () => {
                 const orderResponse = await getAllOrderPending();
                 setOrder(orderResponse?.data);
-                console.log(orderResponse?.data);
+
+                console.log('đây là màn order');
 
                 const productDiscountResponse = await getProductDiscount();
                 setProduct(productDiscountResponse?.data.item);
             };
-
             getData();
         }, [])
     );
@@ -60,7 +60,7 @@ const PendingOrderScreen = ({ navigation }: any) => {
                     onNavigation={() => { navigation.navigate(ScreenNames.DETAIL_ORDER_PENDING, { orderId: value['id'] }) }}
                 />
             ))}
-
+            
             <View style={styles.boundary}>
                 <View style={styles.divider} />
                 <Text style={{

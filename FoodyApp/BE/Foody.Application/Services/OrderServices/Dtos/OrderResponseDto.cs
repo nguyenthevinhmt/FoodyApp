@@ -12,5 +12,6 @@ namespace Foody.Application.Services.OrderServices.Dtos
         public List<InfoProductCartDto> Products { get; set; }
         public UserAddressDto UserAddress { get; set; }
         public int PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

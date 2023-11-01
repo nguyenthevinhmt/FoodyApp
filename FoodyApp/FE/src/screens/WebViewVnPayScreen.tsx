@@ -58,14 +58,14 @@ const WebVnPay = ({ navigation, route }: any) => {
     }, []);
     
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <WebView 
                 ref={webViewRef} 
                 source={{ uri: url }} 
                 onError={handleWebViewError} // Bắt lỗi và lấy thông tin chi tiết
                 style={{ flex: 1 }} 
             />
-        </View>
+        </SafeAreaView>
     );
 }
 
