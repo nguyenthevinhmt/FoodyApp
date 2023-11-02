@@ -45,8 +45,8 @@ export default function UserScreen({ navigation }: any) {
         <View style={styles.profile}>
           <Image
             style={{
-              height: 100,
-              width: 100,
+              height: 80,
+              width: 80,
             }}
             source={require("../assets/Icons/userIcon.png")}
           />
