@@ -22,7 +22,6 @@ import DetailOrderPendingScreen from "./src/screens/DetailOrderPendingScreen";
 import DetailOrderShippingScreen from "./src/screens/DetailOrderShippingCreen";
 import WebVnPay from "./src/screens/WebViewVnPayScreen";
 import WebVnPayCart from "./src/screens/WebViewVnPayCartScreen";
-import PendingOrderScreen from "./src/screens/PendingOrderScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -53,7 +52,6 @@ export default function App() {
         <Stack.Screen name={ScreenNames.DETAIL_ORDER_SHIPPING} component={DetailOrderShippingScreen} />
         <Stack.Screen name={ScreenNames.VNPAY} component={WebVnPay}/>
         <Stack.Screen name={ScreenNames.VNPAY_CART} component={WebVnPayCart}/>
-        <Stack.Screen name={ScreenNames.ORDER_PENDING} component={PendingOrderScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
