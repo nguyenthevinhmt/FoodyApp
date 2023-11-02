@@ -71,11 +71,12 @@ export default function HomeScreen({ navigation }: any) {
           </TextInput>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator = {false}>
         <View style={styles.banner}>
           <Swiper
             autoplay
             autoplayTimeout={5}
+            showsPagination = {false}
           >
             {images.map((image, index) => (
               <View key={index}>
@@ -94,6 +95,7 @@ export default function HomeScreen({ navigation }: any) {
             <FlatList
               horizontal
               data={listCategory}
+              showsHorizontalScrollIndicator={false}
               keyExtractor={(item: any) => item.id}
               renderItem={({ item }) => (
                 <View style={{ justifyContent: 'center', marginBottom: 15 }}>

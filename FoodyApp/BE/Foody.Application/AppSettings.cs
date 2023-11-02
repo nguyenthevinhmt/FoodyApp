@@ -9,5 +9,6 @@
         public string Command {  get; set; }
         public string CurrCode {  get; set; }
         public string Locale {  get; set; }
+        public string BankCode { get; set; }
     }
 }

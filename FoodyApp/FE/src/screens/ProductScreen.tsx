@@ -112,7 +112,7 @@ const ProductScreen = ({ navigation, route }: any) => {
       <View style={styles.buttArea}>
         <TouchableOpacity style={styles.buttLeft} onPress={() => showAlert()}>
           <Image source={require('../assets/Icons/add-cart.png')} style={styles.addCartIcon} />
-          <Text style={{ color: '#EE4D2D' }}>Thêm vào giỏ hàng</Text>
+          <Text style={{ color: '#EE4D2D', fontSize: 12 }}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttRight}
@@ -124,7 +124,7 @@ const ProductScreen = ({ navigation, route }: any) => {
             imgUrl: imgUrl,
             quantity: 1
           })}>
-          <Text style={{ color: '#fff' }}>Mua ngay</Text>
+          <Text style={{ color: '#fff', fontSize: 14 }}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -214,8 +214,8 @@ const styles = StyleSheet.create({
   },
 
   addCartIcon: {
-    width: 40,
-    height: 40
+    width: 25,
+    height: 25
   },
 
   buttRight: {

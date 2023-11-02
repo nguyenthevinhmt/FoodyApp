@@ -8,7 +8,7 @@ namespace Foody.Application.Services.ProductServices.Dtos
     {
         private string _name;
         [FromQuery(Name = "Name")]
-        public string Name { get { return _name; } set { _name = value.Trim(); } }
+        public string Name { get { return _name; } set { _name = value?.Trim(); } }
 
         public string CategoryId { get; set; }
         [FromQuery(Name = "startPrice")]

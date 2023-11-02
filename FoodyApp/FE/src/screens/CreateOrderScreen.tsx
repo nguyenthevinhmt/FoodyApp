@@ -283,7 +283,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     alignItems: 'flex-end',
                     paddingRight: 10,
                 }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice']}</Text>
+                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice'].toLocaleString()}</Text>
                 </View>
 
                 <TouchableOpacity
