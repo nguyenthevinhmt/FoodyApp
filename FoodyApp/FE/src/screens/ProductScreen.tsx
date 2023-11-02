@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from 'react';
 import PagerView from 'react-native-pager-view';
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ScreenNames from "../utils/ScreenNames";
 import { baseURL_img } from "../utils/baseUrl";
 import { addProductToCart } from "../services/cartService";
+
 
 const ProductScreen = ({ navigation, route }: any) => {
   const Id = route.params['productId'];
@@ -50,17 +51,22 @@ const ProductScreen = ({ navigation, route }: any) => {
     }
   }
 
-  const showAlert = () => {
-    Alert.alert(
-      'Thông báo',
-      'Sản phẩm đã được thêm vào giỏ hàng!',
-      [
-        { text: 'Mua sắm tiếp', onPress: () => { handleAddCart(); } }
-      ],
-      { cancelable: false }
-    );
-  };
+  // const showAlert = () => {
+  //   Alert.alert(
+  //     'Thông báo',
+  //     'Sản phẩm đã được thêm vào giỏ hàng!',
+  //     [
+  //       { text: 'Mua sắm tiếp', onPress: () => { handleAddCart(); } }
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
+  const showAlert = () => {
+    handleAddCart();
+    ToastAndroid.show('Thêm sản phẩm thành công !', ToastAndroid.SHORT);
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
