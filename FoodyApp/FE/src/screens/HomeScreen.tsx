@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import Swiper from "react-native-swiper";
@@ -6,6 +6,18 @@ import { getAllCategory } from "../services/categoryService";
 import { getListProduct } from "../services/productService";
 import { baseURL_img } from "../utils/baseUrl";
 import ScreenNames from "../utils/ScreenNames";
+import { addProductToCart } from "../services/cartService";
+
+function showAlert(message: string) {
+  return (
+      Alert.alert(
+          'Thông báo',
+          message,
+          [{ text: 'Ok', onPress: () => { } }],
+          { cancelable: false }
+      )
+  )
+};
 
 export default function HomeScreen({ navigation }: any) {
   const images = [
@@ -40,9 +52,18 @@ export default function HomeScreen({ navigation }: any) {
     navigation.navigate(ScreenNames.PRODUCT_SEARCH, { productName: searchText });
   };
 
+  const handleAddCart = async (id: number) => {
+    const result = await addProductToCart(id);
+    if (result != null) {
+        showAlert("Thêm sản phẩm vào giỏ hàng thành công");
+    }
+    else {
+        showAlert("Có lỗi khi thêm sản phẩm vào giỏ hàng");
+    }
+}
+
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.headerArea}>
         <View style={styles.logoApp}>
           <Image
@@ -71,6 +92,7 @@ export default function HomeScreen({ navigation }: any) {
           </TextInput>
         </View>
       </View>
+
       <ScrollView showsVerticalScrollIndicator = {false}>
         <View style={styles.banner}>
           <Swiper
@@ -126,19 +148,27 @@ export default function HomeScreen({ navigation }: any) {
           <View>
             {
               listProduct.map((item) => (
-                <TouchableOpacity key={item['id']} style={styles.product} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}>
-                  <Image
-                    source={{ uri: `${baseURL_img}${item['productImageUrl']}` }}
-                    style={styles.imgProduct}
-                  />
+                <TouchableOpacity key={item['id']} style={styles.productArea} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}>
+                  <View style={styles.product}>
+                    <Image
+                      source={{ uri: `${baseURL_img}${item['productImageUrl']}` }}
+                      style={styles.imgProduct}
+                    />
 
-                  <View style={{ flexDirection: "column", paddingTop: 5, paddingLeft: 5 }}>
-                    <Text style={styles.name}>{item['name']}</Text>
+                    <View style={{ flexDirection: "column", paddingTop: 5, paddingLeft: 5 }}>
+                      <Text style={styles.name}>{item['name']}</Text>
 
-                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                      <Text style={styles.price}>{(item['price'] | 0).toLocaleString()}đ</Text>
-                      <Text style={styles.actualPrice}>{(item['actualPrice'] | 0).toLocaleString()}đ</Text>
+                      <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <Text style={styles.price}>{(item['price'] | 0).toLocaleString()}đ</Text>
+                        <Text style={styles.actualPrice}>{(item['actualPrice'] | 0).toLocaleString()}đ</Text>
+                      </View>
                     </View>
+                  </View>
+
+                  <View style={{justifyContent: 'center'}}>
+                  <TouchableOpacity style={styles.buttonAdd} onPress={() => {handleAddCart(item['id'])}}>
+                    <Image source={require('../assets/Icons/add.png')} style={styles.buttonImg}/>
+                  </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               ))
@@ -255,6 +285,13 @@ const styles = StyleSheet.create({
 
   },
 
+  productArea: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 5
+  },
+
   product: {
     flexDirection: 'row',
     paddingHorizontal: 5,
@@ -284,5 +321,20 @@ const styles = StyleSheet.create({
     color: '#EE4D2D',
     fontWeight: '700'
   },
+
+  buttonAdd: {
+    height: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 35,
+    borderWidth: 1,
+    borderColor: '#EE4D2D',
+    borderRadius: 5,
+  },
+
+  buttonImg: {
+    width: 25, 
+    height: 25,
+  }
 
 });
