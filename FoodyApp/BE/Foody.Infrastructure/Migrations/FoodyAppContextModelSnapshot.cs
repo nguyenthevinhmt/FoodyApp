@@ -87,7 +87,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 231, DateTimeKind.Local).AddTicks(9676),
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 202, DateTimeKind.Local).AddTicks(1880),
+>>>>>>> dev
                             CreatedBy = 0,
                             Description = "Các món cơm",
                             IsDeleted = false,
@@ -98,7 +102,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 231, DateTimeKind.Local).AddTicks(9695),
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 202, DateTimeKind.Local).AddTicks(1892),
+>>>>>>> dev
                             CreatedBy = 0,
                             Description = "Các món ăn nhanh",
                             IsDeleted = false,
@@ -109,7 +117,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 231, DateTimeKind.Local).AddTicks(9697),
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 202, DateTimeKind.Local).AddTicks(1893),
+>>>>>>> dev
                             CreatedBy = 0,
                             Description = "Các đồ uống",
                             IsDeleted = false,
@@ -120,7 +132,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 231, DateTimeKind.Local).AddTicks(9699),
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 202, DateTimeKind.Local).AddTicks(1895),
+>>>>>>> dev
                             CreatedBy = 0,
                             Description = "Các món bún",
                             IsDeleted = false,
@@ -131,7 +147,11 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 231, DateTimeKind.Local).AddTicks(9701),
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 202, DateTimeKind.Local).AddTicks(1896),
+>>>>>>> dev
                             CreatedBy = 0,
                             Description = "Các món mì",
                             IsDeleted = false,
@@ -214,6 +234,9 @@ namespace Foody.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -371,6 +394,9 @@ namespace Foody.Infrastructure.Migrations
 
                     b.Property<int>("CartId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -652,20 +678,34 @@ namespace Foody.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 169, DateTimeKind.Local).AddTicks(659),
                             CreatedBy = 0,
                             Email = "Admin@gmail.com",
                             Password = "NyxCu3oPnahXCqLsdI6k5XtlaQcmdmY20h3V+6d5zzegM2kI",
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 193, DateTimeKind.Local).AddTicks(7870),
+                            CreatedBy = 0,
+                            Email = "Admin@gmail.com",
+                            Password = "hNfjELLD+xYcftRqvoOyY3Embgt5EdEXeLtDFx8gaa66BkVg",
+>>>>>>> dev
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 1
                         },
                         new
                         {
                             Id = 2,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2023, 10, 28, 22, 47, 22, 210, DateTimeKind.Local).AddTicks(4704),
                             CreatedBy = 0,
                             Email = "Customer@gmail.com",
                             Password = "Y/ddVEhXVmnr6sq+YmuaLE80SswNkV+a8HgUpA05zgjpowIF",
+=======
+                            CreatedAt = new DateTime(2023, 11, 1, 8, 48, 24, 197, DateTimeKind.Local).AddTicks(345),
+                            CreatedBy = 0,
+                            Email = "Customer@gmail.com",
+                            Password = "8aJDt0Mbq0D61QRT+x9Flc6EdT9IceLRgpfpVflDsbV3EhNS",
+>>>>>>> dev
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserType = 2
                         });

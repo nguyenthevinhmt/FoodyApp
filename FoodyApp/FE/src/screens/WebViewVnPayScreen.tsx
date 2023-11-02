@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import queryString from 'query-string';
 import ScreenNames from '../utils/ScreenNames';
+import { deleteOrder, orderPaidSuccess } from '../services/orderService';
 
 const WebVnPay = ({ navigation, route }: any) => {
     const url = route.params.url;
+    const orderId = route.params.orderId;
 
     const webViewRef = useRef(null);
 
@@ -19,7 +21,7 @@ const WebVnPay = ({ navigation, route }: any) => {
         return false;
     };
 
-    const handleWebViewError = (event: any) => {
+    const handleWebViewError = async (event: any) => {
         const { canGoBack, canGoForward, code, description, loading, target, title, url } = event.nativeEvent;
         console.log('Encountered an error loading page', { canGoBack, canGoForward, code, description, loading, target, title, url });
         
@@ -28,15 +30,21 @@ const WebVnPay = ({ navigation, route }: any) => {
         console.log('vnp_ResponseCode:', vnp_ResponseCode);
 
         if (vnp_ResponseCode === '00') {
-            navigation.navigate(ScreenNames.MAIN); 
+            await orderPaidSuccess(orderId);
+            
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order' }) 
             Alert.alert('Thông báo', 'Giao dịch thành công.');
         }
         else if (vnp_ResponseCode === '24') {
-            navigation.navigate(ScreenNames.MAIN);
+            await deleteOrder(orderId);
+            
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
-            navigation.navigate(ScreenNames.MAIN);
+            await deleteOrder(orderId);
+            
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };

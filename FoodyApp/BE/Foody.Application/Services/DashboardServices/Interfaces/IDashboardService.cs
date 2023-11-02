@@ -17,5 +17,23 @@ namespace Foody.Application.Services.DashboardServices.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         public Task<DashboardPageResultDto<DashboardResponseDto>> GetOrderStatistics(DashboardFilterDto input);
+        /// <summary>
+        /// số lượng, tổng doanh thu đơn đã giao thành công theo ngày
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public Task<DashboardPageResultDto<DashboardResponseDto>> GetOrderStatisticsByDay(DashboardFilterByDayDto input);
+        /// <summary>
+        /// số lượng, tổng doanh thu đơn đã giao thành công theo tháng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public Task<DashboardPageResultDto<DashboardResponseDto>> GetOrderStatisticsByMonth(DashboardFilterByMonthDto input);
+        /// <summary>
+        /// thống kê số lượng những sản phẩm được mua nhiều nhất
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public Task<PageResultDto<DashboardResponseTopProductsDto>> GetTopProducts(DashboardProductsFilterDto input);
     }
 }

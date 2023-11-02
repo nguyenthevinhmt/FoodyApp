@@ -53,7 +53,7 @@ const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        marginVertical: 10,
+        marginBottom: 10,
         paddingVertical: 15,
         flexDirection: 'row',
         justifyContent: 'flex-start',

@@ -14,5 +14,6 @@ namespace Foody.Domain.Entities
         public Product Product { get; set; }
         public int CartId { get; set; }
         public Cart Cart { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

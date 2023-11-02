@@ -38,6 +38,9 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
     const [button1Pressed, setButton1Pressed] = useState(false);
     const [button2Pressed, setButton2Pressed] = useState(false);
 
+    //vòng tròn loading
+    const [loadingOn, setLoadingOn] = useState(false);
+
     useEffect(() => {
         const getData = async () => {
             //gọi api lấy địa chỉ và thông tin người dùng
@@ -65,20 +68,25 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
             showAlert(navigation.goBack());
         }
         else {
+            setLoadingOn(true);
+
             const result = await createOrder(productId, paymentMethod, route.params['quantity'], addressList[addressIndex]['addressType']);
             console.log(result);
             if (paymentMethod == 1) {
-                navigation.goBack();
+                navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
             }
             else if (paymentMethod == 2) {
                 //gọi api thanh toán điện tử
                 const payment = await createPayment(result?.data);
                 console.log(payment?.data);
-                
+
                 setTimeout(() => {
-                    navigation.navigate(ScreenNames.VNPAY, {url: payment?.data});
-                }, 3000); // Đợi 3 giây trước khi thực hiện navigation
-            }   
+                    navigation.navigate(ScreenNames.VNPAY, { 
+                        url: payment?.data,
+                        orderId: result?.data, //id đơn hàng
+                    });
+                }, 0); // Đợi 3 giây trước khi thực hiện navigation
+            }
         }
     }
 
@@ -174,8 +182,8 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
 
                             <View style={styles.productDetail}>
                                 <Text style={styles.productCartName}>{route.params['productName']}</Text>
-                                <Text style={styles.productCartActualPrice}>đ{route.params['price']}</Text>
-                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice']}</Text>
+                                <Text style={styles.productCartActualPrice}>đ{route.params['price'].toLocaleString()}</Text>
+                                <Text style={styles.productCartPrice}>đ{route.params['actualPrice'].toLocaleString()}</Text>
                                 <Text>X{route.params['quantity']}</Text>
                             </View>
                         </View>
@@ -246,17 +254,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             marginVertical: 3
                         }}>
                             <Text>Tổng tiền hàng</Text>
-                            <Text>{route.params['actualPrice']}đ</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginVertical: 3
-                        }}>
-                            <Text>Tổng tiền phí vận chuyển</Text>
-                            <Text>0đ</Text>
+                            <Text>{route.params['actualPrice'].toLocaleString()}đ</Text>
                         </View>
 
                         <View style={{
@@ -273,7 +271,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                             <Text style={{
                                 color: '#EE4D2D',
                                 fontSize: 18
-                            }}>{route.params['actualPrice']}đ</Text>
+                            }}>{route.params['actualPrice'].toLocaleString()}đ</Text>
                         </View>
                     </View>
                 </ScrollView>
@@ -286,7 +284,7 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     alignItems: 'flex-end',
                     paddingRight: 10,
                 }}>
-                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice']}</Text>
+                    <Text style={{ color: '#EE4D2D', fontWeight: '600', fontSize: 20 }}>đ{route.params['actualPrice'].toLocaleString()}</Text>
                 </View>
 
                 <TouchableOpacity
@@ -298,6 +296,18 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                     <Text style={{ color: '#fff' }}>Đặt hàng</Text>
                 </TouchableOpacity>
             </View>
+
+            <Modal
+                isVisible={loadingOn}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                backdropOpacity={0.5}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../assets/Icons/loading.gif')} style={{ width: 50, height: 50 }} />
+                </View>
+            </Modal>
         </View>
     );
 }

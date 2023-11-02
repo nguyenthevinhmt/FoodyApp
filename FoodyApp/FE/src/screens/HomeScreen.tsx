@@ -9,9 +9,9 @@ import ScreenNames from "../utils/ScreenNames";
 
 export default function HomeScreen({ navigation }: any) {
   const images = [
-    require('../assets/images/food1.png'),
-    require('../assets/images/food2.png'),
-    require('../assets/images/food3.png'),
+    require('../assets/images/banner1.png'),
+    require('../assets/images/banner2.png'),
+    require('../assets/images/banner3.png'),
   ];
 
   //danh sách danh mục và sản phẩm
@@ -42,6 +42,7 @@ export default function HomeScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
+
       <View style={styles.headerArea}>
         <View style={styles.logoApp}>
           <Image
@@ -70,80 +71,90 @@ export default function HomeScreen({ navigation }: any) {
           </TextInput>
         </View>
       </View>
-
-      <View style={styles.View1}>
-        <Swiper autoplay autoplayTimeout={5}>
-          {images.map((image, index) => (
-            <View key={index}>
-              <Image source={image} style={styles.Img} />
-            </View>
-          ))}
-        </Swiper>
-      </View>
-
-      <View style={styles.container1}>
-        <View style={styles.view1}>
-          <Text style={styles.text1}>Danh mục món ăn </Text>
-        </View>
-
-        <View style={{ marginVertical: 5, height: 70 }}>
-          <FlatList
-            horizontal
-            data={listCategory}
-            keyExtractor={(item: any) => item.id}
-            renderItem={({ item }) => (
-              <View style={{ justifyContent: 'center', height: 70 }}>
-                <TouchableOpacity
-                  style={styles.view2}
-                  onPress={() =>
-                    navigation.navigate(ScreenNames.PRODUCT_BY_CATEGORY, {
-                      categoryId: item.id,
-                      categoryName: item.name,
-                      categoryDescription: item.description
-                    })}>
-                  <Text style={styles.text2}>{item.name}</Text>
-                </TouchableOpacity>
+      <ScrollView showsVerticalScrollIndicator = {false}>
+        <View style={styles.banner}>
+          <Swiper
+            autoplay
+            autoplayTimeout={5}
+            showsPagination = {false}
+          >
+            {images.map((image, index) => (
+              <View key={index}>
+                <Image source={image} style={styles.bannerImg} />
               </View>
-            )}
-          />
+            ))}
+          </Swiper>
         </View>
 
-        <View style={styles.view3}>
-          <View style={styles.view3_1}>
-            <Text style={styles.text1}>Món ăn đề xuất</Text>
+        <View style={styles.areaCategories}>
+          <View>
+            <Text style={styles.title}>Danh mục món ăn </Text>
+          </View>
+
+          <View style={styles.listCategories}>
+            <FlatList
+              horizontal
+              data={listCategory}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item: any) => item.id}
+              renderItem={({ item }) => (
+                <View style={{ justifyContent: 'center' }}>
+                  <TouchableOpacity
+                    style={styles.category}
+                    onPress={() =>
+                      navigation.navigate(ScreenNames.PRODUCT_BY_CATEGORY, {
+                        categoryId: item.id,
+                        categoryName: item.name,
+                        categoryDescription: item.description
+                      })}>
+                    <Text style={styles.categoryName}>{item.name}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+
+        <View style={styles.listProduct}>
+          <View style={styles.listProductHeader}>
+            <Text style={styles.title}>Món ăn đề xuất</Text>
             <TouchableOpacity style={{ flex: 1 }} onPress={() => navigation.navigate(ScreenNames.ALL_PRODUCT)}>
-              <Text style={styles.text3}>Xem tất cả </Text>
+              <Text style={styles.allProduct}>Xem tất cả</Text>
             </TouchableOpacity>
           </View>
 
-          <ScrollView>
+          <View>
             {
               listProduct.map((item) => (
-                <TouchableOpacity key={item['id']} style={styles.view4} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}>
+                <TouchableOpacity key={item['id']} style={styles.product} onPress={() => navigation.navigate(ScreenNames.PRODUCT, { productId: item['id'] })}>
                   <Image
                     source={{ uri: `${baseURL_img}${item['productImageUrl']}` }}
-                    style={styles.img2}
+                    style={styles.imgProduct}
                   />
 
-                  <View style={{ flexDirection: "row", paddingTop: 5, paddingLeft: 5 }}>
-                    <Text style={styles.text4}>{item['name']}</Text>
+                  <View style={{ flexDirection: "column", paddingTop: 5, paddingLeft: 5 }}>
+                    <Text style={styles.name}>{item['name']}</Text>
 
-                    <Text style={styles.text4_1}>  -   {item['description']}</Text>
+                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                      <Text style={styles.price}>{item['price'].toLocaleString()}đ</Text>
+                      <Text style={styles.actualPrice}>{item['actualPrice'].toLocaleString()}đ</Text>
+                    </View>
                   </View>
                 </TouchableOpacity>
               ))
             }
-          </ScrollView>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    paddingBottom: 70
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    backgroundColor: '#fefefe'
   },
 
   headerArea: {
@@ -159,40 +170,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4
   },
 
-  Location: {
-    flexDirection: 'row',
-  },
-
   Search: {
     height: 35,
     marginTop: 5,
-    borderWidth: 1,
+    borderWidth: 0.2,
     borderRadius: 3,
     borderColor: '#EE4D2D',
     flexDirection: 'row',
   },
 
-  locationText: {
-    textAlign: 'left',
-    fontSize: 13
-  },
-
-  locationChoose: {
-    textAlign: 'left',
-    fontSize: 13,
-    fontWeight: '500',
-    paddingTop: 5
-  },
-
   input: {
     width: 330,
     height: 35,
-  },
-
-  locationIcon: {
-    width: 13,
-    height: 20,
-    marginRight: 5
   },
 
   searchIcon: {
@@ -201,66 +190,63 @@ const styles = StyleSheet.create({
     height: 23,
   },
 
-  View1: {
-    height: 200,
+  banner: {
+    height: 120,
   },
 
-  Img: {
-    width: 400,
-    height: 200,
+  bannerImg: {
+    width: '100%',
+    height: 120,
   },
 
-  container1: {
-    padding: 7,
-    flex: 1,
+  areaCategories: {
+    paddingVertical: 20,
+    //flex: 1,
     justifyContent: 'space-between',
   },
 
-  view1: {
-    flexDirection: 'row'
-  },
-
-  view2: {
-    flexDirection: 'column',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    marginRight: 10,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: '#EE4D2D'
-  },
-
-  view3: {
-    flexDirection: 'column',
-  },
-
-  view3_1: {
-    flexDirection: 'row',
-    height: 50,
-  },
-
-  view4: {
-    flexDirection: 'row',
-    margin: 5,
-  },
-
-  text1: {
-    padding: 5,
+  title: {
+    marginLeft: 10,
     fontSize: 16,
     color: 'black',
     fontWeight: '500'
   },
 
-  text2: {
+  listCategories: {
+    paddingVertical: 10,
+    paddingHorizontal: 7,
+  },
+
+  category: {
+    flexDirection: 'column',
+    paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    marginRight: 10,
+    borderWidth: 0.2,
+    borderRadius: 3,
+    borderColor: '#EE4D2D'
+  },
+
+  categoryName: {
     width: 90,
     fontSize: 13,
     color: '#EE4D2D',
     textAlign: 'center',
   },
 
-  text3: {
+  listProduct: {
+    flexDirection: 'column',
+    width: '100%'
+  },
+
+  listProductHeader: {
+    flexDirection: 'row',
+    paddingVertical: 5
+  },
+
+  allProduct: {
     padding: 7,
     flex: 1,
     fontSize: 13,
@@ -269,23 +255,34 @@ const styles = StyleSheet.create({
 
   },
 
-  text4: {
-    fontSize: 16,
-    fontWeight: '500'
+  product: {
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    marginVertical: 5
   },
 
-  text4_1: {
-    fontSize: 15,
-    color: 'black',
-  },
-
-  img: {
-    width: 21,
-    height: 25
-  },
-
-  img2: {
+  imgProduct: {
     width: 100,
     height: 80
-  }
+  },
+
+  name: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 2
+  },
+
+  price: {
+    fontSize: 11,
+    color: '#B4B4B3',
+    textDecorationLine: 'line-through',
+    marginRight: 5
+  },
+
+  actualPrice: {
+    fontSize: 14,
+    color: '#EE4D2D',
+    fontWeight: '700'
+  },
+
 });

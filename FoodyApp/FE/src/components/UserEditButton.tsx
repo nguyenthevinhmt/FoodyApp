@@ -21,12 +21,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginLeft: 10
   },
 
   image: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     marginRight: 10,
   },
 });

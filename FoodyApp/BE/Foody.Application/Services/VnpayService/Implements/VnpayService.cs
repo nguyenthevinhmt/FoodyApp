@@ -29,7 +29,7 @@ namespace Foody.Application.Services.VnpayService.Implements
             var pay = new VnPayLibrary();
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
 
-            var order = (from ord in _context.Orders
+            var orderTemp = (from ord in _context.Orders
                          join orderDetail in _context.OrderDetails on ord.Id equals orderDetail.OrderId
                          join product in _context.Products on orderDetail.ProductId equals product.Id
                          join pp in _context.ProductPromotions on product.Id equals pp.ProductId
@@ -42,7 +42,16 @@ namespace Foody.Application.Services.VnpayService.Implements
                              TotalAmount = orderDetail.Quantity * (product.ActualPrice - product.ActualPrice * pro.DiscountPercent / 100),
                              CustomerName = _context.Users.Where(c => c.Id == userId).Select(c => c.FullName).FirstOrDefault(),
                              OrderDescription = "Thanh toán đơn hàng tại Foody App"
-                         }).FirstOrDefault();
+                         }).ToList();
+
+            var order = new
+            {
+                Id = orderTemp.First().Id,
+                OrderType = orderTemp.First().OrderType,
+                TotalAmount = orderTemp.Sum(o => o.TotalAmount),
+                CustomerName = orderTemp.First().CustomerName,
+                OrderDescription = orderTemp.First().OrderDescription,
+            };
 
             pay.AddRequestData("vnp_Version", _appSettings.Version);
             pay.AddRequestData("vnp_Command", _appSettings.Command);
@@ -56,6 +65,7 @@ namespace Foody.Application.Services.VnpayService.Implements
             pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
             pay.AddRequestData("vnp_ReturnUrl", "http://localhost:5010/api/VnpayCallback/PaymentCallback");
             pay.AddRequestData("vnp_TxnRef", tick);
+            pay.AddRequestData("vnp_BankCode", _appSettings.BankCode);
 
             var paymentUrl =
                 pay.CreateRequestUrl(_appSettings.BaseUrl, _appSettings.HashSecret);

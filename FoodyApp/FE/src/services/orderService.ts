@@ -131,7 +131,8 @@ export const createOrder = async (
 //tạo order mới từ cart
 export const createCartOrder = async (
   cartId: number,
-  paymentMethod: number,
+  productId: [],
+  paymentMethods: number,
   addressType: number
 ) => {
   try {
@@ -139,7 +140,8 @@ export const createCartOrder = async (
 
     const params = {
       cartId: cartId,
-      paymentMethod: paymentMethod,
+      productId: productId,
+      paymentMethods: paymentMethods,
       addressType: addressType,
     };
 
@@ -184,4 +186,55 @@ export const updateOrderStatus = async (orderId: number, newStatus: number) => {
         console.log(error);
         return null;
     }
+}
+
+//xóa đơn hàng được tạo trực tiếp từ sản phẩm
+export const deleteOrder = async (orderId: number) => {
+  try {
+    const response = await axios.delete(`${baseURL}/Order/delete-order?orderId=${orderId}`);
+
+    if (response.status == 200) {
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+//Xử lý đơn hàng khi thanh toán thành công
+export const orderPaidSuccess = async (orderId: number) => {
+  try {
+    const response = await axios.put(`${baseURL}/Order/order-paid-success?orderId=${orderId}`);
+
+    if (response.status == 200) {
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+//Xử lý đơn hàng khi thanh toán từ giỏ hàng thất bại
+export const orderFromCartFail = async (orderId:number, productCartId: []) => {
+  const params = {
+    orderId: orderId,
+    productCartId: productCartId
+  }
+  try {
+    const token = await getAccessToken();
+
+    const response = await axios.put(`${baseURL}/Order/order-from-cart-fail`, params, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+    }
+    });
+    if (response.status == 200) {
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }

@@ -26,8 +26,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             _mail = mail;
         }
 
-
-
         //Đổi trạng thái đơn hàng
         public async Task UpdateOrderStatus(UpdateOrderStatusDto input)
         {
@@ -38,6 +36,8 @@ namespace Foody.Application.Services.OrderServices.Implements
                 throw new UserFriendlyException("Không tìm thấy đơn hàng");
             }
             order.Status = input.newStatus;
+            order.UpdatedAt = DateTime.Now;
+            order.UpdateBy = userId;
             if (input.newStatus == OrderStatus.INPROGRESS && order.Status == OrderStatus.INPROGRESS)
             {
                 try
@@ -168,7 +168,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
             await _context.SaveChangesAsync();
         }
-
         public async Task CancelOrderStatus(int orderId)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
@@ -204,7 +203,6 @@ namespace Foody.Application.Services.OrderServices.Implements
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<List<OrderResponseDto>> GetPendingOrder()
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -214,14 +212,15 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.INPROGRESS
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -263,14 +262,15 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.ACCEPTED
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -311,14 +311,15 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.SHIPPING
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -359,14 +360,15 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.SUCCESS
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -407,14 +409,15 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Status == OrderStatus.CANCELED
-                               && product.IsActived == true && product.IsDeleted == false
-                               && pp.IsActive == true
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
+                               && pp.IsActive == true && od.IsDeleted == false
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
                                {
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -446,7 +449,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
             return order;
         }
-
         public async Task<int> CreateOrder(CreateOrderDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -472,6 +474,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                     StreetAddress = userAddress.StreetAddress,
                     Ward = userAddress.Ward,
                     CreatedBy = userId,
+                    IsPaid = false
                 };
                 await _context.Orders.AddAsync(newOrder);
                 await _context.SaveChangesAsync();
@@ -516,83 +519,6 @@ namespace Foody.Application.Services.OrderServices.Implements
             }
 
         }
-
-        //public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
-        //{
-        //    var userId = CommonUtils.GetUserId(_httpContextAccessor);
-        //    var cart = _context.Carts.Include(c => c.ProductCarts).FirstOrDefault(c => c.UserId == userId);
-        //    if (cart == null)
-        //    {
-        //        throw new UserFriendlyException("Giỏ hàng không tồn tại");
-        //    }
-
-        //    using var transaction = _context.Database.BeginTransaction();
-        //    try
-        //    {
-        //        var userAddress = await _context.UserAddresses.FirstOrDefaultAsync(u => u.UserId == userId && u.AddressType == input.AddressType);
-        //        if (userAddress == null)
-        //        {
-        //            throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
-        //        }
-        //        var order = new Order
-        //        {
-        //            UserId = userId,
-        //            CreatedAt = DateTime.Now,
-        //            CreatedBy = userId,
-        //            PaymentMethod = input.PaymentMethods != 0 ? input.PaymentMethods : PaymentMethod.COD,
-        //            Status = OrderStatus.INPROGRESS,
-        //            AddressType = userAddress.AddressType,
-        //            DetailAddress = userAddress.DetailAddress,
-        //            District = userAddress.District,
-        //            Notes = userAddress.Notes,
-        //            Province = userAddress.Province,
-        //            StreetAddress = userAddress.StreetAddress,
-        //            Ward = userAddress.Ward,
-        //        };
-        //        await _context.Orders.AddAsync(order);
-        //        await _context.SaveChangesAsync();
-
-        //        foreach (var productCart in cart.ProductCarts)
-        //        {
-        //            var orderDetail = new OrderDetail { OrderId = order.Id, ProductId = productCart.ProductId, Quantity = productCart.Quantity };
-        //            await _context.OrderDetails.AddAsync(orderDetail);
-        //            await _context.SaveChangesAsync();
-        //        }
-
-        //        _context.Carts.Remove(cart);
-        //        await _context.SaveChangesAsync();
-        //        await transaction.CommitAsync();
-        //        if (order.Status == OrderStatus.INPROGRESS)
-        //        {
-        //            try
-        //            {
-        //                // Lấy dịch vụ sendmailservice
-        //                MailContent content = new MailContent
-        //                {
-        //                    To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
-        //                    Subject = $"[ĐƠN HÀNG {order.Id} ĐANG ĐƯỢC XỬ LÝ]",
-        //                    Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
-        //                    $"    <h2>ĐƠN HÀNG #{order.Id}</h2>\r\n    " +
-        //                    $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
-
-        //                };
-        //                await _mail.SendMail(content);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Console.WriteLine("Failed to send email: " + ex.Message);
-        //            }
-        //        }
-        //        //trả về order vừa được tạo
-        //        int newOrderId = order.Id;
-        //        return newOrderId;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        throw new UserFriendlyException(ex.Message);
-        //    }
-        //}
         public async Task<OrderResponseDto> GetOrderById(int id)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
@@ -602,7 +528,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                join pp in _context.ProductPromotions on product.Id equals pp.ProductId
                                join pro in _context.Promotions on pp.PromotionId equals pro.Id
                                where ord.UserId == userId && ord.Id == id
-                               && product.IsActived == true && product.IsDeleted == false
+                               && product.IsActived == true && product.IsDeleted == false && ord.IsDeleted == false
                                && pp.IsActive == true
                                group new { ord, od, product, pro } by ord.Id into grouped
                                select new OrderResponseDto
@@ -610,6 +536,7 @@ namespace Foody.Application.Services.OrderServices.Implements
                                    Id = grouped.Key,
                                    TotalAmount = grouped.Sum(g => g.od.Quantity * (g.product.ActualPrice - g.product.ActualPrice * g.pro.DiscountPercent / 100)),
                                    PaymentMethod = grouped.FirstOrDefault().ord.PaymentMethod,
+                                   IsPaid = grouped.FirstOrDefault().ord.IsPaid,
                                    UserAddress = grouped.Select(ud => new UserAddressDto
                                    {
                                        Province = ud.ord.Province,
@@ -693,72 +620,26 @@ namespace Foody.Application.Services.OrderServices.Implements
             return result;
         }
 
-        public int MoveOrderTempToOrder(CreateOrderFromCartDto input)
+        //xóa đơn hàng được tạo trực tiếp từ sản phẩm trong trạng thái chờ
+        public async Task DeleteOrder(int orderId)
         {
-            var userId = CommonUtils.GetUserId(_httpContextAccessor);
-            using var transaction = _context.Database.BeginTransaction();
-            var orderTemp = _context.OrderTemps.Where(c => c.UserId == userId && c.Id == input.OrderTempId).Include(c => c.OrderDetailTemps).FirstOrDefault();
-            var userAddress = _context.UserAddresses.FirstOrDefault(u => u.UserId == userId && u.AddressType == orderTemp.AddressType);
-            if (userAddress == null)
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && (o.Status == OrderStatus.INPROGRESS || o.Status == OrderStatus.ACCEPTED) && o.IsDeleted == false);
+            if (order == null)
             {
-                throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
+                throw new UserFriendlyException($"Đơn hàng có id={orderId} không tồn tại hoặc không đủ điều kiện.");
+            } 
+            else
+            {
+                var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(o => o.OrderId == orderId);
+                order.IsDeleted = true;
+                orderDetail.IsDeleted = true;
+
+                await _context.SaveChangesAsync();
             }
-            var TempOrderDetail = _context.OrderDetailTemps.Where(c => c.OrderTempId == input.OrderTempId);
-            var orderData = _context.Orders.Add(new Order
-            {
-                Status = OrderStatus.INPROGRESS,
-                AddressType = userAddress.AddressType,
-                DetailAddress = userAddress.DetailAddress,
-                District = userAddress.District,
-                Notes = userAddress.Notes,
-                PaymentMethod = orderTemp.PaymentMethod,
-                Province = userAddress.Province,
-                StreetAddress = userAddress.StreetAddress,
-                Ward = userAddress.Ward,
-                UserId = userId,
-                IsPaid = input.IsPaid
-            }).Entity;
-            _context.SaveChanges();
 
-            //Tạo chi tiết đơn hàng để chuyển sang bảng thật
-            var orderDetailTemp = new List<OrderDetail>();
-            var productCart = new List<ProductCart>();
-            foreach (var c in orderTemp.OrderDetailTemps)
-            {
-                foreach (var pi in TempOrderDetail)
-                {
-                    if (c.ProductId == pi.ProductId)
-                    {
-                        orderDetailTemp.Add(new OrderDetail
-                        {
-                            ProductId = pi.ProductId,
-                            Quantity = c.Quantity,
-                            OrderId = orderData.Id
-                        });
-
-                        productCart.Remove(new ProductCart
-                        {
-                            Id = c.Id,
-                            ProductId = pi.ProductId,
-                            Quantity = c.Quantity,
-                            CartId = TempOrderDetail.FirstOrDefault().Id
-                        });
-                    }
-                }
-            };
-
-            _context.OrderDetails.AddRange(orderDetailTemp);
-            _context.SaveChanges();
-
-            //Xóa chi tiết giỏ hàng
-            _context.ProductsCarts.RemoveRange(productCart);
-
-            _context.SaveChanges();
-            transaction.Commit();
-            return orderData.Id;
         }
 
-        public int CreateOrderTemp(CreateOrderTempDto input)
+        public async Task<int> CreateOrderFromCart(CreateOrderFromCartDto input)
         {
             var userId = CommonUtils.GetUserId(_httpContextAccessor);
             var userAddress = _context.UserAddresses.FirstOrDefault(u => u.UserId == userId && u.AddressType == input.AddressType);
@@ -767,44 +648,122 @@ namespace Foody.Application.Services.OrderServices.Implements
                 throw new UserFriendlyException("Địa chỉ của bạn không tồn tại, vui lòng cập nhật địa chỉ giao hàng");
             }
             using var transaction = _context.Database.BeginTransaction();
-            var cart = _context.Carts.Where(c => c.UserId == userId && c.Id == input.CartId).Include(c => c.ProductCarts).FirstOrDefault();
+            
+            try
+            {
+                var cart = _context.Carts.Where(c => c.UserId == userId && c.Id == input.CartId).Include(c => c.ProductCarts).FirstOrDefault();
 
-            var orderTempData = _context.OrderTemps.Add(new OrderTemp
-            {
-                Status = OrderStatus.INPROGRESS,
-                AddressType = userAddress.AddressType,
-                DetailAddress = userAddress.DetailAddress,
-                District = userAddress.District,
-                Notes = userAddress.Notes,
-                PaymentMethod = input.PaymentMethods,
-                Province = userAddress.Province,
-                StreetAddress = userAddress.StreetAddress,
-                Ward = userAddress.Ward,
-                UserId = userId,
-                CartReferId = cart.Id
-            }).Entity;
-            _context.SaveChanges();
-            var orderDetailTemp = new List<OrderDetailTemp>();
-            foreach (var c in cart.ProductCarts)
-            {
-                foreach (var pi in input.ProductId)
+                var newOrder = new Order
                 {
-                    if (c.ProductId == pi)
+                    Status = OrderStatus.INPROGRESS,
+                    AddressType = userAddress.AddressType,
+                    DetailAddress = userAddress.DetailAddress,
+                    District = userAddress.District,
+                    Notes = userAddress.Notes,
+                    PaymentMethod = input.PaymentMethods,
+                    Province = userAddress.Province,
+                    StreetAddress = userAddress.StreetAddress,
+                    Ward = userAddress.Ward,
+                    UserId = userId,
+                    IsPaid = false,
+                };
+
+                await _context.Orders.AddAsync(newOrder);
+                await _context.SaveChangesAsync();
+
+                var orderDetail = new List<OrderDetail>();
+                foreach (var c in cart.ProductCarts)
+                {
+                    foreach (var pi in input.ProductId)
                     {
-                        orderDetailTemp.Add(new OrderDetailTemp
+                        if (c.ProductId == pi && c.IsDeleted == false)
                         {
-                            ProductId = pi,
-                            referId = cart.Id,
-                            Quantity = c.Quantity,
-                            OrderTempId = orderTempData.Id
-                        });
+                            orderDetail.Add(new OrderDetail
+                            {
+                                ProductId = pi,
+                                Quantity = c.Quantity,
+                                OrderId = newOrder.Id
+                            });
+                            c.IsDeleted = true;
+                        }
                     }
                 }
-            };
-            _context.OrderDetailTemps.AddRange(orderDetailTemp);
-            _context.SaveChanges();
-            transaction.Commit();
-            return orderTempData.Id;
+                await _context.OrderDetails.AddRangeAsync(orderDetail);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                /*
+                if (newOrder.Status == OrderStatus.INPROGRESS)
+                {
+                    try
+                    {
+                        // Lấy dịch vụ sendmailservice
+                        MailContent content = new MailContent
+                        {
+                            To = _context.Users.Where(c => c.Id == userId).Select(c => c.Email).FirstOrDefault(),
+                            Subject = $"[ĐƠN HÀNG {newOrder.Id} ĐANG ĐƯỢC XỬ LÝ]",
+                            Body = $"<h1>Foody - Ứng dụng đặt đồ ăn số 1 Việt Nam</h1>\r\n" +
+                            $"    <h2>ĐƠN HÀNG #{newOrder.Id}</h2>\r\n    " +
+                            $" <p>Vui lòng theo dõi gmail để biết tình trạng giao hàng.</p>\r\n    <p>\r\n    "
+
+                        };
+                        await _mail.SendMail(content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to send email: " + ex.Message);
+                    }
+                }
+                */
+                //trả về order vừa được tạo
+                int newOrderId = newOrder.Id;
+                return newOrderId;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new UserFriendlyException(ex.Message);
+            }
+        }
+
+        public async Task OrderPaidSuccessResponse(int orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.IsDeleted == false);
+            if (order == null)
+            {
+                throw new UserFriendlyException($"Không tìm thấy đơn hàng với id={orderId}.");
+            }
+            order.IsPaid = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task OrderFromCartFailResponse(OrderCartFailFilterDto input)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id ==  input.OrderId && o.IsDeleted == false);
+            if (order == null)
+            {
+                throw new UserFriendlyException($"Không tìm thấy đơn hàng với id={input.OrderId}");
+            }
+            else
+            {
+                order.IsPaid = false;
+                order.IsDeleted = true;
+                await _context.SaveChangesAsync();
+
+                foreach (var p in input.ProductCartId)
+                {
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.Id == p && pc.IsDeleted == true);
+                    productCart.IsDeleted = false;
+                }
+                await _context.SaveChangesAsync();
+
+                var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == input.OrderId).ToListAsync();
+                foreach (var detail in orderDetails)
+                {
+                    detail.IsDeleted = true;
+                }
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

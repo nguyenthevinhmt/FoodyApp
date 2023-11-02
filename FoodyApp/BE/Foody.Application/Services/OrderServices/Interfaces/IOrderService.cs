@@ -49,6 +49,18 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <returns></returns>
         //public Task<int> CreateOrderFromCart(CreateOrderFromCartDto input);
         /// <summary>
+        /// xử lý khi đơn hàng thanh toán thành công
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Task OrderPaidSuccessResponse(int orderId);
+        /// <summary>
+        /// xử lý khi đơn hàng thanh toán thất bại
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Task OrderFromCartFailResponse(OrderCartFailFilterDto input);
+        /// <summary>
         /// Cập nhật trạng thái đơn hàng
         /// </summary>
         /// <param name="input"></param>
@@ -67,17 +79,10 @@ namespace Foody.Application.Services.OrderServices.Interfaces
         /// <returns></returns>
         public Task<PageResultDto<AdminOrderDto>> GetAllOrders(OrderFilterDto input);
         /// <summary>
-        /// Thanh toán từ giỏ hàng bước 1: move data giỏ hàng sang bảng tạm
+        /// xóa đơn hàng tạo trực tiếp từ sản phẩm ở trạng thái khởi tạo theo id
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
-        public int CreateOrderTemp(CreateOrderTempDto input);
-
-        /// <summary>
-        /// Nếu thanh toán thành công thì move thông tin sản phẩm sang bảng chính
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public int MoveOrderTempToOrder(CreateOrderFromCartDto input);
+        public Task DeleteOrder(int orderId);
     }
 }

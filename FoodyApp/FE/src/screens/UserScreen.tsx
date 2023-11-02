@@ -45,21 +45,24 @@ export default function UserScreen({ navigation }: any) {
         <View style={styles.profile}>
           <Image
             style={{
-              height: 100,
-              width: 100,
+              height: 80,
+              width: 80,
+              tintColor: "#fff",
+              marginRight: 15,
+              marginLeft: 15
             }}
-            source={require("../assets/Icons/icons8-male-user-96.png")}
+            source={require("../assets/Icons/useravatar.png")}
           />
 
           <Text style={{ fontSize: 20, color: "#fff" }}>
-            {check() ? `${lastName} ${firstName}` : "Không tên"}
+            {check() ? `${lastName} ${firstName}` : "Cập nhật thông tin"}
           </Text>
         </View>
 
         <View style={styles.listButton}>
           <View style={styles.Button}>
             <UserEditButton
-              imageUrl={require("../assets/Icons/icons8-user-shield-75.png")}
+              imageUrl={require("../assets/Icons/secure.png")}
               text="Tài khoản và bảo mật"
               onNavigate={() => navigation.navigate(ScreenNames.ACCOUNT)}
             />
@@ -67,7 +70,7 @@ export default function UserScreen({ navigation }: any) {
 
           <View style={styles.Button}>
             <UserEditButton
-              imageUrl={require("../assets/Icons/icons8-map-marker-100.png")}
+              imageUrl={require("../assets/Icons/localmap.png")}
               text="Địa chỉ"
               onNavigate={() => navigation.navigate(ScreenNames.ADDRESS)}
             />
@@ -75,7 +78,7 @@ export default function UserScreen({ navigation }: any) {
 
           <View style={styles.Button}>
             <UserEditButton
-              imageUrl={require("../assets/Icons/icons8-bill-100.png")}
+              imageUrl={require("../assets/Icons/history.png")}
               text="Lịch sử"
               onNavigate={() => navigation.navigate(ScreenNames.ORDER, { screen: 'Đã vận chuyển' })}
             />

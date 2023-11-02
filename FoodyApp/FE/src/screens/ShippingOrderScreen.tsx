@@ -28,7 +28,6 @@ const ShippingOrderScreen = ({ navigation }: any) => {
     useFocusEffect(
         useCallback(() => {
             const getData = async () => {
-
                 const orderResponse = await getAllOrderShipping();
                 setOrder(orderResponse?.data);
 

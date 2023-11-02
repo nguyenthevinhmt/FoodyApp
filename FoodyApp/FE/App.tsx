@@ -1,6 +1,3 @@
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Remote debugger']);
-
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -24,6 +21,8 @@ import DetailOrderScreen from "./src/screens/DetailOrderScreen";
 import DetailOrderPendingScreen from "./src/screens/DetailOrderPendingScreen";
 import DetailOrderShippingScreen from "./src/screens/DetailOrderShippingCreen";
 import WebVnPay from "./src/screens/WebViewVnPayScreen";
+import WebVnPayCart from "./src/screens/WebViewVnPayCartScreen";
+import PendingOrderScreen from "./src/screens/PendingOrderScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -52,7 +51,9 @@ export default function App() {
         <Stack.Screen name={ScreenNames.DETAIL_ORDER} component={DetailOrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER_PENDING} component={DetailOrderPendingScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER_SHIPPING} component={DetailOrderShippingScreen} />
-        <Stack.Screen name={ScreenNames.VNPAY} component={WebVnPay} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }}/>
+        <Stack.Screen name={ScreenNames.VNPAY} component={WebVnPay}/>
+        <Stack.Screen name={ScreenNames.VNPAY_CART} component={WebVnPayCart}/>
+        <Stack.Screen name={ScreenNames.ORDER_PENDING} component={PendingOrderScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
