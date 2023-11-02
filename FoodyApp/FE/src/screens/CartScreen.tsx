@@ -98,7 +98,7 @@ export default function CartScreen({ navigation }: any) {
             <View style={styles.header}>
               <TouchableOpacity onPress={handleSelectAll} style={styles.selectAllContainer}>
                 <View style={[styles.choiceButtonText, {borderColor: '#fff'}]}>
-                  {selectedProducts.length === products.length ? <Text style={[styles.selectedIndicator, {color: '#fff'}]}>✓</Text> : ''}
+                  {selectedProducts.length === products.length ? <Text style={[styles.selectedIndicator, {color: '#fff', fontSize: 8}]}>✓</Text> : ''}
                 </View>
 
                 <View style={{marginLeft: 5}}>
@@ -109,7 +109,7 @@ export default function CartScreen({ navigation }: any) {
                 </View>
               </TouchableOpacity>
 
-              <View>
+              <View style = {{marginRight: 10}}>
                 <TouchableOpacity onPress={() => setRemove(!remove)}>
                   <Text style={{color: '#fff'}}>Sửa</Text>
                 </TouchableOpacity>
@@ -145,7 +145,7 @@ export default function CartScreen({ navigation }: any) {
                 {
                   remove ?
                     <TouchableOpacity style={styles.deleteProduct} onPress={() => handleDelete(value['id'], value['productCartId'])}>
-                      <Image source={require('../assets/Icons/delete.png')} style={{ width: 30, height: 30 }} />
+                      <Image source={require('../assets/Icons/delete.png')} style={{ width: 20, height: 20 }} />
                     </TouchableOpacity>
                     :
                     <View style={{ width: '15%', marginBottom: 10, backgroundColor: '#fff' }}></View>
@@ -202,7 +202,8 @@ const styles = StyleSheet.create({
   },
 
   selectAllContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
   productChoice: {
@@ -219,17 +220,18 @@ const styles = StyleSheet.create({
   },
 
   choiceButtonText: {
-    width: 25,
-    height: 25,
+    width: 15,
+    height: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.7,
+    borderWidth: 0.5,
     borderRadius: 3
 
   },
 
   selectedIndicator: {
     //color: '#fff'
+    fontSize: 10,
   },
 
   deleteProduct: {

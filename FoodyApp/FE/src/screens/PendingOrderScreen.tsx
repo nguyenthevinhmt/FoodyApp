@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import OrderProductsComponent from "../components/OrderProductsComponent";
 import { getAllOrderPending } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { baseURL_img } from "../utils/baseUrl";
 
 function emtyOrder() {
@@ -24,29 +24,38 @@ const PendingOrderScreen = ({ navigation }: any) => {
     const [shown, setShown] = useState(true);
     const [order, setOrder] = useState([]);
     const [product, setProduct] = useState([]);
-
+    const isFocused = useIsFocused();
     useFocusEffect(
         useCallback(() => {
             const getData = async () => {
                 const orderResponse = await getAllOrderPending();
-                setOrder(orderResponse?.data);
-
+                setOrder(orderResponse.data);
+                if (order && order.length === 0) {
+                    setShown(true);
+                } else {
+                    setShown(false);
+                }
                 console.log('đây là màn order');
 
                 const productDiscountResponse = await getProductDiscount();
                 setProduct(productDiscountResponse?.data.item);
             };
             getData();
-        }, [])
-    );
-
-    useEffect(() => {
-        if (Array.isArray(order) && order.length === 0) {
+             if (Array.isArray(order) && order.length === 0) {
             setShown(true);
         } else {
             setShown(false);
         }
-    }, [order]);
+        }, [order,isFocused])
+    );
+
+    // useEffect(() => {
+    //     if (Array.isArray(order) && order.length === 0) {
+    //         setShown(true);
+    //     } else {
+    //         setShown(false);
+    //     }
+    // }, [order]);
 
     return (
         <ScrollView style={styles.container}>

@@ -65,6 +65,7 @@ namespace Foody.Application.Services.VnpayService.Implements
             pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
             pay.AddRequestData("vnp_ReturnUrl", "http://localhost:5010/api/VnpayCallback/PaymentCallback");
             pay.AddRequestData("vnp_TxnRef", tick);
+            pay.AddRequestData("vnp_BankCode", _appSettings.BankCode);
 
             var paymentUrl =
                 pay.CreateRequestUrl(_appSettings.BaseUrl, _appSettings.HashSecret);
