@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import { Text, StyleSheet, View, ScrollView, TouchableOpacity, Image, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProductCartComponent from "../components/ProductCartComponent";
 import ScreenNames from "../utils/ScreenNames";
@@ -89,6 +89,8 @@ export default function CartScreen({ navigation }: any) {
     setSelectedProducts(selectedProducts.filter(id => id !== productCartId));
     const result = await deleteProductFromCart(productId);
     console.log(result);
+    setComponentAction(!componentAction);
+    ToastAndroid.show("Đã xóa sản phẩm khỏi giỏ hàng", ToastAndroid.SHORT);
   }
 
   //theo dõi hoạt động trong component

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, View, Alert } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View, Alert, ToastAndroid } from 'react-native';
 import { addProductToCart } from '../services/cartService';
 
-function showAlert(message: string) {
-    return (
-        Alert.alert(
-            'Thông báo',
-            message,
-            [{ text: 'Ok', onPress: () => { } }],
-            { cancelable: false }
-        )
-    )
-};
+// function showAlert(message: string) {
+//     return (
+//         Alert.alert(
+//             'Thông báo',
+//             message,
+//             [{ text: 'Ok', onPress: () => { } }],
+//             { cancelable: false }
+//         )
+//     )
+// };
 
 interface ProductDiscountComponentProps {
     id: number;
@@ -35,6 +35,10 @@ const ProductDiscountComponent: React.FC<ProductDiscountComponentProps> = ({ id,
             showAlert("Có lỗi khi thêm sản phẩm vào giỏ hàng");
         }
     }
+
+    const showAlert = (text: string) => {
+        ToastAndroid.show(text, ToastAndroid.SHORT);
+    };
 
     return (
         <TouchableOpacity style={styles.container} onPress={onNavigation}>

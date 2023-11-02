@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { useState } from "react";
 import {
@@ -74,11 +75,11 @@ export const RegisterScreen = ({ navigation }: any) => {
       setIsValidPassword(false);
       setRePasswordError("");
       setIsValidRePassword(false);
-      alert("Đăng kí thành công");
+      ToastAndroid.show("Đăng ký thành công", ToastAndroid.SHORT);
       navigation.replace(ScreenNames.LOGIN)
     }
     else {
-      alert("Đăng kí không thành công");
+      ToastAndroid.show("Đăng ký không thành công", ToastAndroid.SHORT);
     }
   };
 

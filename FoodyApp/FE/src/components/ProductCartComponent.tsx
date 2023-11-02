@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View, ToastAndroid } from 'react-native';
 import { updateProductQuantity } from '../services/cartService';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../utils/ScreenNames';
@@ -25,8 +25,10 @@ const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, 
         if (result != null && response !== 'sản phẩm đã được xóa khỏi giỏ hàng') {
             setQuantity(quantity + update_quantity);
         }
-        else if (result == null || response == 'sản phẩm đã được xóa khỏi giỏ hàng')
+        else if (result == null || response == 'sản phẩm đã được xóa khỏi giỏ hàng') {
+            ToastAndroid.show("Đã xóa sản phẩm khỏi giỏ hàng", ToastAndroid.SHORT);
             onAction();
+        }
     }
 
     return (

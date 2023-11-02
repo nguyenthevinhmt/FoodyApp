@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, ScrollView, Alert } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, ScrollView, Alert, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import Swiper from "react-native-swiper";
@@ -8,16 +8,16 @@ import { baseURL_img } from "../utils/baseUrl";
 import ScreenNames from "../utils/ScreenNames";
 import { addProductToCart } from "../services/cartService";
 
-function showAlert(message: string) {
-  return (
-      Alert.alert(
-          'Thông báo',
-          message,
-          [{ text: 'Ok', onPress: () => { } }],
-          { cancelable: false }
-      )
-  )
-};
+// function showAlert(message: string) {
+//   return (
+//       Alert.alert(
+//           'Thông báo',
+//           message,
+//           [{ text: 'Ok', onPress: () => { } }],
+//           { cancelable: false }
+//       )
+//   )
+// };
 
 export default function HomeScreen({ navigation }: any) {
   const images = [
@@ -60,7 +60,11 @@ export default function HomeScreen({ navigation }: any) {
     else {
         showAlert("Có lỗi khi thêm sản phẩm vào giỏ hàng");
     }
-}
+  }
+
+  const showAlert = (text: string) => {
+    ToastAndroid.show(text, ToastAndroid.SHORT);
+  };
 
   return (
     <SafeAreaView style={styles.container}>

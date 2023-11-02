@@ -77,7 +77,7 @@ export default function UserScreen({ navigation }: any) {
             <UserEditButton
               imageUrl={require("../assets/Icons/history.png")}
               text="Lịch sử"
-              onNavigate={() => navigation.navigate(ScreenNames.ORDER, { screen: 'Đã vận chuyển' })}
+              onNavigate={() => navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Đã vận chuyển' } })}
             />
           </View>
         </View>
