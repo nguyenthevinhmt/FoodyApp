@@ -19,8 +19,7 @@ const ScreenNames = {
     DETAIL_ORDER_PENDING: "Detail Order Pending",
     DETAIL_ORDER_SHIPPING: "Detail Order Shipping",
     VNPAY: 'VnPay',
-    VNPAY_CART: 'VnPayCart',
-    ORDER_PENDING: 'PendingOrderScreen'
+    VNPAY_CART: 'VnPayCart'
 };
 
 export default ScreenNames;

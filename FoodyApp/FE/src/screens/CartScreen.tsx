@@ -22,6 +22,8 @@ export default function CartScreen({ navigation }: any) {
   const [products, setProducts] = useState<any[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartId, setCartId] = useState(0);
+  //kiểm tra khi component con gọi api
+  const [componentAction, setComponentAction] = useState(true);
 
   //id sản phẩn được lựa chọn
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
@@ -43,7 +45,7 @@ export default function CartScreen({ navigation }: any) {
       };
 
       getData();
-    }, [])
+    }, [componentAction])
   );
 
   //cập nhật tổng số tiền các sản phẩm được chọn
@@ -89,6 +91,13 @@ export default function CartScreen({ navigation }: any) {
     console.log(result);
   }
 
+  //theo dõi hoạt động trong component
+  const handleComponent = () => {
+    // Thực hiện các tác vụ khi component con gọi API
+    console.log("Component con đã gọi API");
+    setComponentAction(!componentAction);
+    
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,8 +112,7 @@ export default function CartScreen({ navigation }: any) {
 
                 <View style={{marginLeft: 5}}>
                   <Text style={{color: '#fff'}}>
-                    {selectedProducts.length === products.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'
-                    }
+                    {selectedProducts.length === products.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -139,6 +147,7 @@ export default function CartScreen({ navigation }: any) {
                     price={value['price']}
                     Quantity={value['quantity']}
                     onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
+                    onAction={() => (handleComponent())}
                   />
                 </View>
 

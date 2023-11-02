@@ -98,7 +98,7 @@ export default function HomeScreen({ navigation }: any) {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item: any) => item.id}
               renderItem={({ item }) => (
-                <View style={{ justifyContent: 'center' }}>
+                <View style={{ justifyContent: 'center', marginBottom: 15 }}>
                   <TouchableOpacity
                     style={styles.category}
                     onPress={() =>
@@ -136,8 +136,8 @@ export default function HomeScreen({ navigation }: any) {
                     <Text style={styles.name}>{item['name']}</Text>
 
                     <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                      <Text style={styles.price}>{item['price'].toLocaleString()}đ</Text>
-                      <Text style={styles.actualPrice}>{item['actualPrice'].toLocaleString()}đ</Text>
+                      <Text style={styles.price}>{(item['price'] | 0).toLocaleString()}đ</Text>
+                      <Text style={styles.actualPrice}>{(item['actualPrice'] | 0).toLocaleString()}đ</Text>
                     </View>
                   </View>
                 </TouchableOpacity>

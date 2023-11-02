@@ -1,4 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Alert } from "react-native";
+import Modal from 'react-native-modal';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback } from 'react';
 import { useState } from "react";
@@ -10,7 +11,7 @@ import { baseURL_img } from "../utils/baseUrl";
 import { getOrderById, updateOrderStatus } from "../services/orderService";
 import ScreenNames from "../utils/ScreenNames";
 
-const DetailOrderPendingScreen = ({ navigation, route }: any) => {
+const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
 
     //thông tin đơn hàng
@@ -31,6 +32,9 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
 
     //đã thanh toán
     const [paid, setPaid] = useState(false);
+
+    //vòng tròn loading
+    const [loadingOn, setLoadingOn] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -75,6 +79,7 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
 
     const handleCancel = async () => {
         const result = await updateOrderStatus(orderId, 5); //đơn hàng đã hủy
+        return result?.data;
     }
 
     const showAlert = () => {
@@ -84,9 +89,17 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
             [
                 { text: 'Trở lại', style: 'cancel' },
                 {
-                    text: 'Xóa', onPress: () => {
-                        handleCancel();
-                        navigation.navigate(ScreenNames.MAIN, { screen: 'Order' });
+                    text: 'Xóa', onPress: async () => {
+                        setLoadingOn(true);
+                        const result = await handleCancel();
+                        setTimeout(() => {
+                            if (result === 'Success') {  
+                                navigation.navigate(ScreenNames.MAIN, {screen: 'Order'});
+                            } else {
+                                console.log('lỗi khi xóa');
+                            }
+                        }, 2000)
+                        
                     }
                 }
             ],
@@ -235,6 +248,18 @@ const DetailOrderPendingScreen = ({ navigation, route }: any) => {
                 </TouchableOpacity>
 
             </View>
+            
+            <Modal
+                isVisible={loadingOn}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                backdropOpacity={0.5}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../assets/Icons/loading.gif')} style={{ width: 50, height: 50 }} />
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }

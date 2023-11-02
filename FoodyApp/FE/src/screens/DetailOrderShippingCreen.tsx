@@ -1,4 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Button, Alert } from "react-native";
+import Modal from 'react-native-modal';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useCallback } from 'react';
 import { useState } from "react";
@@ -34,6 +35,9 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
     //Hiển thị thông báo
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
+
+    //vòng tròn loading
+    const [loadingOn, setLoadingOn] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -79,11 +83,13 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
 
     const handleCancel = async () => {
         const result = await updateOrderStatus(orderId, 5); //đơn hàng đã hủy
+        return result?.data
     }
 
     const handleSuccess = async () => {
         await orderPaidSuccess(orderId);
         const result = await updateOrderStatus(orderId, 4); //đơn hàng đã giao thành công
+        return result?.data
     }
 
     const showAlert = (message: string, onNavigate: () => void) => {
@@ -94,6 +100,7 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
                 { text: 'Hủy bỏ', style: 'cancel' },
                 {
                     text: 'Đồng ý', onPress: () => {
+                        setLoadingOn(true);
                         onNavigate()
                     }
                 }
@@ -229,9 +236,15 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
                 <TouchableOpacity
                     style={styles.orderButton}
                     onPress={() => {
-                        showAlert('Bạn sẽ không thể hủy đơn hàng nếu đồng ý nhận hàng. Bạn chắc chắn chứ?', () => {
-                            handleSuccess();
-                            navigation.goBack();
+                        showAlert('Bạn sẽ không thể hủy đơn hàng nếu đồng ý nhận hàng. Bạn chắc chắn chứ?', async () => {
+                            const result = await handleSuccess();
+                            setTimeout(() => {
+                                if (result === 'Success') {  
+                                    navigation.goBack();
+                                } else {
+                                    console.log('lỗi trong màn detaltOrderShipping');
+                                }
+                            }, 2000)
                         });
                     }}>
                     <Text style={{ color: '#fff' }}>Nhận hàng</Text>
@@ -240,14 +253,32 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
                 <TouchableOpacity
                     style={styles.cancelButton}
                     onPress={() => {
-                        showAlert('Bạn chắc chắn muốn hủy đơn hàng?', () => {
-                            handleCancel();
-                            navigation.goBack();
+                        showAlert('Bạn chắc chắn muốn hủy đơn hàng?', async () => {
+                            const result = await handleCancel();
+                            setTimeout(() => {
+                                if (result === 'Success') {  
+                                    navigation.goBack();
+                                } else {
+                                    console.log('lỗi trong màn detaltOrderShipping');
+                                }
+                            }, 2000)
                         });
                     }}>
                     <Text style={{ color: '#EE4D2D' }}>Hủy đặt hàng</Text>
                 </TouchableOpacity>
             </View>
+            
+            <Modal
+                isVisible={loadingOn}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                backdropOpacity={0.5}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../assets/Icons/loading.gif')} style={{ width: 50, height: 50 }} />
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }

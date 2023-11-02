@@ -2,11 +2,11 @@ import { Text, StyleSheet, View, ScrollView } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import ScreenNames from "../utils/ScreenNames";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import OrderProductsComponent from "../components/OrderProductsComponent";
 import { getAllOrderPending } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { baseURL_img } from "../utils/baseUrl";
 
 function emtyOrder() {
@@ -19,43 +19,32 @@ function emtyOrder() {
     );
 }
 
-const PendingOrderScreen = ({ navigation }: any) => {
+const PendingOrderScreen: React.FC = ({ navigation }: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
-    const [shown, setShown] = useState(true);
+    const [shown, setShown] = useState(false);
     const [order, setOrder] = useState([]);
     const [product, setProduct] = useState([]);
-    const isFocused = useIsFocused();
     useFocusEffect(
         useCallback(() => {
             const getData = async () => {
                 const orderResponse = await getAllOrderPending();
-                setOrder(orderResponse.data);
-                if (order && order.length === 0) {
-                    setShown(true);
-                } else {
-                    setShown(false);
-                }
-                console.log('đây là màn order');
+                setOrder(orderResponse?.data);
 
                 const productDiscountResponse = await getProductDiscount();
                 setProduct(productDiscountResponse?.data.item);
-            };
+            }
+
             getData();
-             if (Array.isArray(order) && order.length === 0) {
+        }, [])
+    );
+
+    useEffect(() => {
+        if (Array.isArray(order) && order.length === 0) {
             setShown(true);
         } else {
             setShown(false);
         }
-        }, [order,isFocused])
-    );
-
-    // useEffect(() => {
-    //     if (Array.isArray(order) && order.length === 0) {
-    //         setShown(true);
-    //     } else {
-    //         setShown(false);
-    //     }
-    // }, [order]);
+    }, [order]);
 
     return (
         <ScrollView style={styles.container}>
