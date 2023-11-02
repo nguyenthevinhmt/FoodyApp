@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#BCA37F'
+        borderBottomColor: '#ddd'
     },
 
     image: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#BCA37F'
+        borderBottomColor: '#ddd'
     },
 
     buttonArea: {
