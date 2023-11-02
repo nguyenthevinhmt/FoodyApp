@@ -2,7 +2,7 @@ import { Text, StyleSheet, View, ScrollView } from "react-native";
 import ProductComponent from "../components/ProductComponent";
 import EmptyOrderComponent from "../components/EmptyOrderComponent";
 import ScreenNames from "../utils/ScreenNames";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import OrderProductsComponent from "../components/OrderProductsComponent";
 import { getAllOrderPending } from "../services/orderService";
 import { getProductDiscount } from "../services/productService";
@@ -19,9 +19,9 @@ function emtyOrder() {
     );
 }
 
-const PendingOrderScreen = ({ navigation }: any) => {
+const PendingOrderScreen: React.FC = ({ navigation }: any) => {
     //kiểm tra nếu tồn tại order sẽ xóa màn emptyOrder
-    const [shown, setShown] = useState(true);
+    const [shown, setShown] = useState(false);
     const [order, setOrder] = useState([]);
     const [product, setProduct] = useState([]);
 
@@ -31,11 +31,10 @@ const PendingOrderScreen = ({ navigation }: any) => {
                 const orderResponse = await getAllOrderPending();
                 setOrder(orderResponse?.data);
 
-                console.log('đây là màn order');
-
                 const productDiscountResponse = await getProductDiscount();
                 setProduct(productDiscountResponse?.data.item);
-            };
+            }
+
             getData();
         }, [])
     );

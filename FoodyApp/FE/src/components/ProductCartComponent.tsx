@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import { updateProductQuantity } from '../services/cartService';
+import { useNavigation } from '@react-navigation/native';
+import ScreenNames from '../utils/ScreenNames';
 
 interface ProductCartComponentProps {
     productId: number
@@ -9,16 +11,22 @@ interface ProductCartComponentProps {
     actualPrice: number;
     price: number;
     Quantity: number;
-    onNavigation: () => void
-}
+    onNavigation: () => void,
+    onAction: () => void
+}  
 
-const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, imageUrl, name, actualPrice, price, Quantity, onNavigation }) => {
+const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, imageUrl, name, actualPrice, price, Quantity, onNavigation, onAction }) => {
     const [quantity, setQuantity] = useState(Quantity);
-
+    
     const handleUpdate = async (update_quantity: number) => {
         const result = await updateProductQuantity(productId, update_quantity);
-        if (result != null)
+        const response = result?.data;
+        console.log(result);
+        if (result != null && response !== 'sản phẩm đã được xóa khỏi giỏ hàng') {
             setQuantity(quantity + update_quantity);
+        }
+        else if (result == null || response == 'sản phẩm đã được xóa khỏi giỏ hàng')
+            onAction();
     }
 
     return (

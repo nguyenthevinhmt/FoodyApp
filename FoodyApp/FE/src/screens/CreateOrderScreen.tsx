@@ -164,7 +164,6 @@ const CreateOrderScreen = ({ navigation, route }: any) => {
                         </View>
                     </Modal>
 
-
                     <View style={styles.listProduct}>
                         <Text style={{
                             marginTop: 10,

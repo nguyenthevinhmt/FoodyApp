@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     productDetail: {
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'left',
+        alignItems: 'flex-start',
         width: '100%',
         paddingLeft: 15
     },
