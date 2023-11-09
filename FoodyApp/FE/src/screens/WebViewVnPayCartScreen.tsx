@@ -38,12 +38,12 @@ const WebVnPayCart = ({ navigation, route }: any) => {
         }
         else if (vnp_ResponseCode === '24') {
             await orderFromCartFail(orderId, selectedProducts);
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Giỏ hàng' });
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
             await orderFromCartFail(orderId, selectedProducts);
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Giỏ hàng' });
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };
