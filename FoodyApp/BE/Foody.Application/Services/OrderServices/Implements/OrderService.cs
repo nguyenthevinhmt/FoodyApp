@@ -633,8 +633,8 @@ namespace Foody.Application.Services.OrderServices.Implements
             else
             {
                 var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(o => o.OrderId == orderId);
-                order.IsDeleted = false;
-                orderDetail.IsDeleted = false;
+                order.IsDeleted = true;
+                orderDetail.IsDeleted = true;
 
                 await _context.SaveChangesAsync();
             }
@@ -749,13 +749,14 @@ namespace Foody.Application.Services.OrderServices.Implements
             else
             {
                 order.IsPaid = false;
-                order.IsDeleted = false;
+                order.IsDeleted = true;
                 await _context.SaveChangesAsync();
 
+                //khi thanh toán thất bại sản phẩm vẫn ở trong giỏ hàng
                 foreach (var p in input.ProductCartId)
                 {
-                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.Id == p && pc.IsDeleted == true);
-                    productCart.IsDeleted = true;
+                    var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.Id == p);
+                    productCart.IsDeleted = false;
                 }
                 await _context.SaveChangesAsync();
 

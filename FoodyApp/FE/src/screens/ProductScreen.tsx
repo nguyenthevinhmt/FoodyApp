@@ -7,7 +7,7 @@ import { getProductById } from "../services/productService";
 import { useEffect, useState } from "react";
 import ScreenNames from "../utils/ScreenNames";
 import { baseURL_img } from "../utils/baseUrl";
-import { addProductToCart, getCartByUser } from "../services/cartService";
+import { addProductToCart, getCartByUser, updateProductQuantity } from "../services/cartService";
 import ProductCartComponent from "../components/ProductCartComponent";
 
 
@@ -23,13 +23,11 @@ const ProductScreen = ({ navigation, route }: any) => {
   const [actualPrice, setActualPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [imgUrl, setImgUrl] = useState(baseURL_img);
-
-  const [products, setProducts] = useState<any[]>([]);
-
-  //kiểm tra khi component con gọi api
-  const [componentAction, setComponentAction] = useState(true);
   
   const [isModalVisible, setModalVisible] = useState(false);
+
+  //Thêm số lượng
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const getData = async () => {
@@ -52,38 +50,29 @@ const ProductScreen = ({ navigation, route }: any) => {
 
     getData();
   }, []);
-
-  useEffect(() => {
-    const getData = async () => {
-      //lấy thông tin sản phẩm trong giỏ hàng
-      const result = await getCartByUser();
-      setProducts(result?.data.products);
-    }
-
-    getData();
-  }, [componentAction]);
-
   
   const handleAddCart = async () => {
-    const result = await addProductToCart(Id);
     const cartResult = await getCartByUser();
-    setProducts(cartResult?.data.products);
+    const productCart = cartResult?.data['products'];
+    const filteredProductCart = productCart.filter((obj: any) => obj.id === Id);
+    if (filteredProductCart.length > 0) {
+      await updateProductQuantity(Id, quantity);
+    }
+    else {
+      const create = await addProductToCart(Id);
+      if (create?.status === 200)
+        await updateProductQuantity(Id, quantity-1);
+    }
   }
   
   const showAlert = () => {
     handleAddCart();
     ToastAndroid.show('Thêm sản phẩm thành công !', ToastAndroid.SHORT);
+    toggleModal();
   };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-  };
-
-  //theo dõi hoạt động trong component
-  const handleComponent = () => {
-    // Thực hiện các tác vụ khi component con gọi API
-    console.log("Component con đã gọi API");
-    setComponentAction(!componentAction);
   };
 
   return (
@@ -135,10 +124,7 @@ const ProductScreen = ({ navigation, route }: any) => {
       </View>
 
       <View style={styles.buttArea}>
-        <TouchableOpacity style={styles.buttLeft} onPress={() => {
-          toggleModal();
-          showAlert()}
-        }>
+        <TouchableOpacity style={styles.buttLeft} onPress={() => {toggleModal()}}>
           <Image source={require('../assets/Icons/add-cart.png')} style={styles.addCartIcon} />
           <Text style={{ color: '#EE4D2D', fontSize: 12 }}>Thêm vào giỏ hàng</Text>
           
@@ -165,8 +151,9 @@ const ProductScreen = ({ navigation, route }: any) => {
         swipeDirection="down" // Cho phép vuốt xuống để đóng modal
       >
         <View style={styles.bottomSheetContainer}>
+          <View>
           <View style={styles.headerBottomSheet}>
-            <Text style={{ fontSize: 18, fontWeight: '600' }}>Giỏ hàng</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>Thêm sản phẩm vào giỏ</Text>
 
             <TouchableOpacity style={{ justifyContent: 'flex-start' }} onPress={() => { toggleModal() }}>
               <Text style={{
@@ -175,25 +162,41 @@ const ProductScreen = ({ navigation, route }: any) => {
             </TouchableOpacity>
           </View>
 
-          {/* {danh sách các sản phẩm trong giỏ hàng} */}
-          <ScrollView style={styles.bottomSheetContent}>
-            {
-              products.map((value) => (
-                <View key={value['id']}>
-                  <ProductCartComponent
-                    productId={value['id']}
-                    imageUrl={`${baseURL_img}${value['productImageUrl']}`}
-                    name={value['name']}
-                    actualPrice={value['actualPrice']}
-                    price={value['price']}
-                    Quantity={value['quantity']}
-                    onNavigation={() => navigation.navigate(ScreenNames.PRODUCT, { productId: value['id'] })}
-                    onAction={() => {handleComponent()}}
-                  />
+          <View style={styles.containerModal}>
+            <Image source={{ uri: imgUrl }} style={styles.imageModal} />
+
+            <View style={styles.productDetailModal}>
+              <View>
+                <Text style={styles.nameModal}>{name}</Text>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                  <Text style={styles.priceModal}>{price.toLocaleString()}đ</Text>
+                  <Text style={styles.actualPriceModal}>{actualPrice.toLocaleString()}đ</Text>
                 </View>
-              ))
-            }
-          </ScrollView>
+              </View>
+
+              <View style={styles.updateQuantityModal}>
+                <TouchableOpacity 
+                  style={styles.subtractionModal} 
+                  onPress={() => {
+                    if (quantity - 1 >= 1)
+                      setQuantity(quantity => quantity - 1)
+                  }}>
+                  <Image source={require('../assets/Icons/subtraction-logo.png')} style={styles.quantity_logoModal} />
+                </TouchableOpacity>
+
+                <Text style={styles.quantityModal}>{quantity}</Text>
+
+                <TouchableOpacity style={styles.additionModal} onPress={() => setQuantity(quantity => quantity + 1)}>
+                  <Image source={require('../assets/Icons/addition-logo.png')} style={styles.quantity_logoModal} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          </View>
+
+          <TouchableOpacity style={styles.addCartButton} onPress={() => showAlert()}>
+            <Text style={{color: '#fff'}}>Thêm</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </SafeAreaView>
@@ -301,9 +304,9 @@ const styles = StyleSheet.create({
 
 bottomSheetContainer: {
     backgroundColor: 'white',
-    height: '70%',
+    height: '45%',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10
 },
@@ -323,6 +326,86 @@ bottomSheetContent: {
     height: '100%',
     backgroundColor: '#F1EFEF'
 },
+
+containerModal: {
+  width: '100%',
+  marginBottom: 10,
+  paddingVertical: 15,
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  backgroundColor: '#fff'
+},
+
+imageModal: {
+  width: 90,
+  height: 90,
+  marginHorizontal: 10,
+},
+
+productDetailModal: {
+  height: 110,
+  justifyContent: 'space-around',
+  flexDirection: 'column',
+  alignItems: 'flex-start'
+},
+
+nameModal: {
+  fontSize: 16,
+  fontWeight: '400'
+},
+
+priceModal: {
+  fontSize: 12,
+  color: '#B4B4B3',
+  marginRight: 6,
+  textDecorationLine: 'line-through'
+},
+
+actualPriceModal: {
+  fontSize: 12,
+  color: '#EE4D2D',
+  fontWeight: '700'
+},
+
+updateQuantityModal: {
+  flexDirection: 'row',
+},
+
+subtractionModal: {
+  width: 25,
+  height: 25,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderWidth: 0.7,
+  borderColor: '#EE4D2D'
+},
+
+quantityModal: {
+  marginHorizontal: 15
+},
+
+additionModal: {
+  width: 25,
+  height: 25,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderWidth: 0.7,
+  borderColor: '#EE4D2D',
+  backgroundColor: '#EE4D2D'
+},
+
+quantity_logoModal: {
+  width: 20,
+  height: 20
+},
+
+addCartButton: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: 40,
+  backgroundColor: '#EE4D2D',
+}
 });
 
 export default ProductScreen;
