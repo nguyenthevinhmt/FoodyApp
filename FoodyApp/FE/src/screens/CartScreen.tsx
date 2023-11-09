@@ -98,7 +98,6 @@ export default function CartScreen({ navigation }: any) {
     // Thực hiện các tác vụ khi component con gọi API
     console.log("Component con đã gọi API");
     setComponentAction(!componentAction);
-    
   };
 
   return (

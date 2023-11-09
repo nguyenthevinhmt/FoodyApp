@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 25,
-        height: 25,
+        width: 20,
+        height: 20,
     },
 
     right: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
+        fontSize: 15,
         marginBottom: 5,
     },
 

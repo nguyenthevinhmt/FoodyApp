@@ -9,6 +9,7 @@ import { getAccessToken } from "../services/authService";
 import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
 import { getOrderById, orderPaidSuccess, updateOrderStatus } from "../services/orderService";
+import ScreenNames from "../utils/ScreenNames";
 
 const DetailOrderShippingScreen = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
@@ -241,6 +242,7 @@ const DetailOrderShippingScreen = ({ navigation, route }: any) => {
                             setTimeout(() => {
                                 if (result === 'Success') {  
                                     navigation.goBack();
+                                    navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Đã vận chuyển' } });
                                 } else {
                                     console.log('lỗi trong màn detaltOrderShipping');
                                 }

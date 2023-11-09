@@ -33,20 +33,17 @@ const WebVnPayCart = ({ navigation, route }: any) => {
 
         if (vnp_ResponseCode === '00') {
             await orderPaidSuccess(orderId);
-
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Order' }) 
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Giao dịch thành công.');
         }
         else if (vnp_ResponseCode === '24') {
             await orderFromCartFail(orderId, selectedProducts);
-
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
             await orderFromCartFail(orderId, selectedProducts);
-
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };
