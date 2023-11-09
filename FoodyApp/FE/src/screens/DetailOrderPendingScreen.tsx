@@ -10,6 +10,7 @@ import { getUserById } from "../services/userService";
 import { baseURL_img } from "../utils/baseUrl";
 import { getOrderById, updateOrderStatus } from "../services/orderService";
 import ScreenNames from "../utils/ScreenNames";
+import { createPayment } from "../services/vnpayService";
 
 const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
     const orderId = route.params['orderId'];
@@ -22,8 +23,6 @@ const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
 
     //thông tin địa chỉ
     const [address, setAddress] = useState([]);
-
-    //thông tin địa chỉ
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
 
@@ -35,6 +34,9 @@ const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
 
     //vòng tròn loading
     const [loadingOn, setLoadingOn] = useState(false);
+
+    //Thanh toán trực tuyến
+    //const [vnPay, setVnPay] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -71,10 +73,24 @@ const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
             return <Text>Đơn hàng đã được thanh toán trực tiếp</Text>
         }
         else if (paymentMethod == 2 && paid == false) {
+            //setVnPay(true);
             return <Text>Đơn hàng chưa được thanh toán trực tuyến</Text>
         } else {
             return <Text>Đơn hàng đã được thanh toán trực tuyến</Text>
         }
+    }
+
+    const handlePayment = async () => {
+        setLoadingOn(true);
+        //gọi api thanh toán điện tử
+        const payment = await createPayment(order.id);
+
+        setTimeout(() => {
+            navigation.navigate(ScreenNames.VNPAY, { 
+                url: payment?.data,
+                orderId: order.id, //id đơn hàng
+            });
+        }, 0); // Đợi 3 giây trước khi thực hiện navigation
     }
 
     const handleCancel = async () => {
@@ -231,16 +247,23 @@ const DetailOrderPendingScreen: React.FC = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.footer}>
-            <TouchableOpacity
-                    style={styles.orderButton}
+                <TouchableOpacity
+                    style={[styles.orderButton, (paymentMethod == 2 && paid == false) && styles.orderButtonNew]}
                     onPress={() => {
                         navigation.goBack();
                     }}>
-                    <Text style={{ color: '#fff' }}>Trở lại</Text>
+                    <Text style={[{ color: '#fff' }, (paymentMethod == 2 && paid == false) && { color: '#aaa' }]}>Trở lại</Text>
                 </TouchableOpacity>
 
+                {paymentMethod == 2 && paid == false ?  
+                    (<TouchableOpacity style={styles.VNPAYpayment} onPress={() => {handlePayment()}}>
+                        <Text style={{color: '#fff'}}>Thanh toán</Text>
+                    </TouchableOpacity>)
+                : ('')
+                }
+                
                 <TouchableOpacity
-                    style={styles.cancelButton}
+                    style={[styles.cancelButton, (paymentMethod == 2 && paid == false) && styles.cancelButtonNew]}
                     onPress={() => {
                         showAlert();
                     }}>
@@ -371,7 +394,6 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
 
-
     paymentMethods: {
         width: '100%',
         flexDirection: 'row',
@@ -415,6 +437,30 @@ const styles = StyleSheet.create({
         width: '50%',
         alignItems: 'center',
         backgroundColor: '#fff',
+        justifyContent: 'center',
+        margin: 0,
+    },
+
+    orderButtonNew: {
+        width: '33%',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        margin: 0,
+    },
+
+    cancelButtonNew: {
+        width: '33%',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        margin: 0,
+    },
+
+    VNPAYpayment: {
+        width: '33%',
+        alignItems: 'center',
+        backgroundColor: '#EE4D2D',
         justifyContent: 'center',
         margin: 0,
     }

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Image, View, ToastAndroid } from 'react-native';
 import { updateProductQuantity } from '../services/cartService';
-import { useNavigation } from '@react-navigation/native';
-import ScreenNames from '../utils/ScreenNames';
 
 interface ProductCartComponentProps {
     productId: number
@@ -16,14 +14,12 @@ interface ProductCartComponentProps {
 }  
 
 const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, imageUrl, name, actualPrice, price, Quantity, onNavigation, onAction }) => {
-    const [quantity, setQuantity] = useState(Quantity);
-    
     const handleUpdate = async (update_quantity: number) => {
         const result = await updateProductQuantity(productId, update_quantity);
         const response = result?.data;
         console.log(result);
         if (result != null && response !== 'sản phẩm đã được xóa khỏi giỏ hàng') {
-            setQuantity(quantity + update_quantity);
+            onAction();
         }
         else if (result == null || response == 'sản phẩm đã được xóa khỏi giỏ hàng') {
             ToastAndroid.show("Đã xóa sản phẩm khỏi giỏ hàng", ToastAndroid.SHORT);
@@ -49,7 +45,7 @@ const ProductCartComponent: React.FC<ProductCartComponentProps> = ({ productId, 
                         <Image source={require('../assets/Icons/subtraction-logo.png')} style={styles.quantity_logo} />
                     </TouchableOpacity>
 
-                    <Text style={styles.quantity}>{quantity}</Text>
+                    <Text style={styles.quantity}>{Quantity}</Text>
 
                     <TouchableOpacity style={styles.addition} onPress={() => handleUpdate(1)}>
                         <Image source={require('../assets/Icons/addition-logo.png')} style={styles.quantity_logo} />

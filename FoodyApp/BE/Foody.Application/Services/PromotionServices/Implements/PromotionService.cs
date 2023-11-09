@@ -60,7 +60,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
 
         public async Task<PromotionResponseDto> GetById(int id)
         {
-            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id);
+            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted == false);
             if (promotion == null)
             {
                 throw new UserFriendlyException($"Chương trình khuyến mại có id {id} không tồn tại!");
@@ -89,7 +89,7 @@ namespace Foody.Application.Services.PromotionServices.Implements
 
             query = query.Where(p =>
                 (string.IsNullOrEmpty(input.Keyword) || p.PromotionCode.ToLower().Contains(input.Keyword.ToLower()))
-                && ((p.CreatedAt >= input.StartTime && p.CreatedAt <= input.EndTime)));
+                && ((p.CreatedAt >= input.StartTime && p.CreatedAt <= input.EndTime)) && p.IsDeleted == false);
 
             var totalItem = await query.CountAsync();
 

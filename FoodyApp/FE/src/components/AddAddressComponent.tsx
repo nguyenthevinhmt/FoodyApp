@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
     },
 
     img: {
-        width: 25,
-        height: 25,
+        width: 20,
+        height: 20,
         marginRight: 10
     },
 
     title: {
-        fontWeight: '600',
+        //fontWeight: '600',
         fontSize: 15
     }
 });

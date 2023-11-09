@@ -31,20 +31,17 @@ const WebVnPay = ({ navigation, route }: any) => {
 
         if (vnp_ResponseCode === '00') {
             await orderPaidSuccess(orderId);
-            
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Order' }) 
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Giao dịch thành công.');
         }
         else if (vnp_ResponseCode === '24') {
             await deleteOrder(orderId);
-            
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Giao dịch không thành công do: Khách hàng hủy giao dịch.');
         }
         else {
             await deleteOrder(orderId);
-            
-            navigation.navigate(ScreenNames.MAIN, { screen: 'Home' })
+            navigation.navigate(ScreenNames.MAIN, { screen: 'Order', params: { screen: 'Chờ xử lý' } });
             Alert.alert('Thông báo', 'Có lỗi trong quá trình thanh toán. Vui lòng thử lại sau.');
         }
     };

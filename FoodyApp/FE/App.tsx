@@ -36,16 +36,16 @@ export default function App() {
         <Stack.Screen name={ScreenNames.LOGIN} component={LoginScreen} />
         <Stack.Screen name={ScreenNames.REGISTER} component={RegisterScreen} />
         <Stack.Screen name={ScreenNames.USER} component={UserScreen} />
-        <Stack.Screen name={ScreenNames.ACCOUNT} component={AccountScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
-        <Stack.Screen name={ScreenNames.ADDRESS} component={AddressScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
-        <Stack.Screen name={ScreenNames.CREATEADDRESS} component={CreateAddressScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
+        <Stack.Screen name={ScreenNames.ACCOUNT} component={AccountScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 14 } }} />
+        <Stack.Screen name={ScreenNames.ADDRESS} component={AddressScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 14 } }} />
+        <Stack.Screen name={ScreenNames.CREATEADDRESS} component={CreateAddressScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 14 } }} />
         <Stack.Screen name={ScreenNames.UPDATEADDRESS} component={UpdateAddressScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
         <Stack.Screen name={ScreenNames.PRODUCT} component={ProductScreen} />
-        <Stack.Screen name={ScreenNames.CREATE_ORDER} component={CreateOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
+        <Stack.Screen name={ScreenNames.CREATE_ORDER} component={CreateOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 14 } }} />
         <Stack.Screen name={ScreenNames.ALL_PRODUCT} component={AllProductScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_BY_CATEGORY} component={ProductByCategoryScreen} />
         <Stack.Screen name={ScreenNames.PRODUCT_SEARCH} component={ProductSearchScreen} />
-        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' } }} />
+        <Stack.Screen name={ScreenNames.CREATE_CART_ORDER} component={CreateCartOrderScreen} options={{ headerShown: true, headerStyle: { backgroundColor: '#EE4D2D' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 14 } }} />
         <Stack.Screen name={ScreenNames.ORDER} component={OrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER} component={DetailOrderScreen} />
         <Stack.Screen name={ScreenNames.DETAIL_ORDER_PENDING} component={DetailOrderPendingScreen} />

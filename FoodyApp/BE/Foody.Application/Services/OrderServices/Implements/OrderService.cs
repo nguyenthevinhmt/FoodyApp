@@ -633,8 +633,8 @@ namespace Foody.Application.Services.OrderServices.Implements
             else
             {
                 var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(o => o.OrderId == orderId);
-                order.IsDeleted = true;
-                orderDetail.IsDeleted = true;
+                order.IsDeleted = false;
+                orderDetail.IsDeleted = false;
 
                 await _context.SaveChangesAsync();
             }
@@ -749,20 +749,20 @@ namespace Foody.Application.Services.OrderServices.Implements
             else
             {
                 order.IsPaid = false;
-                order.IsDeleted = true;
+                order.IsDeleted = false;
                 await _context.SaveChangesAsync();
 
                 foreach (var p in input.ProductCartId)
                 {
                     var productCart = await _context.ProductsCarts.FirstOrDefaultAsync(pc => pc.Id == p && pc.IsDeleted == true);
-                    productCart.IsDeleted = false;
+                    productCart.IsDeleted = true;
                 }
                 await _context.SaveChangesAsync();
 
                 var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == input.OrderId).ToListAsync();
                 foreach (var detail in orderDetails)
                 {
-                    detail.IsDeleted = true;
+                    detail.IsDeleted = false;
                 }
                 await _context.SaveChangesAsync();
             }
